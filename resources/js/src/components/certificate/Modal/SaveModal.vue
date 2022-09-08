@@ -3,7 +3,7 @@
     <vs-button class="mr-2 primary" type="flat" @click="activePrompt = true">Save</vs-button>
 
     <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="">
+      :active.sync="activePrompt" title="" @close="close">
       <h3 class="text-center mb-4">Save Certificate Template</h3>
       <div class="con-exemple-prompt">
         <span class="mb-1">Certificate Name</span>
@@ -61,9 +61,6 @@ export default {
     changeModal(name) {
       this.modal = name
     },
-    changeModal(name) {
-      this.modal = name
-    },
     handleShow() {
       this.showDescription = true
     },
@@ -77,6 +74,10 @@ export default {
     clearValMultiple() {
       this.valMultipe.value1 = ""
       this.valMultipe.value2 = ""
+    },
+    close() {
+      this.showDescription = false
+      this.textarea = ''
     }
   }
 }

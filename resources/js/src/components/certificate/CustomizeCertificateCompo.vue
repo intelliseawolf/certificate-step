@@ -48,7 +48,7 @@
     </div>
     <!-- Styles -->
     <div class="my-5">
-      <p><b>Styles</b></p>
+      <span><b>Styles</b></span>
       <vs-checkbox class="my-3">Any style</vs-checkbox>
       <div class="flex justify-center row-gap-3 flex-wrap">
         <a href="#">

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="Preview" class="flex">
+    <vs-prompt @accept="acceptAlert" @close="close" buttonAccept="false" buttonCancel="false" :active="activePrompt"
+      title="Preview" class="flex">
       <vs-button class="ml-auto mr-5 primary" type="flat">Edit</vs-button>
       <vs-button class="ml-auto primary" type="flat">Download Certificates</vs-button>
       <div class="con-exemple-prompt">
@@ -13,7 +13,7 @@
         </div>
         <!-- Footer -->
         <div class="flex mt-3 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat">Cancel</vs-button>
+          <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div class="flex">
             <vs-button class="mr-2 primary" type="flat">Save</vs-button>
             <vs-button @click="$emit('send')">Send Certificates</vs-button>
@@ -56,6 +56,14 @@ export default {
     clearValMultiple() {
       this.valMultipe.value1 = ""
       this.valMultipe.value2 = ""
+    },
+    close() {
+      this.$vs.notify({
+        color: 'danger',
+        title: 'Closed',
+        text: 'You close a dialog!'
+      })
+      this.$emit('cancel')
     },
     handleOpen() {
       // this.$emit('close')

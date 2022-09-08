@@ -17,8 +17,8 @@
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
-            <vs-button class="mr-auto mt-2 dark" type="flat">Back</vs-button>
-            <vs-button class="ml-auto mt-2">Preview</vs-button>
+            <vs-button class="mr-auto mt-2 dark" type="flat" @click="goBack">Back</vs-button>
+            <vs-button class="ml-auto mt-2" @click="changeTab">Preview</vs-button>
           </div>
         </div>
       </div>
@@ -55,6 +55,12 @@ export default {
     setDynamicText(id) {
       this.$refs.editor.addDynamicText(id)
       this.activeDynamicTexts.push(id)
+    },
+    changeTab() {
+      this.$emit('changeTab', 2)
+    },
+    goBack() {
+      this.$emit('changeTab', 0)
     }
   },
   data() {

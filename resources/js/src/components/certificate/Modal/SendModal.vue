@@ -1,7 +1,7 @@
 <template>
   <div>
-    <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="Send Certificates" class="flex">
+    <vs-prompt @close="close" @accept="acceptAlert" buttonAccept="false" buttonCancel="false" :active="activePrompt"
+      title="Send Certificates" class="flex">
       <div class="con-exemple-prompt">
         <div class="flex award-section my-12">
           <ul class="centerx">
@@ -19,7 +19,7 @@
         </div>
         <!-- Footer -->
         <div class="flex mt-3 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat">Cancel</vs-button>
+          <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div>
             <vs-button class="mr-2 primary" type="flat">Save</vs-button>
             <vs-button>Award Certificates</vs-button>
@@ -52,6 +52,14 @@ export default {
         title: 'Accept Selected',
         text: 'Lorem ipsum dolor sit amet, consectetur'
       })
+    },
+    close() {
+      this.$vs.notify({
+        color: 'danger',
+        title: 'Closed',
+        text: 'You close a dialog!'
+      })
+      this.$emit('cancel')
     },
     clearValMultiple() {
       this.valMultipe.value1 = ""

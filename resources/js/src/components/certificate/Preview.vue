@@ -9,18 +9,19 @@
             width="628" height="440" alt="">
         </div>
       </div>
-
       <!-- Next Button -->
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
-            <vs-button class="mr-auto mt-2 dark" type="flat">Back</vs-button>
+            <vs-button class="mr-auto mt-2 dark" type="flat" @click="changeTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
               <save-modal />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
-              <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')" />
-              <preview-modal :activePrompt="modal === 'preview'" @send="changeModal('send')" />
-              <send-modal :activePrompt="modal === 'send'" />
+              <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
+                @cancel="changeModal(null)" />
+              <preview-modal :activePrompt="modal === 'preview'" @send="changeModal('send')"
+                @cancel="changeModal(null)" />
+              <send-modal :activePrompt="modal === 'send'" @cancel="changeModal(null)" />
             </div>
           </div>
         </div>
@@ -45,6 +46,9 @@ export default {
   methods: {
     changeModal(name) {
       this.modal = name
+    },
+    changeTab() {
+      this.$emit('changeTab', 1)
     }
   }
 }

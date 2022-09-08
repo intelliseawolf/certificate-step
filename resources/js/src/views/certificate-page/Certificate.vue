@@ -12,12 +12,12 @@
 					</vs-tab>
 					<vs-tab label="2. Texts & Dynamic Fields">
 						<div class="tab-text">
-							<texts-and-dynamic-fields :template="template" />
+							<texts-and-dynamic-fields :template="template" @changeTab="changeTab" />
 						</div>
 					</vs-tab>
 					<vs-tab label="3. Preview">
 						<div class="tab-text">
-							<Preview />
+							<Preview @changeTab="changeTab" />
 						</div>
 					</vs-tab>
 				</vs-tabs>
@@ -56,5 +56,4 @@ export default {
 		}
 	}
 }
-
 </script>

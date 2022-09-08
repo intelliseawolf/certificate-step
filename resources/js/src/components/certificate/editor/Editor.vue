@@ -26,7 +26,7 @@
       alt="1.png"
     >
     <draggable v-for="(item, index) in content" :key="index" :data="item">
-      <div :style="item.style">
+      <div :style="item.style" class="flex">
         <vs-input
           v-if="activeIndex == index"
           size="small"
