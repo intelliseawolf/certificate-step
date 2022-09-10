@@ -46,28 +46,6 @@
         </div>
       </div>
     </div>
-    <!-- Styles -->
-    <div class="my-5">
-      <span><b>Styles</b></span>
-      <vs-checkbox class="my-3">Any style</vs-checkbox>
-      <div class="flex justify-center row-gap-3 flex-wrap">
-        <a href="#">
-          <img class="mx-2" width="245" height="158" src="/images/styles_img/style_1.png" alt="style_1.png">
-        </a>
-        <a href="#">
-          <img class="mx-2" width="245" height="158" src="/images/styles_img/style_2.png" alt="style_2.png">
-        </a>
-        <a href="#">
-          <img class="mx-2" width="245" height="158" src="/images/styles_img/style_3.png" alt="style_3.png">
-        </a>
-        <a href="#">
-          <img class="mx-2" width="245" height="158" src="/images/styles_img/style_4.png" alt="style_4.png">
-        </a>
-        <a href="#">
-          <img class="mx-2" width="245" height="158" src="/images/styles_img/style_5.png" alt="style_5.png">
-        </a>
-      </div>
-    </div>
     <!-- Templates -->
     <div class="my-5">
       <p><b>Templates</b></p>
@@ -149,9 +127,8 @@ export default {
 
 <style>
 .preview-section {
-  background-color: #F6F6F6;
   width: 100%;
-  height: 504px;
+  height: 100%;
 }
 
 .template-box {
@@ -173,9 +150,11 @@ export default {
   height: 100%;
   align-items: center;
   justify-content: center;
+  background: white;
 }
 
-.con-input-upload {
+.con-input-upload,
+.img-upload {
   width: 240px !important;
   height: 144px !important;
   margin: 0px !important;

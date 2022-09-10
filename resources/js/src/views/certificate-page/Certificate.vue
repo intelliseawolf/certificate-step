@@ -39,7 +39,7 @@ export default {
 		VxCardVue,
 		CustomizeCertificateCompo,
 		TextsAndDynamicFields,
-		Preview,
+		Preview
 	},
 	data() {
 		return {

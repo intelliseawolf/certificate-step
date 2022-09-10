@@ -37,7 +37,12 @@ import PreviewModal from './Modal/PreviewModal.vue'
 import SendModal from './Modal/SendModal.vue'
 
 export default {
-  components: { SaveModal, GenerateModal, PreviewModal, SendModal },
+  components: {
+    SaveModal,
+    GenerateModal,
+    PreviewModal,
+    SendModal
+  },
   data() {
     return {
       modal: null

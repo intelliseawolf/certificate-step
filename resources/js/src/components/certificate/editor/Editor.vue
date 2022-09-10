@@ -20,27 +20,17 @@
     </div>
   </quill-editor> -->
   <div class="w-full h-full editor-wrapper">
-    <img
-      class="editor-bg"
-      :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path"
-      alt="1.png"
-    >
+    <img class="editor-bg"
+      :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path" alt="1.png">
     <draggable v-for="(item, index) in content" :key="index" :data="item">
       <div :style="item.style" class="flex">
-        <quill-editor
-          v-if="activeIndex == index"
-          size="small"
-          class="inputx"
-          placeholder="Size small"
-          v-model="content[activeIndex].content"
-          @keydown="(e) => changeContent(e)"
-        />
+        <quill-editor v-if="activeIndex == index" size="small" class="inputx" placeholder="Size small"
+          v-model="content[activeIndex].content" @keydown="(e) => changeContent(e)" />
         <p v-else @dblclick="setActiveIndex(index)">{{ item.content }}</p>
       </div>
     </draggable>
   </div>
 </template>
-
 
 <script>
 import QuillEditor from "./QuillEditor"
