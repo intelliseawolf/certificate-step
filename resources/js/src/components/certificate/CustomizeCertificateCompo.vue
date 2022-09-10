@@ -44,6 +44,11 @@
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-else>
         </div>
+        <div class="template-placeholder">
+          <p v-html="templateList[selectedTemplate].title"></p>
+          <p v-html="templateList[selectedTemplate].description"></p>
+          <p v-html="templateList[selectedTemplate].content"></p>
+        </div>
       </div>
     </div>
     <!-- Templates -->
@@ -115,22 +120,18 @@ export default {
   data() {
     return {
       orientation: 'landscape',
-      width: 500,
-      height: 300,
+      width: 800,
+      height: 500,
       // AgGrid
       currentPage: 1,
       template: [],
+      content: "<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>{client_name}</p>\n<p>You have successfully passed the {class_name} under guidance of {class_teacher_name}</p>\n<p>for {class_term_name} for session {class_start_date} - {class_end_date}</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {created_by}</p>\n<p>&nbsp;</p>"
     }
   }
 }
 </script>
 
 <style>
-.preview-section {
-  width: 100%;
-  height: 100%;
-}
-
 .template-box {
   width: 242px;
   height: 146px;
@@ -146,11 +147,23 @@ export default {
   border-radius: 8px;
 }
 
+.preview-section {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .template-pos {
   height: 100%;
   align-items: center;
   justify-content: center;
   background: white;
+}
+
+.template-placeholder {
+  position: absolute;
+  left: 50%;
+  top: 30%;
 }
 
 .con-input-upload,
