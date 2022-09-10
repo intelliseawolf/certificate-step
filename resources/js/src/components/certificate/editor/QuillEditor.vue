@@ -1,27 +1,6 @@
 <template>
   <div class="custom-quill-editor">
-    <quill-editor v-model="content" :options="editorOption" theme="bubble">
-      <div id="toolbar" slot="toolbar">
-        <button class="ql-bold">Bold</button>
-        <button class="ql-italic">Italic</button>
-        <button class="ql-underline">Underline</button>
-        <button class="ql-link">Link</button>
-
-        <select class="ql-size">
-          <option value="small"></option>
-          <option selected></option>
-          <option value="large"></option>
-          <option value="huge"></option>
-        </select>
-
-        <select class="ql-font">
-          <option selected="selected"></option>
-          <option value="serif"></option>
-          <option value="monospace"></option>
-        </select>
-
-        <button class="ql-image float-right">Image</button>
-      </div>
+    <quill-editor v-model="content" theme="snow">
     </quill-editor>
   </div>
 </template>
@@ -38,20 +17,44 @@ export default {
   components: {
     quillEditor,
   },
+  props: {
+    value: {
+      required: true
+    }
+  },
   data() {
     return {
-      editorOption: {
-        modules: {
-          toolbar: '#toolbar'
-        }
-      },
-      content: `...`,
+      content: this.value
     }
   },
   methods: {
     customButtonClick() {
       alert("Button clicked!");
     }
+  },
+  watch: {
+    content(newVal) {
+      this.$emit("input", newVal)
+    },
+    value(newVal) {
+      this.content = newVal
+    }
   }
 };
 </script>
+
+<style lang="scss">
+.custom-quill-editor {
+  position: absolute;
+  width: 100%;
+
+  .ql-container {
+    width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+    border: none !important;
+  }
+}
+
+
+</style>

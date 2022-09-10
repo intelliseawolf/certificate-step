@@ -20,15 +20,19 @@
     </div>
   </quill-editor> -->
   <div class="w-full h-full editor-wrapper">
-    <img class="editor-bg"
-      :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path" alt="1.png">
+    <img
+      class="editor-bg"
+      :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path"
+      alt="certificate-bg"
+    >
     <draggable v-for="(item, index) in content" :key="index" :data="item">
       <div :style="item.style" class="flex">
         <quill-editor v-if="activeIndex == index" size="small" class="inputx" placeholder="Size small"
           v-model="content[activeIndex].content" @keydown="(e) => changeContent(e)" />
-        <p v-else @dblclick="setActiveIndex(index)">{{ item.content }}</p>
+        <p v-else @dblclick="setActiveIndex(index)" v-html="item.content"></p>
       </div>
     </draggable>
+    <quill-editor v-model="mainContent" />
   </div>
 </template>
 
@@ -54,29 +58,30 @@ export default {
         }
       },
       content: [
-        {
-          type: 'static-text',
-          style: { 'align-items': 'center', 'text-align': 'center', fontSize: '14px', fontWeight: '500', width: '80px', height: '80px', background: '#DFE4EB', 'border-radius': '47px' },
-          content: 'School Logo',
-          x: 50,
-          y: 0
-        },
-        {
-          type: 'static-text',
-          style: { fontSize: '18px', fontWeight: 'bold' },
-          content: 'Congratulations!',
-          x: 250,
-          y: 0
-        },
-        {
-          type: 'static-text',
-          style: { fontSize: '14px', width: 'max-content' },
-          content: 'This is text number 1 if selected.',
-          x: 250,
-          y: 80
-        }
+        // {
+        //   type: 'static-text',
+        //   style: { 'align-items': 'center', 'text-align': 'center', fontSize: '14px', fontWeight: '500', width: '80px', height: '80px', background: '#DFE4EB', 'border-radius': '47px' },
+        //   content: '111',
+        //   x: 50,
+        //   y: 0
+        // },
+        // {
+        //   type: 'static-text',
+        //   style: { fontSize: '18px', fontWeight: 'bold' },
+        //   content: 'Congratulations!',
+        //   x: 250,
+        //   y: 0
+        // },
+        // {
+        //   type: 'static-text',
+        //   style: { fontSize: '14px', width: 'max-content' },
+        //   content: 'This is text number 1 if selected.',
+        //   x: 250,
+        //   y: 80
+        // }
       ],
       activeIndex: -1,
+      mainContent: ""
     }
   },
   components: {
@@ -101,13 +106,21 @@ export default {
       }
     },
     addDynamicText(id) {
-      this.content.push({
-        type: 'static-text',
-        style: { fontSize: '14px', width: 'max-content' },
-        content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'],
-        x: 100,
-        y: 100
-      })
+      // this.content.push({
+      //   type: 'static-text',
+      //   style: { fontSize: '14px', width: 'max-content' },
+      //   content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'],
+      //   x: 100,
+      //   y: 100
+      // })
+      this.mainContent = this.mainContent.concat('', `<p>${this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code']}</p>`)
+    }
+  },
+  watch: {
+    templateList(newVal) {
+      if (newVal && newVal.length) {
+        this.mainContent = newVal[this.template].content
+      }
     }
   }
 }
@@ -119,12 +132,14 @@ export default {
 
 .editor-wrapper {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .editor-bg {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 500px;
+  height: 300px;
 }
 
 .template-content {
@@ -142,7 +157,7 @@ export default {
 .ql-toolbar {
   position: absolute;
   background: white;
-  top: -50px;
+  top: -90px;
   width: 100%;
   border: none !important;
 }
