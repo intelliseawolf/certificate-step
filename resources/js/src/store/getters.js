@@ -35,6 +35,14 @@ const getters = {
 
   getDynamicTextList: state => {
     return state.dynamicTextList
+  },
+
+  getStudentList: state => {
+    return state.studentList
+  },
+
+  getTeacherList: state => {
+    return state.teacherList
   }
 }
 

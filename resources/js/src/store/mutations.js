@@ -124,6 +124,14 @@ const mutations = {
 
   GET_CETIFICATE_DYNAMIC_TEXTS(state, payload) {
     state.dynamicTextList = payload.data.certificate_dynamic_field
+  },
+
+  GET_STUDENTS_LIST(state, payload) {
+    state.studentList = payload.data.studentlist
+  },
+
+  GET_TEACHERS_LIST(state, payload) {
+    state.teacherList = payload.data.teacherlist
   }
 }
 

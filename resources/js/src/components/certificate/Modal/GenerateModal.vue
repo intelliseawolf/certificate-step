@@ -28,27 +28,16 @@
               <div>
                 <ul class="centerx">
                   <li class="mb-4">
-                    <vs-checkbox v-model="selectBox">Select All</vs-checkbox>
+                    <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
                   </li>
-                  <li class="flex mb-4">
-                    <vs-checkbox v-model="checkBox1"></vs-checkbox>
-                    <img class="rounded-circle" src="/images/avatar-s-1.jpg" alt="avatar1.jpg">
-                    <span class="ml-2 my-auto">John Smith</span>
-                  </li>
-                  <li class="flex mb-4">
-                    <vs-checkbox v-model="checkBox2"></vs-checkbox>
-                    <img class="rounded-circle" src="/images/avatar-s-15.jpg" alt="avatar1.jpg">
-                    <span class="ml-2 my-auto">Bernard</span>
-                  </li>
-                  <li class="flex mb-4">
-                    <vs-checkbox v-model="checkBox3"></vs-checkbox>
-                    <img class="rounded-circle" src="/images/avatar-s-18.jpg" alt="avatar1.jpg">
-                    <span class="ml-2 my-auto">Catherine</span>
-                  </li>
-                  <li class="flex mb-4">
-                    <vs-checkbox v-model="checkBox4"></vs-checkbox>
-                    <img class="rounded-circle" src="/images/avatar-s-8.jpg" alt="avatar1.jpg">
-                    <span class="ml-2 my-auto">Anna</span>
+                  <li v-for="item in studentList" :key="item.client_users.id" class="flex mb-4">
+                    <vs-checkbox :vs-value="item.client_users.id" v-model="student"></vs-checkbox>
+                    <img class="rounded-circle"
+                      :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
+                      alt="student avatar">
+                    <span class="ml-2 my-auto">
+                      {{ item.client_users.first_name + " " + item.client_users.last_name }}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -57,41 +46,15 @@
               <div>
                 <ul class="centerx">
                   <li class="mb-4">
-                    <vs-checkbox v-model="selectBox">Select All</vs-checkbox>
+                    <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
                   </li>
-                  <li class="flex mb-4">
-                    <vs-checkbox v-model="checkBox1"></vs-checkbox>
-                    <img class="rounded-circle" src="/images/avatar-s-1.jpg" alt="avatar1.jpg">
-                    <span class="ml-2 my-auto">John Smith</span>
-                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
-                    <!-- <img class="ml-auto" src="/images/staff_icon.png" width="27" height="24" alt="staff_icon"> -->
-                  </li>
-                  <li class="flex mb-4">
-                    <div class="flex">
-                      <vs-checkbox v-model="checkBox2"></vs-checkbox>
-                      <img class="rounded-circle" src="/images/avatar-s-15.jpg" alt="avatar1.jpg">
-                      <span class="ml-2 my-auto">Bernard</span>
-                    </div>
-                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      disabled />
-                  </li>
-                  <li class="flex mb-4">
-                    <div class="flex">
-                      <vs-checkbox v-model="checkBox3"></vs-checkbox>
-                      <img class="rounded-circle" src="/images/avatar-s-18.jpg" alt="avatar1.jpg">
-                      <span class="ml-2 my-auto">Catherine</span>
-                    </div>
-                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      disabled />
-                  </li>
-                  <li class="flex mb-4">
-                    <div class="flex">
-                      <vs-checkbox v-model="checkBox4"></vs-checkbox>
-                      <img class="rounded-circle" src="/images/avatar-s-8.jpg" alt="avatar1.jpg">
-                      <span class="ml-2 my-auto">Anna</span>
-                    </div>
-                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                      disabled />
+                  <li v-for="item in teacherList" :key="item.user.id" class="flex mb-4">
+                    <vs-checkbox :vs-value="item.user.id" v-model="stuff"></vs-checkbox>
+                    <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
+                      alt="teacher image">
+                    <span class="ml-2 my-auto">{{ item.user.first_name + " " + item.user.last_name }}</span>
+                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+                    <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
               </div>
@@ -143,11 +106,15 @@ export default {
       ],
       staff_list: { id: 1, label: 'Staff_Name 1' },
       selectBox: false,
-      checkBox1: false,
-      checkBox2: false,
-      checkBox3: false,
-      checkBox4: false,
+      student: [],
+      allStudent: false,
+      stuff: [],
+      allStuff: false,
     }
+  },
+  mounted() {
+    this.$store.dispatch("getStudents")
+    this.$store.dispatch("getTeachers")
   },
   components: {
     'v-select': vSelect,
@@ -156,7 +123,13 @@ export default {
   computed: {
     validName() {
       return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
-    }
+    },
+    studentList: function () {
+      return this.$store.getters['getStudentList']
+    },
+    teacherList: function () {
+      return this.$store.getters['getTeacherList']
+    },
   },
   methods: {
     handleShow() {
@@ -185,8 +158,24 @@ export default {
     },
     handlePreview() {
       this.$emit('preview')
+    },
+    selectAllStudent() {
+      this.student = []
+      if (this.allStudent) {
+        this.studentList.map((item) => {
+          this.student.push(item.client_users.id)
+        })
+      }
+    },
+    selectAllStuff() {
+      this.stuff = []
+      if (this.allStuff) {
+        this.teacherList.map((item) => {
+          this.stuff.push(item.user.id)
+        })
+      }
     }
-  }
+  },
 }
 </script>
 
@@ -226,5 +215,10 @@ export default {
   border-radius: 50%;
   width: 40px;
   height: 37px;
+}
+
+.centerx {
+  max-height: 230px;
+  overflow-y: auto;
 }
 </style>
