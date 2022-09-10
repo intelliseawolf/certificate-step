@@ -27,7 +27,7 @@
     >
     <draggable v-for="(item, index) in content" :key="index" :data="item">
       <div :style="item.style" class="flex">
-        <vs-input
+        <quill-editor
           v-if="activeIndex == index"
           size="small"
           class="inputx"
@@ -43,12 +43,7 @@
 
 
 <script>
-// require styles
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
-import { quillEditor } from 'vue-quill-editor'
+import QuillEditor from "./QuillEditor"
 import Draggable from './Draggable'
 
 export default {
@@ -95,7 +90,7 @@ export default {
     }
   },
   components: {
-    quillEditor,
+    QuillEditor,
     Draggable
   },
   computed: {
@@ -142,26 +137,9 @@ export default {
   height: 100%;
 }
 
-
-.ql-editor {
-  margin-top: 84px;
-  margin-left: 118px;
-  margin-bottom: 188px;
-  margin-right: 128px;
-  background-color: white;
-  height: 547px;
-}
-
-
-.ql-container {
-  border: none !important;
-}
-
-
 .template-content {
   align-items: center;
 }
-
 
 .certificate-editor {
   width: 840px !important;
@@ -171,8 +149,11 @@ export default {
   margin-left: 10;
 }
 
-
-#toolbar {
-  background-color: white;
+.ql-toolbar {
+  position: absolute;
+  background: white;
+  top: -50px;
+  width: 100%;
+  border: none !important;
 }
 </style>

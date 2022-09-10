@@ -133,6 +133,6 @@ export default {
   border-radius: 6px;
   margin-top: 7px;
   background: #F6F6F6;
-  padding: 50px 43px 50px 43px;
+  padding: 80px 43px 80px 43px;
 }
 </style>
