@@ -21,7 +21,7 @@
           <a href="/certificate/generate" class="ml-auto">Upload CSV</a>
         </div>
         <v-select v-model="classes_list" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
-        <!-- Student & Stuff Tabs -->
+        <!-- Student & Staff Tabs -->
         <div class="mt-1">
           <vs-tabs alignment="fixed">
             <vs-tab label="Student">
@@ -53,7 +53,7 @@
                 </ul>
               </div>
             </vs-tab>
-            <vs-tab label="Stuff">
+            <vs-tab label="Staff">
               <div>
                 <ul class="centerx">
                   <li class="mb-4">
@@ -63,8 +63,8 @@
                     <vs-checkbox v-model="checkBox1"></vs-checkbox>
                     <img class="rounded-circle" src="/images/avatar-s-1.jpg" alt="avatar1.jpg">
                     <span class="ml-2 my-auto">John Smith</span>
-                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
-                    <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
+                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+                    <!-- <img class="ml-auto" src="/images/staff_icon.png" width="27" height="24" alt="staff_icon"> -->
                   </li>
                   <li class="flex mb-4">
                     <div class="flex">
@@ -72,7 +72,7 @@
                       <img class="rounded-circle" src="/images/avatar-s-15.jpg" alt="avatar1.jpg">
                       <span class="ml-2 my-auto">Bernard</span>
                     </div>
-                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       disabled />
                   </li>
                   <li class="flex mb-4">
@@ -81,7 +81,7 @@
                       <img class="rounded-circle" src="/images/avatar-s-18.jpg" alt="avatar1.jpg">
                       <span class="ml-2 my-auto">Catherine</span>
                     </div>
-                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       disabled />
                   </li>
                   <li class="flex mb-4">
@@ -90,7 +90,7 @@
                       <img class="rounded-circle" src="/images/avatar-s-8.jpg" alt="avatar1.jpg">
                       <span class="ml-2 my-auto">Anna</span>
                     </div>
-                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                    <v-select class="ml-auto" v-model="staff_list" :options="staff" :dir="$vs.rtl ? 'rtl' : 'ltr'"
                       disabled />
                   </li>
                 </ul>
@@ -105,7 +105,7 @@
             <vs-button class="mr-2 primary" type="flat">Save</vs-button>
             <!-- <vs-button>Next</vs-button> -->
             <vs-button @click="handlePreview">Preview</vs-button>
-            <!-- <preview-modal /> -->
+            preview-modal /> -->
           </div>
         </div>
       </div>
@@ -136,12 +136,12 @@ export default {
         { id: 3, label: 'Class 3' },
       ],
       classes_list: { id: 1, label: 'Class 1' },
-      stuff: [
-        { id: 1, label: 'Stuff_Name 1' },
-        { id: 2, label: 'Stuff_Name 2' },
-        { id: 3, label: 'Stuff_Name 3' },
+      staff: [
+        { id: 1, label: 'Staff_Name 1' },
+        { id: 2, label: 'Staff_Name 2' },
+        { id: 3, label: 'Staff_Name 3' },
       ],
-      stuff_list: { id: 1, label: 'Stuff_Name 1' },
+      staff_list: { id: 1, label: 'Staff_Name 1' },
       selectBox: false,
       checkBox1: false,
       checkBox2: false,
@@ -150,7 +150,8 @@ export default {
     }
   },
   components: {
-    'v-select': vSelect, PreviewModal
+    'v-select': vSelect,
+    PreviewModal
   },
   computed: {
     validName() {
@@ -180,7 +181,7 @@ export default {
     },
     clearValMultiple() {
       this.valMultipe.value1 = ""
-      this.valMultipe.value2 = ""
+        .valMultipe.value2 = ""
     },
     handlePreview() {
       this.$emit('preview')

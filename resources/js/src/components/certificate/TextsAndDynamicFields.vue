@@ -71,10 +71,13 @@ export default {
       // AgGrid
       currentPage: 1,
       selected: -1,
-      activeDynamicTexts: []
+      activeDynamicTexts: [],
     }
   },
-  components: { Editor, Menubutton },
+  components: {
+    Editor,
+    Menubutton
+  },
 }
 </script>
 
