@@ -49,9 +49,17 @@ export default {
   width: 100%;
 
   .ql-container {
-    width: 500px;
+    width: 877px;
     margin-right: auto;
     margin-left: auto;
+    border: none !important;
+  }
+
+  .ql-toolbar {
+    position: absolute;
+    background: white;
+    top: -85px;
+    width: 100%;
     border: none !important;
   }
 }

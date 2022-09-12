@@ -7,44 +7,29 @@
     <div v-else>
       <div class="flex text-button" @click="handleDropDown">
         Static Texts
-        <i class="material-icons ml-auto" v-if="dropdown"> expand_more </i>
-        <i class="material-icons ml-auto" v-else> expand_less </i>
+        <i class="material-icons ml-auto" v-if="dropdown"> expand_less </i>
+        <i class="material-icons ml-auto" v-else> expand_more </i>
       </div>
       <ul class="dropdown-menu" v-if="dropdown">
-        <li class="dropdown-item relative">
+        <li
+          class="dropdown-item relative"
+          v-for="(text, index) in staticTextList"
+          :key="index"
+        >
           <vs-button type="border" class="demo-text-dark text-button" text-color="rgb(30,30,30)">
             <p class="truncate pr-5">
-              This is text number 1 selected
+              {{ text }}
             </p>
           </vs-button>
 
           <a class="absolute li-button">
-            <i class="material-icons ml-auto text-red"> delete </i>
+            <i class="material-icons ml-auto text-red" @click="removeStaticText(text)">
+              delete
+            </i>
           </a>
         </li>
-        <li class="dropdown-item relative">
-          <vs-button type="border" class="demo-text-dark text-button pr-16" text-color="rgb(30,30,30)">
-            <p class="truncate pr-5">
-              This is a very very long text This is a very very long text This is a very very long text
-            </p>
-          </vs-button>
 
-          <a class="absolute li-button">
-            <i class="material-icons ml-auto text-red"> delete </i>
-          </a>
-        </li>
-        <li class="dropdown-item relative">
-          <vs-button type="border" class="demo-text-dark text-button" text-color="rgb(30,30,30)">
-            This is text number 3
-          </vs-button>
-
-          <a class="absolute li-button">
-            <i class="material-icons ml-auto text-red"> delete </i>
-          </a>
-        </li>
-        <vs-button class="add-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle">
-          Add Text
-        </vs-button>
+        <static-text-modal @createStaticText="createStaticText" />
       </ul>
     </div>
     <div class="flex menu-button">
@@ -77,16 +62,23 @@
 <script>
 import { Drag, Drop } from "vue-easy-dnd"
 
+import StaticTextModal from "../Modal/StaticTextModal.vue"
+
 export default {
   components: {
     Drag,
-    Drop
+    Drop,
+    StaticTextModal,
   },
   props: {
     activeDynamicTexts: {
       type: Array
     },
     dynamicTextList: {
+      required: true
+    },
+    staticTextList: {
+      type: Array,
       required: true
     }
   },
@@ -96,6 +88,12 @@ export default {
     },
     setDynamicText(id) {
       this.$emit("setDynamicText", id);
+    },
+    createStaticText(text) {
+      this.$emit("createStaticText", text)
+    },
+    removeStaticText(text) {
+      this.$emit("removeStaticText", text)
     }
   },
   data() {

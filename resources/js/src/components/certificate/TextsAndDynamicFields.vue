@@ -5,11 +5,22 @@
       <p><b>Edit text and dynamic fields</b></p>
       <div class="flex">
         <div class="template-toolbar">
-          <Menubutton @setDynamicText="setDynamicText" :activeDynamicTexts="activeDynamicTexts"
-            :dynamicTextList="dynamicTextList" />
+          <Menubutton
+            @setDynamicText="setDynamicText"
+            @createStaticText="createStaticText"
+            @removeStaticText="removeStaticText"
+            :activeDynamicTexts="activeDynamicTexts"
+            :dynamicTextList="dynamicTextList"
+            :staticTextList="staticTextList"
+          />
         </div>
         <div class="template-edit-box">
-          <Editor :dynamicTextList="dynamicTextList" :template="template" ref="editor" />
+          <Editor
+            :dynamicTextList="dynamicTextList"
+            :template="template"
+            @changeMainContent="changeContent"
+            ref="editor"
+          />
         </div>
       </div>
 
@@ -55,12 +66,25 @@ export default {
     setDynamicText(id) {
       this.$refs.editor.addDynamicText(id)
       this.activeDynamicTexts.push(id)
+      this.$refs.editor.allowDraggable()
     },
     changeTab() {
       this.$emit('changeTab', 2)
     },
     goBack() {
       this.$emit('changeTab', 0)
+    },
+    changeContent(content) {
+      this.$emit("changeContent", content)
+    },
+    createStaticText(text) {
+      this.staticTextList.push(text);
+      this.$refs.editor.addStaticText(text)
+      this.$refs.editor.allowDraggable()
+    },
+    removeStaticText(text) {
+      this.staticTextList = this.staticTextList.filter((item) => item != text);
+      this.$refs.editor.removeStaticText(text)
     }
   },
   data() {
@@ -72,6 +96,7 @@ export default {
       currentPage: 1,
       selected: -1,
       activeDynamicTexts: [],
+      staticTextList: [],
     }
   },
   components: {
@@ -136,6 +161,6 @@ export default {
   border-radius: 6px;
   margin-top: 7px;
   background: #F6F6F6;
-  padding: 120px 43px;
+  padding: 150px 43px;
 }
 </style>

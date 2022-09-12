@@ -38,6 +38,7 @@ export default {
         // enable autoScroll
         autoScroll: true,
 
+        onstart: this.onDragStart,
         // call this function on every dragmove event
         onmove: this.dragMoveListener,
         // call this function on every dragend event
@@ -66,10 +67,14 @@ export default {
       target.setAttribute('data-x', x)
       target.setAttribute('data-y', y)
     },
+    onDragStart() {
+      this.$emit('startDrag')
+    },
     onDragEnd(event) {
       const target = event.target
       this.screenX = target.getBoundingClientRect().left
       this.screenY = target.getBoundingClientRect().top
+      this.$emit('endDrag')
     }
   }
 }

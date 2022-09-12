@@ -5,8 +5,12 @@
       <p><b>Preview</b></p>
       <div class="preview-section mt-5">
         <div class="flex template-pos">
-          <img src="https://scoolio-files.s3.ap-south-1.amazonaws.com/platform_certificate_images/certificate3.jpg"
-            width="628" height="440" alt="">
+          <img
+            :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path"
+            width="500"
+            height="300"
+            alt=""
+          >
         </div>
       </div>
       <!-- Next Button -->
@@ -15,7 +19,7 @@
           <div class="mt-8 flex flex-wrap items-center justify-end">
             <vs-button class="mr-auto mt-2 dark" type="flat" @click="changeTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
-              <save-modal />
+              <save-modal @saveCertificate="saveCertificate" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
                 @cancel="changeModal(null)" />
@@ -36,6 +40,8 @@ import GenerateModal from './Modal/GenerateModal.vue'
 import PreviewModal from './Modal/PreviewModal.vue'
 import SendModal from './Modal/SendModal.vue'
 
+import axios from '../../axios'
+
 export default {
   components: {
     SaveModal,
@@ -43,10 +49,24 @@ export default {
     PreviewModal,
     SendModal
   },
+  props: {
+    template: {
+      required: true
+    },
+    content: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       modal: null
     }
+  },
+  computed: {
+    templateList: function () {
+      return this.$store.getters['getTemplateList']
+    },
   },
   methods: {
     changeModal(name) {
@@ -54,6 +74,15 @@ export default {
     },
     changeTab() {
       this.$emit('changeTab', 1)
+    },
+    saveCertificate({title, description}) {
+      axios.post('/certificate/template/create/184', {
+        title,
+        description,
+        content: this.content,
+        certificate_image_id: this.templateList[this.template].certificate_image_details.certificate_image_id,
+        type: 0
+      })
     }
   }
 }
