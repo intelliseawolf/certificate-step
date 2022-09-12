@@ -5,7 +5,7 @@
       <vs-button class="ml-auto mr-5 primary" type="flat">Edit</vs-button>
       <vs-button class="ml-auto primary" type="flat">Download Certificates</vs-button>
       <div class="con-exemple-prompt">
-        <div class="preview-section mt-5">
+        <div class="modal-preview-section mt-5">
           <div class="flex template-pos">
             <img src="https://scoolio-files.s3.ap-south-1.amazonaws.com/platform_certificate_images/certificate3.jpg"
               width="478" height="334" alt="">
@@ -79,7 +79,7 @@ export default {
   max-width: 720px !important;
 }
 
-.preview-section {
+.modal-preview-section {
   width: 100%;
   height: 454px;
   background-color: #F6F6F6;

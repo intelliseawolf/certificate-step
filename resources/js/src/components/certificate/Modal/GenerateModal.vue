@@ -53,7 +53,7 @@
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
                     <span class="ml-2 my-auto">{{ item.user.first_name + " " + item.user.last_name }}</span>
-                    <v-select class="ml-auto" v-model="stuff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+                    <v-select class="ml-auto" v-model="staff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
