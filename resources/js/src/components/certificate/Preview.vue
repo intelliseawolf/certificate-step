@@ -3,7 +3,7 @@
     <!-- Header -->
     <div>
       <p><b>Preview</b></p>
-      <div class="preview-section mt-5">
+      <div class="third-preview-section mt-5">
         <div class="flex template-pos">
           <img src="https://scoolio-files.s3.ap-south-1.amazonaws.com/platform_certificate_images/certificate3.jpg"
             width="628" height="440" alt="">
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style>
-.preview-section {
+.third-preview-section {
   width: 100%;
   height: 550px;
   background-color: #F6F6F6;

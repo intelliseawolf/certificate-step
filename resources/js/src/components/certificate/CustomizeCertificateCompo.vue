@@ -5,7 +5,7 @@
       <p><b>Choose a template or upload your own certificate to start</b></p>
       <div class="flex mt-5">
         <!-- Orientation -->
-        <div class="mr-3">
+        <div class="mr-10">
           <p>Orientation</p>
           <div class="flex">
             <div class="mr-2">
@@ -18,6 +18,18 @@
         </div>
         <!-- Size -->
         <div>
+          <p>Size</p>
+          <div class="flex">
+            <div class="mr-2">
+              <vs-radio v-model="size" vs-value="size-a4" @change="changesize(877, 620)">A4</vs-radio>
+            </div>
+            <div class="m">
+              <vs-radio v-model="size" vs-value="size-legal" @change="changesize(1071,650)">Legal</vs-radio>
+            </div>
+          </div>
+        </div>
+        <!-- Size -->
+        <!-- <div>
           <span>Size</span>
           <div class="flex">
             <div class="items-center flex mt-2 mr-4">
@@ -29,25 +41,28 @@
               <vs-input class="text-right" type="number" v-model="height" />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- Preview -->
     <div class="my-5">
-      <p><b>Preview</b></p>
+      <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img :width="width" :height="height"
+          <img :width="height" :height="width"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-if="orientation === 'landscape'">
-          <img :width="height" :height="width"
+          <img :width="width" :height="height"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-else>
         </div>
         <div class="template-placeholder">
-          <p v-html="templateList[selectedTemplate].title"></p>
-          <p v-html="templateList[selectedTemplate].description"></p>
-          <p v-html="templateList[selectedTemplate].content"></p>
+          <p v-html="templateList[selectedTemplate].title"
+            v-if="templateList[selectedTemplate] && templateList[selectedTemplate].title !== null"></p>
+          <p v-html="templateList[selectedTemplate].description"
+            v-if="templateList[selectedTemplate] && templateList[selectedTemplate].description !== null"></p>
+          <p v-html="templateList[selectedTemplate].content"
+            v-if="templateList[selectedTemplate] && templateList[selectedTemplate].content !== null"></p>
         </div>
       </div>
     </div>
@@ -55,9 +70,9 @@
     <div class="my-5">
       <p><b>Templates</b></p>
       <div class="flex flex-wrap">
-        <div class="flex flex-wrap">
+        <div class="templates-section mx-2">
           <!-- Upload -->
-          <div class="mt-5 mx-2">
+          <div class="mt-5 mr-2">
             <vs-upload action="https://jsonplaceholder.typicode.com/posts/" text="" accept="image/*">
             </vs-upload>
           </div>
@@ -66,6 +81,11 @@
             v-for="(template, index) in templateList" :key="template.title" @click="selectTemplate(index)">
             <img :src="template.certificate_image_details.file.file_path" width="240" height="144"
               class="template-img" />
+            <div class="template-placeholder">
+              <p v-html="template.title" v-if="template && template.title !== null"></p>
+              <p v-html="template.description" v-if="template && template.description !== null"></p>
+              <p v-html="template.content" v-if="template && template.content !== null"></p>
+            </div>
           </div>
         </div>
         <div class="mt-3 w-1/2" v-if="templateListMetaData && templateListMetaData.total">
@@ -115,13 +135,18 @@ export default {
     },
     changeTab() {
       this.$emit("changeTab", 1)
+    },
+    changesize(w, h) {
+      this.width = w
+      this.height = h
     }
   },
   data() {
     return {
       orientation: 'landscape',
-      width: 800,
-      height: 500,
+      size: 'size-a4',
+      width: 877,
+      height: 620,
       // AgGrid
       currentPage: 1,
       template: [],
@@ -133,6 +158,7 @@ export default {
 
 <style>
 .template-box {
+  position: relative;
   width: 242px;
   height: 146px;
   border: 1px solid gray;
@@ -153,6 +179,12 @@ export default {
   height: 100%;
 }
 
+.templates-section {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%
+}
+
 .template-pos {
   height: 100%;
   align-items: center;
@@ -162,18 +194,33 @@ export default {
 
 .template-placeholder {
   position: absolute;
-  left: 50%;
-  top: 30%;
+  width: 100%;
+  top: 10%;
+  text-align: center !important;
 }
 
 .con-input-upload,
 .img-upload {
   width: 240px !important;
   height: 144px !important;
-  margin: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  margin-left: 0px !important;
+  margin-right: 1px !important;
+}
+
+.con-input-upload {
+  order: -1;
+}
+
+.img-upload {
+  margin-left: 1px !important;
+  margin-right: 1px !important;
 }
 
 .con-img-upload {
+  display: flex !important;
+  flex-wrap: wrap;
   padding: 0px !important;
   margin-top: 0px !important;
 }

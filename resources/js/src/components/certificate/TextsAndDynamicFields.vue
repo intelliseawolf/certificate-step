@@ -82,12 +82,6 @@ export default {
 </script>
 
 <style>
-.preview-section {
-  background-color: #F6F6F6;
-  width: 100%;
-  height: 504px;
-}
-
 .template-box {
   width: 242px;
   height: 146px;
