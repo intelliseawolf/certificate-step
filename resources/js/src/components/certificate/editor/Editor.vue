@@ -36,6 +36,8 @@
         v-model="dragOption.color"
         @input="changeColor"
       />
+      <i class="material-icons ml-3" @click="toggleUnderline"> format_underline </i>
+      <i class="material-icons ml-3" @click="toggleBold"> format_bold </i>
     </div>
     <img
       class="editor-bg"
@@ -212,6 +214,24 @@ export default {
     changeColor() {
       if (this.activeDragIndex != -1) {
         this.content[this.activeDragIndex].style.color = this.dragOption.color
+      }
+    },
+    toggleUnderline() {
+      if (this.activeDragIndex != -1) {
+        const value = this.content[this.activeDragIndex].style.textDecoration
+        this.content[this.activeDragIndex].style = {
+          ...this.content[this.activeDragIndex].style,
+          textDecoration: value && value == 'underline' ? 'unset' : 'underline'
+        }
+      }
+    },
+    toggleBold() {
+      if (this.activeDragIndex != -1) {
+        const value = this.content[this.activeDragIndex].style.fontWeight
+        this.content[this.activeDragIndex].style = {
+          ...this.content[this.activeDragIndex].style,
+          fontWeight: value && value == 'bold' ? 'normal' : 'bold'
+        }
       }
     }
   },
