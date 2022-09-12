@@ -7,7 +7,7 @@
       <h3 class="text-center mb-4">Save Certificate Template</h3>
       <div class="con-exemple-prompt">
         <span class="mb-1">Certificate Name</span>
-        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="val"
+        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="form.title"
           class="w-full mb-3" />
         <!-- <slot></slot> -->
         <vs-button class="menu-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle"
@@ -15,7 +15,7 @@
           Add Description
         </vs-button>
         <span class="mb-1" v-if="showDescription">Description</span>
-        <vs-textarea v-model="textarea" v-if="showDescription" placeholder="Lorem Ipsum" height="115px" />
+        <vs-textarea v-model="form.description" v-if="showDescription" placeholder="Lorem Ipsum" rows="4" />
 
         <div class="flex">
           <vs-button class="ml-auto primary" type="flat" @click="changeModal('generate')">Generate Certificate Now
@@ -25,7 +25,7 @@
           <send-modal :activePrompt="modal === 'send'" />
         </div>
         <div class="flex mt-3">
-          <vs-button class="ml-auto">Save Certificate</vs-button>
+          <vs-button class="ml-auto" @click="saveCertificate">Save Certificate</vs-button>
         </div>
       </div>
     </vs-prompt>
@@ -44,17 +44,10 @@ export default {
       modal: null,
       showDescription: false,
       activePrompt: false,
-      val: '',
-      valMultipe: {
-        value1: '',
-        value2: ''
+      form: {
+        title: "",
+        description: ""
       },
-      textarea: '',
-    }
-  },
-  computed: {
-    validName() {
-      return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
     }
   },
   methods: {
@@ -71,13 +64,12 @@ export default {
         text: 'Lorem ipsum dolor sit amet, consectetur'
       })
     },
-    clearValMultiple() {
-      this.valMultipe.value1 = ""
-      this.valMultipe.value2 = ""
-    },
     close() {
       this.showDescription = false
       this.textarea = ''
+    },
+    saveCertificate() {
+      this.$emit("saveCertificate", this.form)
     }
   }
 }
