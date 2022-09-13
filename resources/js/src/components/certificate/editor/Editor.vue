@@ -20,7 +20,7 @@
     </div>
   </quill-editor> -->
   <div class="editor-wrapper">
-    <vs-switch v-model="canEditable">
+    <vs-switch v-model="canEditable" style="width: 60px;">
       <span slot="on">Editor</span>
       <span slot="off">Drag</span>
     </vs-switch>
