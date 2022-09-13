@@ -49,21 +49,27 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img :width="height" :height="width"
+          <!-- <img :width="width" :height="height"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-if="orientation === 'landscape'">
-          <img :width="width" :height="height"
+          <img :width="height" :height="width"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
+            alt="1.png" v-else> -->
+          <img :width="width" :height="height"
+            :src="`/certificate_templates_svg_files/Certificates_Landscape/${selectedTemplateIndex ? selectedTemplateIndex : 2}.svg`"
+            alt="1.png" v-if="orientation === 'landscape'">
+          <img :width="height" :height="width"
+            :src="`/certificate_templates_svg_files/Certificates_Landscape/${selectedTemplateIndex ? selectedTemplateIndex : 2}.svg`"
             alt="1.png" v-else>
         </div>
-        <div class="template-placeholder">
+        <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
             v-if="templateList[selectedTemplate] && templateList[selectedTemplate].title !== null"></p>
           <p v-html="templateList[selectedTemplate].description"
             v-if="templateList[selectedTemplate] && templateList[selectedTemplate].description !== null"></p>
           <p v-html="templateList[selectedTemplate].content"
             v-if="templateList[selectedTemplate] && templateList[selectedTemplate].content !== null"></p>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- Templates -->
@@ -76,7 +82,7 @@
             <vs-upload action="https://jsonplaceholder.typicode.com/posts/" text="" accept="image/*">
             </vs-upload>
           </div>
-          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+          <!-- <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
             v-if="(index >= (currentPage - 1) * 5) && (index < currentPage * 5)"
             v-for="(template, index) in templateList" :key="template.title" @click="selectTemplate(index)">
             <img :src="template.certificate_image_details.file.file_path" width="240" height="144"
@@ -86,11 +92,16 @@
               <p v-html="template.description" v-if="template && template.description !== null"></p>
               <p v-html="template.content" v-if="template && template.content !== null"></p>
             </div>
+          </div> -->
+          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+            v-if="(index > (currentPage - 1) * 8) && (index <= currentPage * 8) && index % 2 === 0" v-for="index in 40"
+            :key="index" @click="selectTemplate(index)">
+            <img :src="`/certificate_templates_svg_files/Certificates_Landscape/${index}.svg`" width="240" height="144"
+              class="template-img" />
           </div>
         </div>
-        <div class="mt-3 w-1/2" v-if="templateListMetaData && templateListMetaData.total">
-          <vs-pagination :length="totalPages" circle v-model="currentPage" not-margin :dotted-number="10"
-            color="success" :total="templateListMetaData.total" />
+        <div class="mt-3 w-1/2">
+          <vs-pagination circle v-model="currentPage" not-margin color="success" :total="5" />
         </div>
       </div>
     </div>
@@ -120,7 +131,7 @@ export default {
       return this.$store.getters['templateListMetaData']
     },
     totalPages: function () {
-      return Math.ceil(this.templateList / 5)
+      return Math.ceil(40 / 5)
     }
   },
   mounted() {
@@ -132,6 +143,7 @@ export default {
   methods: {
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
+      this.selectedTemplateIndex = index
     },
     changeTab() {
       this.$emit("changeTab", 1)
@@ -150,7 +162,8 @@ export default {
       // AgGrid
       currentPage: 1,
       template: [],
-      content: "<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>{client_name}</p>\n<p>You have successfully passed the {class_name} under guidance of {class_teacher_name}</p>\n<p>for {class_term_name} for session {class_start_date} - {class_end_date}</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {created_by}</p>\n<p>&nbsp;</p>"
+      content: "",
+      selectedTemplateIndex: 2
     }
   }
 }
