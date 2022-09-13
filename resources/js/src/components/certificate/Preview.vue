@@ -13,7 +13,7 @@
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
-            <vs-button class="mr-auto mt-2 dark" type="flat" @click="changeTab">Back</vs-button>
+            <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
               <save-modal @saveCertificate="saveCertificate" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
@@ -68,8 +68,8 @@ export default {
     changeModal(name) {
       this.modal = name
     },
-    changeTab() {
-      this.$emit('changeTab', 1)
+    prevTab() {
+      this.$emit('prevTab')
     },
     saveCertificate({ title, description }) {
       axios.post('/certificate/template/create/184', {

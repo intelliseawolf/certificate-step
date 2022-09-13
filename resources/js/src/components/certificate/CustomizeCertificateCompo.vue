@@ -109,7 +109,7 @@
     <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
-          <vs-button class="ml-auto mt-2" @click="changeTab">Next</vs-button>
+          <vs-button class="ml-auto mt-2" @click="nextTab">Next</vs-button>
         </div>
       </div>
     </div>
@@ -145,8 +145,8 @@ export default {
       this.$emit("changeTemplate", index)
       this.selectedTemplateIndex = index
     },
-    changeTab() {
-      this.$emit("changeTab", 1)
+    nextTab() {
+      this.$emit("nextTab")
     },
     changesize(w, h) {
       this.width = w

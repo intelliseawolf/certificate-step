@@ -36,21 +36,38 @@
 		<h4>Home / Certificate</h4>
 		<vx-card class="my-5">
 			<div class="tabs-container pt-6">
-				<form-wizard class="steps-transparent" color="rgba(var(--vs-primary), 1)" :title="null" :subtitle="null"
-					finishButtonText="Submit" @on-complete="formSubmitted">
+				<form-wizard
+					ref="formWizard"
+					class="steps-transparent"
+					color="rgba(var(--vs-primary), 1)"
+					:title="null"
+					:subtitle="null"
+					finishButtonText="Submit"
+					@on-complete="formSubmitted"
+				>
 					<tab-content title="1. Customize Certificate" icon="feather icon-home">
-						<customize-certificate-compo :selectedTemplate="template" @changeTemplate="changeTemplate"
-							@changeTab="changeTab" />
+						<customize-certificate-compo
+							:selectedTemplate="template"
+							@changeTemplate="changeTemplate"
+							@nextTab="nextTab"
+						/>
 					</tab-content>
 
 					<!-- tab 2 content -->
 					<tab-content title="2. Texts & Dynamic Fields" icon="feather icon-briefcase">
-						<texts-and-dynamic-fields :template="template" @changeTab="changeTab" />
+						<texts-and-dynamic-fields
+							:template="template"
+							@nextTab="nextTab"
+							@prevTab="prevTab"
+						/>
 					</tab-content>
 
 					<!-- tab 3 content -->
 					<tab-content title="3. Preview" icon="feather icon-image">
-						<Preview :template="template" @changeTab="changeTab" />
+						<Preview
+							:template="template"
+							@prevTab="prevTab"
+						/>
 					</tab-content>
 				</form-wizard>
 			</div>
@@ -78,7 +95,6 @@ export default {
 	},
 	data() {
 		return {
-			activeTab: 0,
 			template: -1,
 			content: ""
 		}
@@ -90,8 +106,11 @@ export default {
 		changeTemplate(index) {
 			this.template = index
 		},
-		changeTab(tab) {
-			this.activeTab = tab
+		nextTab() {
+			this.$refs.formWizard.nextTab()
+		},
+		prevTab() {
+			this.$refs.formWizard.prevTab()
 		},
 		changeContent(content) {
 			this.content = content

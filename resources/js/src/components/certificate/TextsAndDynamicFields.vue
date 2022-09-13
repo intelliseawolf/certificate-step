@@ -28,8 +28,8 @@
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
-            <vs-button class="mr-auto mt-2 dark" type="flat" @click="goBack">Back</vs-button>
-            <vs-button class="ml-auto mt-2" @click="changeTab">Preview</vs-button>
+            <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
+            <vs-button class="ml-auto mt-2" @click="nextTab">Preview</vs-button>
           </div>
         </div>
       </div>
@@ -68,11 +68,11 @@ export default {
       this.activeDynamicTexts.push(id)
       this.$refs.editor.allowDraggable()
     },
-    changeTab() {
-      this.$emit('changeTab', 2)
+    nextTab() {
+      this.$emit('nextTab')
     },
-    goBack() {
-      this.$emit('changeTab', 0)
+    prevTab() {
+      this.$emit('prevTab')
     },
     changeContent(content) {
       this.$emit("changeContent", content)
