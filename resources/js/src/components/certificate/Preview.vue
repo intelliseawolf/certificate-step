@@ -5,15 +5,23 @@
       <p><b>Preview</b></p>
       <div class="third-preview-section mt-5">
         <div class="flex template-pos">
-          <img :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path"
-            width="500" height="300" alt="">
+          <TemplateSection
+            :style="{
+              width: `${width}px`,
+              height: `${height}px`
+            }"
+            :width="width"
+            :height="height"
+            :template="templateList[template]"
+            :content="content"
+          />
         </div>
       </div>
       <!-- Next Button -->
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
-            <vs-button class="mr-auto mt-2 dark" type="flat" @click="changeTab">Back</vs-button>
+            <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
               <save-modal @saveCertificate="saveCertificate" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
@@ -35,6 +43,7 @@ import SaveModal from './Modal/SaveModal.vue'
 import GenerateModal from './Modal/GenerateModal.vue'
 import PreviewModal from './Modal/PreviewModal.vue'
 import SendModal from './Modal/SendModal.vue'
+import TemplateSection from "./editor/TemplateSection.vue"
 
 import axios from '../../axios'
 
@@ -43,16 +52,25 @@ export default {
     SaveModal,
     GenerateModal,
     PreviewModal,
-    SendModal
+    SendModal,
+    TemplateSection
   },
   props: {
     template: {
       required: true
     },
-    // content: {
-    //   type: String,
-    //   required: true
-    // }
+    content: {
+      type: Array,
+      required: true
+    },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    }
   },
   data() {
     return {
@@ -68,14 +86,14 @@ export default {
     changeModal(name) {
       this.modal = name
     },
-    changeTab() {
-      this.$emit('changeTab', 1)
+    prevTab() {
+      this.$emit('prevTab')
     },
     saveCertificate({ title, description }) {
       axios.post('/certificate/template/create/184', {
         title,
         description,
-        // content: this.content,
+        content: JSON.stringify(this.content),
         certificate_image_id: this.templateList[this.template].certificate_image_details.certificate_image_id,
         type: 0
       })
@@ -85,16 +103,10 @@ export default {
 </script>
 
 <style>
+
 .third-preview-section {
   width: 100%;
-  height: 550px;
   background-color: #F6F6F6;
-}
-
-.drop {
-  width: 400px;
-  height: 100px;
-  background-color: white;
 }
 
 .template-pos {

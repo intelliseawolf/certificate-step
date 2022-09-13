@@ -21,10 +21,10 @@
           <p>Size</p>
           <div class="flex">
             <div class="mr-2">
-              <vs-radio v-model="size" vs-value="size-a4" @change="changesize(877, 620)">A4</vs-radio>
+              <vs-radio v-model="size" vs-value="size-a4" @change="changeSize(877, 620)">A4</vs-radio>
             </div>
             <div class="m">
-              <vs-radio v-model="size" vs-value="size-legal" @change="changesize(1071,650)">Legal</vs-radio>
+              <vs-radio v-model="size" vs-value="size-legal" @change="changeSize(1071,650)">Legal</vs-radio>
             </div>
           </div>
         </div>
@@ -35,12 +35,12 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img :width="width" :height="height"
+          <img
+            :width="width"
+            :height="height"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png" v-if="orientation === 'landscape'">
-          <img :width="height" :height="width"
-            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png" v-else>
+            alt="1.png"
+          >
         </div>
         <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
@@ -84,7 +84,7 @@
     <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
-          <vs-button class="ml-auto mt-2" @click="changeTab">Next</vs-button>
+          <vs-button class="ml-auto mt-2" @click="nextTab">Next</vs-button>
         </div>
       </div>
     </div>
@@ -95,6 +95,14 @@
 export default {
   props: {
     selectedTemplate: {
+      required: true
+    },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
       required: true
     },
   },
@@ -119,24 +127,39 @@ export default {
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
     },
-    changeTab() {
-      this.$emit("changeTab", 1)
+    nextTab() {
+      this.$emit("nextTab")
     },
-    changesize(w, h) {
-      this.width = w
-      this.height = h
+    changeSize(w, h) {
+      if (this.orientation == 'landscape') {
+        this.$emit("changeImageSize", {
+          width: w,
+          height: h
+        })
+      } else {
+        this.$emit("changeImageSize", {
+          width: h,
+          height: w
+        })
+      }
     }
   },
   data() {
     return {
       orientation: 'landscape',
       size: 'size-a4',
-      width: 877,
-      height: 620,
       // AgGrid
       currentPage: 1,
       template: [],
       content: ""
+    }
+  },
+  watch: {
+    orientation() {
+      this.$emit("changeImageSize", {
+        width: this.height,
+        height: this.width
+      })
     }
   }
 }
