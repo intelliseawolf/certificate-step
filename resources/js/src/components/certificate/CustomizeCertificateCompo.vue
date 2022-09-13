@@ -28,20 +28,6 @@
             </div>
           </div>
         </div>
-        <!-- Size -->
-        <!-- <div>
-          <span>Size</span>
-          <div class="flex">
-            <div class="items-center flex mt-2 mr-4">
-              <label class="mr-3" for="width">W </label>
-              <vs-input class="text-right" type="number" v-model="width" />
-            </div>
-            <div class="items-center flex mt-2">
-              <label class="mr-3" for="height">H </label>
-              <vs-input class="text-right" type="number" v-model="height" />
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
     <!-- Preview -->
@@ -49,17 +35,11 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <!-- <img :width="width" :height="height"
-            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png" v-if="orientation === 'landscape'">
-          <img :width="height" :height="width"
-            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png" v-else> -->
           <img :width="width" :height="height"
-            :src="`/certificate_templates_svg_files/Certificates_Landscape/${selectedTemplateIndex ? selectedTemplateIndex : 2}.svg`"
+            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-if="orientation === 'landscape'">
           <img :width="height" :height="width"
-            :src="`/certificate_templates_svg_files/Certificates_Landscape/${selectedTemplateIndex ? selectedTemplateIndex : 2}.svg`"
+            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
             alt="1.png" v-else>
         </div>
         <!-- <div class="template-placeholder">
@@ -82,26 +62,21 @@
             <vs-upload action="https://jsonplaceholder.typicode.com/posts/" text="" accept="image/*">
             </vs-upload>
           </div>
-          <!-- <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
             v-if="(index >= (currentPage - 1) * 5) && (index < currentPage * 5)"
             v-for="(template, index) in templateList" :key="template.title" @click="selectTemplate(index)">
             <img :src="template.certificate_image_details.file.file_path" width="240" height="144"
               class="template-img" />
-            <div class="template-placeholder">
+            <!-- <div class="template-placeholder">
               <p v-html="template.title" v-if="template && template.title !== null"></p>
               <p v-html="template.description" v-if="template && template.description !== null"></p>
               <p v-html="template.content" v-if="template && template.content !== null"></p>
-            </div>
-          </div> -->
-          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-if="(index > (currentPage - 1) * 8) && (index <= currentPage * 8) && index % 2 === 0" v-for="index in 40"
-            :key="index" @click="selectTemplate(index)">
-            <img :src="`/certificate_templates_svg_files/Certificates_Landscape/${index}.svg`" width="240" height="144"
-              class="template-img" />
+            </div> -->
           </div>
         </div>
-        <div class="mt-3 w-1/2">
-          <vs-pagination circle v-model="currentPage" not-margin color="success" :total="5" />
+        <div class="mt-3 w-1/2" v-if="templateListMetaData && templateListMetaData.total">
+          <vs-pagination :length="totalPages" circle v-model="currentPage" not-margin :dotted-number="10"
+            color="success" :total="templateListMetaData.total" />
         </div>
       </div>
     </div>
@@ -131,7 +106,7 @@ export default {
       return this.$store.getters['templateListMetaData']
     },
     totalPages: function () {
-      return Math.ceil(40 / 5)
+      return Math.ceil(this.templateList / 5)
     }
   },
   mounted() {
@@ -143,7 +118,6 @@ export default {
   methods: {
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
-      this.selectedTemplateIndex = index
     },
     nextTab() {
       this.$emit("nextTab")
@@ -162,8 +136,7 @@ export default {
       // AgGrid
       currentPage: 1,
       template: [],
-      content: "",
-      selectedTemplateIndex: 2
+      content: ""
     }
   }
 }
