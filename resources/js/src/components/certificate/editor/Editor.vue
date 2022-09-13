@@ -19,12 +19,18 @@
       <button style="width:auto" @click="customButtonClick">Click here</button>
     </div>
   </quill-editor> -->
-  <div class="editor-wrapper">
-    <vs-switch v-model="canEditable" style="width: 60px;">
+  <div
+    class="editor-wrapper"
+    :style="{
+      width: `${width}px`,
+      height: `${height}px`
+    }"
+  >
+    <!-- <vs-switch v-model="canEditable" style="width: 60px;">
       <span slot="on">Editor</span>
       <span slot="off">Drag</span>
-    </vs-switch>
-    <div class="drag-toolbar" v-if="!canEditable">
+    </vs-switch> -->
+    <div class="drag-toolbar">
       <v-select
         class="mr-3"
         v-model="dragOption.fontSize"
@@ -49,6 +55,7 @@
       :key="index"
       :data="item"
       @endDrag="endDrag"
+      @onDragMove="(val) => onDragMove(index, val)"
     >
       <div
         :style="item.style"
@@ -68,12 +75,12 @@
         <p v-else @dblclick="setActiveIndex(index)" v-html="item.content"></p>
       </div>
     </draggable>
-    <quill-editor
+    <!-- <quill-editor
       v-if="canEditable"
       v-model="mainContent"
       @dblclick="toggleDraggable"
-    />
-    <div v-else class="editor-static-text" v-html="mainContent"></div>
+    /> -->
+    <!-- <div class="editor-static-text" v-html="mainContent"></div> -->
   </div>
 </template>
 
@@ -94,6 +101,14 @@ export default {
     },
     staticTextList: {
       type: Array,
+    },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -103,15 +118,7 @@ export default {
           toolbar: '#toolbar'
         }
       },
-      content: [
-        // {
-        //   type: 'static-text',
-        //   style: { fontSize: '14px', width: 'max-content' },
-        //   content: 'This is text number 1 if selected.',
-        //   x: 250,
-        //   y: 80
-        // }
-      ],
+      content: [],
       staticTextContent: [],
       activeIndex: -1,
       mainContent: "",
@@ -233,6 +240,10 @@ export default {
           fontWeight: value && value == 'bold' ? 'normal' : 'bold'
         }
       }
+    },
+    onDragMove(index, {x, y}) {
+      this.content[index].x = x;
+      this.content[index].y = y;
     }
   },
   watch: {
@@ -257,8 +268,6 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
-  width: 877px;
-  height: 620px;
   margin-right: auto;
   margin-left: auto;
 }

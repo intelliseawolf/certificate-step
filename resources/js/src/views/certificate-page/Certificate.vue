@@ -44,19 +44,26 @@
 					:subtitle="null"
 					finishButtonText="Submit"
 					@on-complete="formSubmitted"
+					@on-change="handleChanageTab"
 				>
 					<tab-content title="1. Customize Certificate" icon="feather icon-home">
 						<customize-certificate-compo
 							:selectedTemplate="template"
+							:width="width"
+							:height="height"
 							@changeTemplate="changeTemplate"
 							@nextTab="nextTab"
+							@changeImageSize="changeImageSize"
 						/>
 					</tab-content>
 
 					<!-- tab 2 content -->
 					<tab-content title="2. Texts & Dynamic Fields" icon="feather icon-briefcase">
 						<texts-and-dynamic-fields
+							ref="textField"
 							:template="template"
+							:width="width"
+							:height="height"
 							@nextTab="nextTab"
 							@prevTab="prevTab"
 						/>
@@ -66,6 +73,9 @@
 					<tab-content title="3. Preview" icon="feather icon-image">
 						<Preview
 							:template="template"
+							:width="width"
+							:height="height"
+							:content="content"
 							@prevTab="prevTab"
 						/>
 					</tab-content>
@@ -96,7 +106,9 @@ export default {
 	data() {
 		return {
 			template: -1,
-			content: ""
+			content: [],
+      width: 877,
+      height: 620,
 		}
 	},
 	methods: {
@@ -112,8 +124,14 @@ export default {
 		prevTab() {
 			this.$refs.formWizard.prevTab()
 		},
-		changeContent(content) {
-			this.content = content
+		handleChanageTab(prevIndex, nextIndex) {
+			if (prevIndex == 1 && nextIndex == 2) {
+				this.content = this.$refs.textField.getEditorContent()
+			}
+		},
+		changeImageSize({width, height}) {
+			this.width = width;
+			this.height = height;
 		}
 	}
 }

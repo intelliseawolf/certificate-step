@@ -57,6 +57,7 @@ export default {
           event.dy
 
       this.translate(target, x, y)
+      this.$emit('onDragMove', {x, y})
     },
     translate(target, x, y) {
       // translate the element
@@ -84,5 +85,7 @@ export default {
 <style scoped>
 .draggable {
   position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

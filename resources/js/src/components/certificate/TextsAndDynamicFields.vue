@@ -18,6 +18,8 @@
           <Editor
             :dynamicTextList="dynamicTextList"
             :template="template"
+            :width="width"
+            :height="height"
             @changeMainContent="changeContent"
             ref="editor"
           />
@@ -46,6 +48,14 @@ export default {
     template: {
       required: true
     },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    }
   },
   mounted() {
     this.$store.dispatch("getTemplates")
@@ -69,7 +79,16 @@ export default {
       this.$refs.editor.allowDraggable()
     },
     nextTab() {
-      this.$emit('nextTab')
+      if (!this.$refs.editor.content.length) {
+        return this.$vs.notify({
+          title:'Warning',
+          text:'You must choose the static or dynamic texts',
+          color:'danger',
+          iconPack: 'feather',
+          icon:'icon-alert-circle'
+        });
+      }
+      this.$emit('nextTab');
     },
     prevTab() {
       this.$emit('prevTab')
@@ -85,13 +104,14 @@ export default {
     removeStaticText(text) {
       this.staticTextList = this.staticTextList.filter((item) => item != text);
       this.$refs.editor.removeStaticText(text)
+    },
+    getEditorContent() {
+      return this.$refs.editor.content
     }
   },
   data() {
     return {
       orientation: "landscape",
-      width: 300,
-      height: 500,
       // AgGrid
       currentPage: 1,
       selected: -1,
@@ -149,12 +169,11 @@ export default {
 
 .template-edit-box {
   width: 100%;
-  height: 925px;
   left: 716px;
   top: 356px;
   border-radius: 6px;
   margin-top: 7px;
   background: #F6F6F6;
-  padding: 150px 43px;
+  padding: 150px 43px 50px;
 }
 </style>
