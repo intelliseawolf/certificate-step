@@ -63,8 +63,8 @@
             </vs-upload>
           </div>
           <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-if="(index >= (currentPage - 1) * 5) && (index < currentPage * 5)"
-            v-for="(template, index) in templateList" :key="template.title" @click="selectTemplate(index)">
+            v-if="(index >= (currentPage - 1) * 20) && (index < currentPage * 20)"
+            v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
             <img :src="template.certificate_image_details.file.file_path" width="240" height="144"
               class="template-img" />
             <!-- <div class="template-placeholder">
@@ -75,8 +75,8 @@
           </div>
         </div>
         <div class="mt-3 w-1/2" v-if="templateListMetaData && templateListMetaData.total">
-          <vs-pagination :length="totalPages" circle v-model="currentPage" not-margin :dotted-number="10"
-            color="success" :total="templateListMetaData.total" />
+          <vs-pagination circle v-model="currentPage" not-margin :dotted-number="10" color="success"
+            :total="totalPages" />
         </div>
       </div>
     </div>
@@ -103,10 +103,10 @@ export default {
       return this.$store.getters['getTemplateList']
     },
     templateListMetaData: function () {
-      return this.$store.getters['templateListMetaData']
+      return this.$store.getters['getTemplateListMetaData']
     },
     totalPages: function () {
-      return Math.ceil(this.templateList / 5)
+      return Math.ceil(this.templateListMetaData.total / 20)
     }
   },
   mounted() {
