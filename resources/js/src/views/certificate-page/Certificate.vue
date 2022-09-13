@@ -50,7 +50,7 @@
 
 					<!-- tab 3 content -->
 					<tab-content title="3. Preview" icon="feather icon-image">
-						<Preview @changeTab="changeTab" />
+						<Preview :template="template" @changeTab="changeTab" />
 					</tab-content>
 				</form-wizard>
 			</div>
@@ -99,3 +99,9 @@ export default {
 	}
 }
 </script>
+
+<style>
+.wizard-card-footer {
+	display: none;
+}
+</style>
