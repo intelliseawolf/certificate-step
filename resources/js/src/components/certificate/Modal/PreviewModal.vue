@@ -18,8 +18,11 @@
               <swiper :options="swiperOption" :dir="$vs.rtl ? 'rtl' : 'ltr'" :key="$vs.rtl" ref="mySwiper"
                 @slide-change="changeSwiperIndex">
                 <swiper-slide v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
-                  <TemplateSection :type="index" :style="{ width: `478px`, height: `334px`}" :template="template"
-                    :width="width" :height="height" :content="JSON.parse(template.content)" />
+                  <TemplateSection :type="index" :style="{
+                    width: `478px`,
+                    height: `334px`
+                  }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
+                    :content="JSON.parse(template.content)" />
                 </swiper-slide>
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>

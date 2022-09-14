@@ -35,27 +35,15 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img
-            v-if="previewImage"
-            :src="previewImage"
-            class="uploading-image"
-            :style="{
-              width: `${width}px`,
-              height: `${height}px`
-            }"
-          />
-          <TemplateSection
-            v-if="!previewImage && templateList.length"
-            type="topImage"
-            :style="{
-              width: `${width}px`,
-              height: `${height}px`
-            }"
-            :width="width"
-            :height="height"
-            :image="templateList[selectedTemplate].certificate_image_details"
-            :content="JSON.parse(templateList[selectedTemplate].content)"
-          />
+          <img v-if="previewImage" :src="previewImage" class="uploading-image" :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }" />
+          <TemplateSection v-if="!previewImage && templateList.length" type="topImage" :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }" :width="width" :height="height" :image="templateList[selectedTemplate].certificate_image_details"
+            :content="JSON.parse(templateList[selectedTemplate].content)" />
         </div>
         <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
@@ -68,12 +56,8 @@
       </div>
     </div>
     <!-- Templates Section -->
-    <certificate-file-upload
-      class="file-upload"
-      :file_repository_id="4103"
-      section_type="CertificateComponent"
-      @image="setImage"
-    />
+    <certificate-file-upload class="file-upload" :file_repository_id="4103" section_type="CertificateComponent"
+      @image="setImage" />
     <div class="my-5">
       <p><b>Templates</b></p>
       <div class="flex flex-wrap">
@@ -84,23 +68,13 @@
 
             <vs-button type="border" class="uploading-image" @click="$refs.uploadImageInput.click()">Upload</vs-button>
           </div> -->
-          <div
-            :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-for="(template, index) in templateList"
-            :key="index"
-            @click="selectTemplate(index)"
-          >
-            <TemplateSection
-              :type="index"
-              :style="{
-                width: `200px`,
-                height: `143px`
-              }"
-              :width="width"
-              :height="height"
-              :image="templateList[index].certificate_image_details"
-              :content="JSON.parse(template.content)"
-            />
+          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+            v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
+            <TemplateSection :type="index" :style="{
+              width: `200px`,
+              height: `143px`
+            }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
+              :content="JSON.parse(template.content)" />
             <!-- <div class="template-placeholder">
               <p v-html="template.title" v-if="template && template.title !== null"></p>
               <p v-html="template.description" v-if="template && template.description !== null"></p>

@@ -36,52 +36,24 @@
 		<h4>Home / Certificate</h4>
 		<vx-card class="my-5">
 			<div class="tabs-container pt-6">
-				<form-wizard
-					ref="formWizard"
-					class="steps-transparent"
-					color="rgba(var(--vs-primary), 1)"
-					:title="null"
-					:subtitle="null"
-					finishButtonText="Submit"
-					@on-complete="formSubmitted"
-					@on-change="handleChanageTab"
-				>
-					<tab-content title="1. Customize Certificate" icon="feather icon-home">
-						<customize-certificate-compo
-							:selectedTemplate="template"
-							:width="width"
-							:height="height"
-							@changeTemplate="changeTemplate"
-							@nextTab="nextTab"
-							@changeImageSize="changeImageSize"
-							@setInitialContent="setInitialContent"
-							@changeImage="changeImage"
-						/>
+				<form-wizard ref="formWizard" class="steps-transparent" color="rgba(var(--vs-primary), 1)" :title="null"
+					:subtitle="null" finishButtonText="Submit" @on-complete="formSubmitted" @on-change="handleChanageTab">
+					<tab-content title="Customize Certificate">
+						<customize-certificate-compo :selectedTemplate="template" :width="width" :height="height"
+							@changeTemplate="changeTemplate" @nextTab="nextTab" @changeImageSize="changeImageSize"
+							@setInitialContent="setInitialContent" @changeImage="changeImage" />
 					</tab-content>
 
 					<!-- tab 2 content -->
-					<tab-content title="2. Texts & Dynamic Fields" icon="feather icon-briefcase">
-						<texts-and-dynamic-fields
-							ref="textField"
-							:template="template"
-							:image="image"
-							:width="width"
-							:height="height"
-							@nextTab="nextTab"
-							@prevTab="prevTab"
-						/>
+					<tab-content title="Texts & Dynamic Fields">
+						<texts-and-dynamic-fields ref="textField" :template="template" :image="image" :width="width"
+							:height="height" @nextTab="nextTab" @prevTab="prevTab" />
 					</tab-content>
 
 					<!-- tab 3 content -->
-					<tab-content title="3. Preview" icon="feather icon-image">
-						<Preview
-							:template="template"
-							:image="image"
-							:width="width"
-							:height="height"
-							:content="content"
-							@prevTab="prevTab"
-						/>
+					<tab-content title="Preview">
+						<Preview :template="template" :image="image" :width="width" :height="height" :content="content"
+							@prevTab="prevTab" />
 					</tab-content>
 				</form-wizard>
 			</div>
@@ -112,8 +84,8 @@ export default {
 			image: {},
 			template: -1,
 			content: [],
-      width: 877,
-      height: 620,
+			width: 877,
+			height: 620,
 		}
 	},
 	methods: {
@@ -137,9 +109,9 @@ export default {
 				this.content = this.$refs.textField.getEditorContent()
 			}
 		},
-		changeImageSize({width, height}) {
-			this.width = width;
-			this.height = height;
+		changeImageSize({ width, height }) {
+			this.width = width
+			this.height = height
 		},
 		setInitialContent(content) {
 			this.$refs.textField.setEditorContent(content)
