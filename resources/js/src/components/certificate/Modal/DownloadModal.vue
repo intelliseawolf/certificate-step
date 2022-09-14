@@ -1,59 +1,38 @@
 <template>
   <div>
-    <vs-button @click="activePrompt = true">Send Certificates</vs-button>
-
-    <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="Download Certificates" class="flex">
+    <vs-prompt @close="close" @accept="acceptAlert" buttonAccept="false" buttonCancel="false" :active="activePrompt"
+      title="Download Certificates" class="flex">
       <div class="con-exemple-prompt">
-        <span class="mb-1">Search Student</span>
-        <vs-input icon-pack="feather" icon="icon-search" v-model="val" class="w-full mb-3" />
+        <span class="mb-5">Search Student</span>
+        <vs-input icon-pack="feather" icon="icon-search" v-model="search" class="w-full mt-5 mb-10" />
         <!-- Students -->
-        <ul class="centerx">
-          <li class="mb-4">
-            <vs-checkbox v-model="selectBox">Select All</vs-checkbox>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox1"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-1.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">John Smith</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox2"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-15.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">Bernard</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox3"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-18.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">Catherine</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox4"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-8.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">John Smith</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox4"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-12.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">John Doe</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox4"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-3.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">John Doe</span>
-          </li>
-          <li class="flex mb-4">
-            <vs-checkbox v-model="checkBox4"></vs-checkbox>
-            <img class="rounded-circle" src="/images/avatar-s-4.jpg" alt="avatar1.jpg">
-            <span class="ml-2 my-auto">John doe</span>
-          </li>
-        </ul>
+        <div>
+          <ul class="centerx">
+            <li class="mb-4">
+              <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
+            </li>
+            <li v-for="item in filterStudentList" :key="item.client_users.id" class="flex mb-4">
+              <vs-checkbox :vs-value="item.client_users.id" v-model="student"></vs-checkbox>
+              <img class="rounded-circle"
+                :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
+                alt="student avatar">
+              <span class="ml-2 my-auto">
+                {{ item.client_users.first_name + " " + item.client_users.last_name }}
+              </span>
+            </li>
+          </ul>
+        </div>
         <!-- Footer -->
-        <div class="flex mt-3 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat">Cancel</vs-button>
+        <div class="flex mt-10 justify-between">
+          <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div>
-            <vs-button class="mr-2 primary" type="flat">Preview</vs-button>
-            <vs-button>Download Certificates</vs-button>
+            <vs-button @click="handlePreview" class="mr-2 primary" type="flat">Preview</vs-button>
+            <vs-button @click="downloadPDF">Download Certificates</vs-button>
+            <VueHtml2pdf :manual-pagination="true" :enable-download="true" ref="DownloadComp">
+              <section slot="pdf-content">
+                <Download />
+              </section>
+            </VueHtml2pdf>
           </div>
         </div>
       </div>
@@ -62,23 +41,63 @@
 </template>
 
 <script>
+import VueHtml2pdf from 'vue-html2pdf'
+import Download from './Download'
+
 export default {
+  props: {
+    activePrompt: Boolean,
+  },
+  components: {
+    VueHtml2pdf,
+    Download
+  },
   data() {
     return {
-      activePrompt: false,
-      val: '',
+      search: '',
+      full_name: '',
       valMultipe: {
         value1: '',
         value2: ''
       },
+      student: [],
+      allStudent: false,
     }
   },
   computed: {
     validName() {
       return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
+    },
+    studentList: function () {
+      return this.$store.getters['getStudentList']
+    },
+    filterStudentList() {
+      return this.studentList.filter(student => {
+        this.full_name = student.client_users.first_name + student.client_users.last_name
+        return this.full_name.toLowerCase().includes(this.search.toLowerCase().replace(/\s/g, ''))
+      })
     }
   },
+  mounted() {
+    this.$store.dispatch("getStudents")
+  },
   methods: {
+    selectAllStudent() {
+      this.student = []
+      if (this.allStudent) {
+        this.studentList.map((item) => {
+          this.student.push(item.client_users.id)
+        })
+      }
+    },
+    close() {
+      this.$vs.notify({
+        color: 'danger',
+        title: 'Closed',
+        text: 'You close a dialog!'
+      })
+      this.$emit('cancel')
+    },
     acceptAlert() {
       this.$vs.notify({
         color: 'success',
@@ -89,6 +108,12 @@ export default {
     clearValMultiple() {
       this.valMultipe.value1 = ""
       this.valMultipe.value2 = ""
+    },
+    handlePreview() {
+      this.$emit('preview')
+    },
+    downloadPDF() {
+      this.$refs.DownloadComp.generatePdf()
     }
   }
 }
