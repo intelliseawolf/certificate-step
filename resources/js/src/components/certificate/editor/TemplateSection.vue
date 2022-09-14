@@ -1,7 +1,6 @@
 <template>
   <div :class="`template-section template-section-${type ? type : ''}`">
-    <img :src="template && template.certificate_image_details && template.certificate_image_details.file.file_path"
-      alt="template image" width="100%" height="100%">
+    <img :src="image && image.file && image.file.file_path" alt="template image" width="100%" height="100%">
     <div class="template-content-section flex" v-for="(item, index) in content" :key="index" :style="{
       ...item.style,
       fontSize: `${Number(item.style.fontSize.slice(0, item.style.fontSize.length - 2)) * rate.y}px`,
@@ -28,7 +27,7 @@ export default {
       type: Number,
       required: true
     },
-    template: {
+    image: {
       type: Object,
       required: false
     },

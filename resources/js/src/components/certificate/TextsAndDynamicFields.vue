@@ -18,6 +18,7 @@
           <Editor
             :dynamicTextList="dynamicTextList"
             :template="template"
+            :image="image"
             :width="width"
             :height="height"
             @changeMainContent="changeContent"
@@ -55,6 +56,10 @@ export default {
     height: {
       type: Number,
       required: true
+    },
+    image: {
+      type: Object,
+      required: true
     }
   },
   mounted() {
@@ -66,9 +71,6 @@ export default {
     },
   },
   methods: {
-    selectTemplate(index) {
-      this.selected = index
-    },
     setDynamicText(id) {
       this.$refs.editor.addDynamicText(id)
       this.activeDynamicTexts.push(id)

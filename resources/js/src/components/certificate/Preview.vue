@@ -8,7 +8,7 @@
           <TemplateSection :style="{
             width: `${width}px`,
             height: `${height}px`
-          }" :width="width" :height="height" :template="templateList[template]" :content="content" />
+          }" :width="width" :height="height" :image="image" :content="content" />
         </div>
       </div>
       <!-- Next Button -->
@@ -59,6 +59,10 @@ export default {
     template: {
       required: true
     },
+    image: {
+      type: Object,
+      required: true
+    },
     content: {
       type: Array,
       required: true
@@ -94,7 +98,7 @@ export default {
         title,
         description,
         content: JSON.stringify(this.content),
-        certificate_image_id: this.templateList[this.template].certificate_image_details.certificate_image_id,
+        certificate_image_id: this.image.certificate_image_id,
         type: 0
       })
     }

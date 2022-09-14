@@ -55,6 +55,7 @@
 							@nextTab="nextTab"
 							@changeImageSize="changeImageSize"
 							@setInitialContent="setInitialContent"
+							@changeImage="changeImage"
 						/>
 					</tab-content>
 
@@ -63,6 +64,7 @@
 						<texts-and-dynamic-fields
 							ref="textField"
 							:template="template"
+							:image="image"
 							:width="width"
 							:height="height"
 							@nextTab="nextTab"
@@ -74,6 +76,7 @@
 					<tab-content title="3. Preview" icon="feather icon-image">
 						<Preview
 							:template="template"
+							:image="image"
 							:width="width"
 							:height="height"
 							:content="content"
@@ -106,6 +109,7 @@ export default {
 	},
 	data() {
 		return {
+			image: {},
 			template: -1,
 			content: [],
       width: 877,
@@ -118,6 +122,9 @@ export default {
 		},
 		changeTemplate(index) {
 			this.template = index
+		},
+		changeImage(image) {
+			this.image = image
 		},
 		nextTab() {
 			this.$refs.formWizard.nextTab()
