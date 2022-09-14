@@ -54,8 +54,8 @@ const actions = {
 
     // Get templates from backend
 
-    getTemplates({commit}, payload) {
-      axios.post('/certificate/template/list/184', {
+    getTemplates({commit}, {page}) {
+      axios.post(`/certificate/template/list/184?page=${page}`, {
         type: "string"
       })
       .then(({data}) => {

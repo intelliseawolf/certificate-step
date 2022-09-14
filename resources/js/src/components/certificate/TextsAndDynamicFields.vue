@@ -58,10 +58,6 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("getTemplates")
-      .then(() => {
-        this.selected = 0
-      })
     this.$store.dispatch("getDynamicTexts")
   },
   computed: {
@@ -107,6 +103,9 @@ export default {
     },
     getEditorContent() {
       return this.$refs.editor.content
+    },
+    setEditorContent(content) {
+      this.$refs.editor.setContent(content);
     }
   },
   data() {
@@ -127,27 +126,6 @@ export default {
 </script>
 
 <style>
-.template-box {
-  width: 242px;
-  height: 146px;
-  border: 1px solid gray;
-  border-radius: 8px;
-}
-
-.template-box-active {
-  border: 1px solid blue;
-}
-
-.template-img {
-  border-radius: 8px;
-}
-
-.template-pos {
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
 .con-input-upload {
   width: 240px !important;
   height: 144px !important;

@@ -54,6 +54,7 @@
 							@changeTemplate="changeTemplate"
 							@nextTab="nextTab"
 							@changeImageSize="changeImageSize"
+							@setInitialContent="setInitialContent"
 						/>
 					</tab-content>
 
@@ -132,6 +133,9 @@ export default {
 		changeImageSize({width, height}) {
 			this.width = width;
 			this.height = height;
+		},
+		setInitialContent(content) {
+			this.$refs.textField.setEditorContent(content)
 		}
 	}
 }

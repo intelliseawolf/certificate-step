@@ -1,5 +1,5 @@
 <template>
-  <div class="template-section">
+  <div :class="`template-section template-section-${type ? type : ''}`">
     <img
       :src="template && template.certificate_image_details && template.certificate_image_details.file.file_path"
       alt="template image"
@@ -12,8 +12,9 @@
       :key="index"
       :style="{
         ...item.style,
-        left: `${item.x}px`,
-        top: `${item.y}px`,
+        fontSize: `${Number(item.style.fontSize.slice(0, item.style.fontSize.length - 2)) * rate.y}px`,
+        left: `${item.x * rate.x}px`,
+        top: `${item.y * rate.y}px`,
       }"
     >
       <p v-html="item.content"></p>
@@ -25,6 +26,9 @@
 export default {
   name: "TemplateSection",
   props: {
+    type: {
+      required: false
+    },
     width: {
       type: Number,
       required: true
@@ -45,7 +49,8 @@ export default {
   data() {
     return {
       innerWidth: 0,
-      innerHeight: 0
+      innerHeight: 0,
+      rate: {x: 1, y: 1}
     }
   },
   mounted() {
@@ -53,9 +58,11 @@ export default {
   },
   methods: {
     setInnerBoxParams() {
-      const box = document.querySelector('.template-section');
+      const box = document.querySelector(`.template-section-${this.type ? this.type : ''}`);
       this.innerWidth = box.offsetWidth ? box.offsetWidth : this.width;
       this.innerHeight = box.offsetHeight ? box.offsetHeight : this.height;
+      this.rate.x = this.innerWidth / this.width;
+      this.rate.y = this.innerHeight / this.height;
     }
   },
   watch: {

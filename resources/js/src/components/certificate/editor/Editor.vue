@@ -244,6 +244,9 @@ export default {
     onDragMove(index, {x, y}) {
       this.content[index].x = x;
       this.content[index].y = y;
+    },
+    setContent(content) {
+      this.content = content;
     }
   },
   watch: {
