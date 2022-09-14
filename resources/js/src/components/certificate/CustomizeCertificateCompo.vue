@@ -35,10 +35,11 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img :width="width" :height="height" :src="previewImage" alt="1.png" v-if="previewImage !== null">
-          <img :width="width" :height="height"
-            :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png" v-else>
+          <TemplateSection v-if="templateList.length" type="topImage" :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }" :width="width" :height="height" :template="templateList[selectedTemplate]"
+            :content="JSON.parse(templateList[selectedTemplate].content)" />
         </div>
         <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
@@ -61,12 +62,12 @@
             <!-- <input type="file" accept="image/jpeg" @change=uploadImage> -->
             <input type="file" accept="image/*" @change="uploadImage($event)" id="file-input" />
           </div>
-          <!-- Templates -->
           <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-if="(index >= (currentPage - 1) * 20) && (index < currentPage * 20)"
             v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
-            <img :src="template.certificate_image_details.file.file_path" width="240" height="144"
-              class="template-img" />
+            <TemplateSection :type="index" :style="{
+              width: `200px`,
+              height: `143px`
+            }" :width="width" :height="height" :template="template" :content="JSON.parse(template.content)" />
             <!-- <div class="template-placeholder">
               <p v-html="template.title" v-if="template && template.title !== null"></p>
               <p v-html="template.description" v-if="template && template.description !== null"></p>
@@ -74,7 +75,7 @@
             </div> -->
           </div>
         </div>
-        <div class="mt-3 w-1/2" v-if="templateListMetaData && templateListMetaData.total">
+        <div class="mt-3 mx-auto" v-if="templateListMetaData && templateListMetaData.total">
           <vs-pagination circle v-model="currentPage" not-margin :dotted-number="10" color="success"
             :total="totalPages" />
         </div>
@@ -92,7 +93,12 @@
 </template>
 
 <script>
+import TemplateSection from "./editor/TemplateSection.vue"
+
 export default {
+  components: {
+    TemplateSection,
+  },
   props: {
     selectedTemplate: {
       required: true
@@ -118,7 +124,9 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('getTemplates')
+    this.$store.dispatch('getTemplates', {
+      page: 1,
+    })
       .then(() => {
         this.$emit("changeTemplate", 0)
       })
@@ -160,6 +168,7 @@ export default {
     },
     nextTab() {
       this.$emit("nextTab")
+      this.$emit("setInitialContent", JSON.parse(this.templateList[this.selectedTemplate].content))
     },
     changeSize(w, h) {
       if (this.orientation == 'landscape') {
@@ -173,7 +182,7 @@ export default {
           height: w
         })
       }
-    }
+    },
   },
   data() {
     return {
@@ -191,6 +200,11 @@ export default {
       this.$emit("changeImageSize", {
         width: this.height,
         height: this.width
+      })
+    },
+    currentPage(newVal) {
+      this.$store.dispatch('getTemplates', {
+        page: newVal,
       })
     }
   }
@@ -212,8 +226,7 @@ export default {
 
 .template-box {
   position: relative;
-  width: 242px;
-  height: 146px;
+  padding: 4px 8px;
   border: 1px solid gray;
   border-radius: 8px;
 }
