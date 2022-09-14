@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="generate-modal">
     <vs-prompt @accept="acceptAlert" @close="close" buttonAccept="false" buttonCancel="false" :active="activePrompt"
       title="Genrate Certificate">
       <div class="con-exemple-prompt">
@@ -20,7 +20,13 @@
           <span>Select Course / Class</span>
           <a href="/certificate/generate" class="ml-auto">Upload CSV</a>
         </div>
-        <v-select v-model="classes_list" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        <v-select
+          v-model="selectedClass"
+          :options="classes"
+          :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          @input="changeClass"
+        />
+        <br>
         <!-- Student & Staff Tabs -->
         <div class="mt-1">
           <vs-tabs alignment="fixed">
@@ -30,13 +36,13 @@
                   <li class="mb-4">
                     <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
                   </li>
-                  <li v-for="item in studentList" :key="item.client_users.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.client_users.id" v-model="student"></vs-checkbox>
+                  <li v-for="item in studentList" :key="item.id" class="flex mb-4">
+                    <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
                     <img class="rounded-circle"
-                      :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
+                      :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="student avatar">
                     <span class="ml-2 my-auto">
-                      {{ item.client_users.first_name + " " + item.client_users.last_name }}
+                      {{ item.first_name + " " + item.last_name }}
                     </span>
                   </li>
                 </ul>
@@ -48,11 +54,11 @@
                   <li class="mb-4">
                     <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
                   </li>
-                  <li v-for="item in teacherList" :key="item.user.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.user.id" v-model="stuff"></vs-checkbox>
+                  <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center;">
+                    <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
-                    <span class="ml-2 my-auto">{{ item.user.first_name + " " + item.user.last_name }}</span>
+                    <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
                     <v-select class="ml-auto" v-model="staff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
@@ -92,12 +98,8 @@ export default {
         value2: ''
       },
       textarea: '',
-      classes: [
-        { id: 1, label: 'Class 1' },
-        { id: 2, label: 'Class 2' },
-        { id: 3, label: 'Class 3' },
-      ],
-      classes_list: { id: 1, label: 'Class 1' },
+      classes: [],
+      selectedClass: {},
       staff: [
         { id: 1, label: 'Staff_Name 1' },
         { id: 2, label: 'Staff_Name 2' },
@@ -109,11 +111,20 @@ export default {
       allStudent: false,
       stuff: [],
       allStuff: false,
+      studentList: [],
+      teacherList: []
     }
   },
   mounted() {
-    this.$store.dispatch("getStudents")
-    this.$store.dispatch("getTeachers")
+    // this.$store.dispatch("getStudents")
+    // this.$store.dispatch("getTeachers")
+    this.$store.dispatch("getClasses", {
+      page: 1,
+      limit: 1000
+    })
+    .then(() => {
+      this.getClassDetail(this.classList[0].class_id);
+    })
   },
   components: {
     'v-select': vSelect,
@@ -123,12 +134,18 @@ export default {
     validName() {
       return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
     },
-    studentList: function () {
-      return this.$store.getters['getStudentList']
+    // studentList() {
+    //   return this.$store.getters['getStudentList']
+    // },
+    // teacherList() {
+    //   return this.$store.getters['getTeacherList']
+    // },
+    classList() {
+      return this.$store.getters['getClassList']
     },
-    teacherList: function () {
-      return this.$store.getters['getTeacherList']
-    },
+    classDetail() {
+      return this.$store.getters['getClassDetail']
+    }
   },
   methods: {
     handleShow() {
@@ -162,7 +179,7 @@ export default {
       this.student = []
       if (this.allStudent) {
         this.studentList.map((item) => {
-          this.student.push(item.client_users.id)
+          this.student.push(item.id)
         })
       }
     },
@@ -170,11 +187,36 @@ export default {
       this.stuff = []
       if (this.allStuff) {
         this.teacherList.map((item) => {
-          this.stuff.push(item.user.id)
+          this.stuff.push(item.id)
         })
       }
+    },
+    getClassDetail(classId) {
+      return this.$store.dispatch("getClassDetail", classId)
+    },
+    changeClass() {
+      this.getClassDetail(this.selectedClass.id)
     }
   },
+  watch: {
+    classList(newVal) {
+      if (newVal.length) {
+        this.classes = newVal.map((item) => {
+          return {
+            id: item.class_id,
+            label: item.name
+          }
+        })
+        this.selectedClass = this.classes[0]
+      }
+    },
+    classDetail(newVal) {
+      if (newVal) {
+        this.studentList = newVal.student.student_details
+        this.teacherList = newVal.teacher.teacher_details
+      }
+    }
+  }
 }
 </script>
 
@@ -224,5 +266,9 @@ export default {
 .v-select .vs__dropdown-toggle {
   margin-top: 1em;
   width: 100% !important;
+}
+
+.vs__dropdown-toggle {
+  margin: 0 !important;
 }
 </style>

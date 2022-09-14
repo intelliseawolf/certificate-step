@@ -132,7 +132,16 @@ const mutations = {
 
   GET_TEACHERS_LIST(state, payload) {
     state.teacherList = payload.data.teacherlist
-  }
+  },
+
+  GET_CLASS_LIST(state, payload) {
+    state.classList = payload.data.classes
+    state.classListMetaData = payload.data.meta
+  },
+
+  GET_CLASS_DETAIL(state, payload) {
+    state.classDetail = payload.data.classes;
+  },
 }
 
 export default mutations

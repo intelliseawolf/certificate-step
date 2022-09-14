@@ -89,6 +89,20 @@ const actions = {
         commit('GET_TEACHERS_LIST', data)
       })
     },
+
+    getClasses({commit}, {page, limit}) {
+      return axios.post(`/classes/list/184?page=${page}&limit=${limit}`, {is_archived: 1})
+        .then(({data}) => {
+          commit('GET_CLASS_LIST', data)
+        })
+    },
+
+    getClassDetail({commit}, classId) {
+      return axios.get(`/classes/show/${classId}/184`)
+        .then(({data}) => {
+          commit('GET_CLASS_DETAIL', data)
+        })
+    },
 }
 
 export default actions
