@@ -69,10 +69,16 @@ export default {
       })
       this.$emit('cancel')
       this.showDescription = false
-      this.textarea = ''
+      this.form = {
+        title: "",
+        description: ""
+      }
     },
     saveCertificate() {
       this.$emit("saveCertificate", this.form)
+    },
+    closeModal() {
+      this.activePrompt = false
     },
     handleGenerate() {
       this.$emit('generate')

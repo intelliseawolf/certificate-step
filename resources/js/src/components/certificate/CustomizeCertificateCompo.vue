@@ -162,12 +162,12 @@ export default {
     // },
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
-      this.$emit('changeImage', this.templateList[index].certificate_image_details)
       this.previewImage = ""
     },
     nextTab() {
       if (!this.previewImage) {
         this.$emit("setInitialContent", JSON.parse(this.templateList[this.selectedTemplate].content))
+        this.$emit('changeImage', this.templateList[this.selectedTemplate].certificate_image_details)
       }
       this.$emit("nextTab")
       // if (this.uploadedImage) {

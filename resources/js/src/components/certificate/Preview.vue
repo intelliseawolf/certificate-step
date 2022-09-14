@@ -101,6 +101,9 @@ export default {
         certificate_image_id: this.image.certificate_image_id,
         type: 0
       })
+      .then(() => {
+        this.$refs.saveModal.closeModal()
+      })
     }
   }
 }
