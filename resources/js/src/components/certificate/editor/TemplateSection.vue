@@ -1,7 +1,7 @@
 <template>
   <div :class="`template-section template-section-${type ? type : ''}`">
     <img
-      :src="template && template.certificate_image_details && template.certificate_image_details.file.file_path"
+      :src="image && image.file && image.file.file_path"
       alt="template image"
       width="100%"
       height="100%"
@@ -37,7 +37,7 @@ export default {
       type: Number,
       required: true
     },
-    template: {
+    image: {
       type: Object,
       required: false
     },

@@ -47,7 +47,7 @@
     </div>
     <img
       class="editor-bg"
-      :src="!!templateList.length && templateList[template].certificate_image_details.file.file_path"
+      :src="image && image.file && image.file.file_path"
       alt="certificate-bg"
     >
     <draggable
@@ -93,6 +93,10 @@ import Draggable from './Draggable'
 export default {
   props: {
     template: {
+      required: true
+    },
+    image: {
+      type: Object,
       required: true
     },
     dynamicTextList: {

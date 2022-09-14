@@ -35,11 +35,27 @@
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <TemplateSection v-if="templateList.length" type="topImage" :style="{
-            width: `${width}px`,
-            height: `${height}px`
-          }" :width="width" :height="height" :template="templateList[selectedTemplate]"
-            :content="JSON.parse(templateList[selectedTemplate].content)" />
+          <img
+            v-if="previewImage"
+            :src="previewImage"
+            class="uploading-image"
+            :style="{
+              width: `${width}px`,
+              height: `${height}px`
+            }"
+          />
+          <TemplateSection
+            v-if="!previewImage && templateList.length"
+            type="topImage"
+            :style="{
+              width: `${width}px`,
+              height: `${height}px`
+            }"
+            :width="width"
+            :height="height"
+            :image="templateList[selectedTemplate].certificate_image_details"
+            :content="JSON.parse(templateList[selectedTemplate].content)"
+          />
         </div>
         <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
@@ -52,22 +68,39 @@
       </div>
     </div>
     <!-- Templates Section -->
+    <certificate-file-upload
+      class="file-upload"
+      :file_repository_id="4103"
+      section_type="CertificateComponent"
+      @image="setImage"
+    />
     <div class="my-5">
       <p><b>Templates</b></p>
       <div class="flex flex-wrap">
         <div class="templates-section mx-2">
           <!-- Upload -->
-          <div class="mt-5 mr-2">
-            <img :src="previewImage" class="uploading-image" />
-            <!-- <input type="file" accept="image/jpeg" @change=uploadImage> -->
-            <input type="file" accept="image/*" @change="uploadImage($event)" id="file-input" />
-          </div>
-          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
-            <TemplateSection :type="index" :style="{
-              width: `200px`,
-              height: `143px`
-            }" :width="width" :height="height" :template="template" :content="JSON.parse(template.content)" />
+          <!-- <div class="mt-5 mr-2">
+            <input type="file" class="hidden" ref="uploadImageInput" @change="uploadImage" accept="image/*">
+
+            <vs-button type="border" class="uploading-image" @click="$refs.uploadImageInput.click()">Upload</vs-button>
+          </div> -->
+          <div
+            :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+            v-for="(template, index) in templateList"
+            :key="index"
+            @click="selectTemplate(index)"
+          >
+            <TemplateSection
+              :type="index"
+              :style="{
+                width: `200px`,
+                height: `143px`
+              }"
+              :width="width"
+              :height="height"
+              :image="templateList[index].certificate_image_details"
+              :content="JSON.parse(template.content)"
+            />
             <!-- <div class="template-placeholder">
               <p v-html="template.title" v-if="template && template.title !== null"></p>
               <p v-html="template.description" v-if="template && template.description !== null"></p>
@@ -94,10 +127,14 @@
 
 <script>
 import TemplateSection from "./editor/TemplateSection.vue"
+import CertificateFileUpload from "./editor/CertificateFileUpload.vue"
+// import fileUpload from "../../mixins/fileUpload"
+// import axios from "../../axios"
 
 export default {
   components: {
     TemplateSection,
+    CertificateFileUpload,
   },
   props: {
     selectedTemplate: {
@@ -112,6 +149,7 @@ export default {
       required: true
     },
   },
+  // mixins: [fileUpload],
   computed: {
     templateList: function () {
       return this.$store.getters['getTemplateList']
@@ -132,43 +170,66 @@ export default {
       })
   },
   methods: {
-    // uploadImage(e) {
-    //   const image = e.target.files[0]
+    setImage(image) {
+      this.previewImage = image.file.file_path
+      this.$emit('changeImage', image)
+    },
+    // setPreviewImage(file) {
     //   const reader = new FileReader()
-    //   reader.readAsDataURL(image)
+    //   reader.readAsDataURL(file)
     //   reader.onload = e => {
     //     this.previewImage = e.target.result
     //   }
     // },
-    uploadImage(event) {
-      const URL = 'https://scoolio-backend-dev.track-progress.com/api/certificate/file/save'
-
-      let data = new FormData()
-      data.append('name', 'my-picture')
-      data.append('file', event.target.files[0])
-
-      let config = {
-        header: {
-          'Content-Type': 'image/png'
-        }
-      }
-
-      axios.post(
-        URL,
-        data,
-        config
-      ).then(
-        response => {
-          console.log('image upload response > ', response)
-        }
-      )
-    },
+    // uploadImage(event) {
+    //   this.uploadedImage = event.target.files[0];
+    //   console.log(this.uploadedImage)
+    //   this.setPreviewImage(this.uploadedImage)
+    // },
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
+      this.$emit('changeImage', this.templateList[index].certificate_image_details)
+      this.previewImage = ""
     },
     nextTab() {
+      if (!this.previewImage) {
+        this.$emit("setInitialContent", JSON.parse(this.templateList[this.selectedTemplate].content))
+      }
       this.$emit("nextTab")
-      this.$emit("setInitialContent", JSON.parse(this.templateList[this.selectedTemplate].content))
+      // if (this.uploadedImage) {
+      //   axios.post(this.uploadUrl, this.createFormData(), {headers: {"Content-Type": "multipart/form-data"}})
+      //     .then((response, error) => {
+      //       if (response) {
+      //         const file_name = response.data.data.files[0].file_name
+      //         const file_path = response.data.data.files[0].file_path
+      //         const cdn = response.data.data.cdn
+      //         const raw = JSON.stringify({
+      //           file_repository_id: '4103',
+      //           files: [
+      //             {
+      //               file_name,
+      //               file_path: `${cdn}/${file_path}`
+      //             }
+      //           ]
+      //         })
+
+      //         const uploadedFile = raw
+      //         this.addUploadedFile(uploadedFile)
+      //       }  else {
+      //         console.log(error)
+      //       }
+      //     })
+      //     .catch((error) => {
+      //       console.error(error)
+      //       return this.$vs.notify({
+      //         title:'Danger',
+      //         text:'Error occured when file uploading!',
+      //         color:'danger',
+      //         iconPack: 'feather',
+      //         icon:'icon-alert-circle'
+      //       });
+      //     })
+      // }
     },
     changeSize(w, h) {
       if (this.orientation == 'landscape') {
@@ -192,7 +253,9 @@ export default {
       currentPage: 1,
       template: [],
       content: "",
-      previewImage: null
+      previewImage: null,
+      // uploadedImage: null,
+      // uploadUrl: '/file/upload/184'
     }
   },
   watch: {
@@ -214,8 +277,6 @@ export default {
 <style>
 .uploading-image {
   display: flex;
-  width: 240px;
-  height: 144px;
   margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 0px;
