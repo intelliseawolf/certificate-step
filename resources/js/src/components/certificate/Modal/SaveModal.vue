@@ -1,9 +1,7 @@
 <template>
   <div>
-    <vs-button class="mr-2 primary" type="flat" @click="activePrompt = true">Save</vs-button>
-
-    <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="" @close="close">
+    <vs-prompt @close="close" @accept="acceptAlert" buttonAccept="false" buttonCancel="false" :active="activePrompt"
+      title="">
       <h3 class="text-center mb-4">Save Certificate Template</h3>
       <div class="con-exemple-prompt">
         <span class="mb-1">Certificate Name</span>
@@ -18,11 +16,8 @@
         <vs-textarea v-model="form.description" v-if="showDescription" placeholder="Lorem Ipsum" rows="4" />
 
         <div class="flex">
-          <vs-button class="ml-auto primary" type="flat" @click="changeModal('generate')">Generate Certificate Now
+          <vs-button class="ml-auto primary" type="flat" @click="handleGenerate">Generate Certificate Now
           </vs-button>
-          <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')" />
-          <preview-modal :activePrompt="modal === 'preview'" @send="changeModal('send')" />
-          <send-modal :activePrompt="modal === 'send'" />
         </div>
         <div class="flex mt-3">
           <vs-button class="ml-auto" @click="saveCertificate">Save Certificate</vs-button>
@@ -38,12 +33,14 @@ import PreviewModal from './PreviewModal.vue'
 import SendModal from './SendModal.vue'
 
 export default {
+  props: {
+    activePrompt: Boolean,
+  },
   components: { GenerateModal, PreviewModal, SendModal },
   data() {
     return {
       modal: null,
       showDescription: false,
-      activePrompt: false,
       form: {
         title: "",
         description: ""
@@ -65,11 +62,20 @@ export default {
       })
     },
     close() {
+      this.$vs.notify({
+        color: 'danger',
+        title: 'Closed',
+        text: 'You close a dialog!'
+      })
+      this.$emit('cancel')
       this.showDescription = false
       this.textarea = ''
     },
     saveCertificate() {
       this.$emit("saveCertificate", this.form)
+    },
+    handleGenerate() {
+      this.$emit('generate')
     }
   }
 }

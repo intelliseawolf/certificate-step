@@ -68,7 +68,6 @@
             <vs-button class="mr-2 primary" type="flat">Save</vs-button>
             <!-- <vs-button>Next</vs-button> -->
             <vs-button @click="handlePreview">Preview</vs-button>
-            preview-modal /> -->
           </div>
         </div>
       </div>
@@ -220,5 +219,10 @@ export default {
 .centerx {
   max-height: 230px;
   overflow-y: auto;
+}
+
+.v-select .vs__dropdown-toggle {
+  margin-top: 1em;
+  width: 100% !important;
 }
 </style>

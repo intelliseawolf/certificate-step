@@ -5,16 +5,10 @@
       <p><b>Preview</b></p>
       <div class="third-preview-section mt-5">
         <div class="flex template-pos">
-          <TemplateSection
-            :style="{
-              width: `${width}px`,
-              height: `${height}px`
-            }"
-            :width="width"
-            :height="height"
-            :template="templateList[template]"
-            :content="content"
-          />
+          <TemplateSection :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }" :width="width" :height="height" :template="templateList[template]" :content="content" />
         </div>
       </div>
       <!-- Next Button -->
@@ -23,11 +17,15 @@
           <div class="mt-8 flex flex-wrap items-center justify-end">
             <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
-              <save-modal @saveCertificate="saveCertificate" />
+              <vs-button class="mr-2 primary" type="flat" @click="changeModal('save')">Save</vs-button>
+              <save-modal :activePrompt="modal === 'save'" @saveCertificate="saveCertificate"
+                @generate="changeModal('generate')" @cancel="changeModal(null)" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
                 @cancel="changeModal(null)" />
-              <preview-modal :activePrompt="modal === 'preview'" @send="changeModal('send')"
+              <preview-modal :activePrompt="modal === 'preview'" @download="changeModal('download')"
+                @send="changeModal('send')" @cancel="changeModal(null)" />
+              <download-modal :activePrompt="modal === 'download'" @preview="changeModal('preview')"
                 @cancel="changeModal(null)" />
               <send-modal :activePrompt="modal === 'send'" @cancel="changeModal(null)" />
             </div>
@@ -44,6 +42,7 @@ import GenerateModal from './Modal/GenerateModal.vue'
 import PreviewModal from './Modal/PreviewModal.vue'
 import SendModal from './Modal/SendModal.vue'
 import TemplateSection from "./editor/TemplateSection.vue"
+import DownloadModal from "./Modal/DownloadModal.vue"
 
 import axios from '../../axios'
 
@@ -53,7 +52,8 @@ export default {
     GenerateModal,
     PreviewModal,
     SendModal,
-    TemplateSection
+    TemplateSection,
+    DownloadModal
   },
   props: {
     template: {
@@ -103,7 +103,6 @@ export default {
 </script>
 
 <style>
-
 .third-preview-section {
   width: 100%;
   background-color: #F6F6F6;
