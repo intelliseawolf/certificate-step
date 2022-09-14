@@ -1,6 +1,6 @@
 <template>
   <div class="my-5">
-    <!-- Header -->
+    <!-- Size Section -->
     <div>
       <p><b>Choose a template or upload your own certificate to start</b></p>
       <div class="flex mt-5">
@@ -30,17 +30,15 @@
         </div>
       </div>
     </div>
-    <!-- Preview -->
+    <!-- Preview Section -->
     <div class="my-5">
       <p class="mb-10"><b>Preview</b></p>
       <div class="preview-section my-5">
         <div class="flex template-pos">
-          <img
-            :width="width"
-            :height="height"
+          <img :width="width" :height="height" :src="previewImage" alt="1.png" v-if="previewImage !== null">
+          <img :width="width" :height="height"
             :src="!!templateList.length && templateList[selectedTemplate].certificate_image_details.file.file_path"
-            alt="1.png"
-          >
+            alt="1.png" v-else>
         </div>
         <!-- <div class="template-placeholder">
           <p v-html="templateList[selectedTemplate].title"
@@ -52,16 +50,18 @@
         </div> -->
       </div>
     </div>
-    <!-- Templates -->
+    <!-- Templates Section -->
     <div class="my-5">
       <p><b>Templates</b></p>
       <div class="flex flex-wrap">
         <div class="templates-section mx-2">
           <!-- Upload -->
           <div class="mt-5 mr-2">
-            <vs-upload action="https://jsonplaceholder.typicode.com/posts/" text="" accept="image/*">
-            </vs-upload>
+            <img :src="previewImage" class="uploading-image" />
+            <!-- <input type="file" accept="image/jpeg" @change=uploadImage> -->
+            <input type="file" accept="image/*" @change="uploadImage($event)" id="file-input" />
           </div>
+          <!-- Templates -->
           <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
             v-if="(index >= (currentPage - 1) * 20) && (index < currentPage * 20)"
             v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <!-- Next Button -->
+    <!-- Footer -->
     <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
@@ -124,6 +124,37 @@ export default {
       })
   },
   methods: {
+    // uploadImage(e) {
+    //   const image = e.target.files[0]
+    //   const reader = new FileReader()
+    //   reader.readAsDataURL(image)
+    //   reader.onload = e => {
+    //     this.previewImage = e.target.result
+    //   }
+    // },
+    uploadImage(event) {
+      const URL = 'https://scoolio-backend-dev.track-progress.com/api/certificate/file/save'
+
+      let data = new FormData()
+      data.append('name', 'my-picture')
+      data.append('file', event.target.files[0])
+
+      let config = {
+        header: {
+          'Content-Type': 'image/png'
+        }
+      }
+
+      axios.post(
+        URL,
+        data,
+        config
+      ).then(
+        response => {
+          console.log('image upload response > ', response)
+        }
+      )
+    },
     selectTemplate(index) {
       this.$emit("changeTemplate", index)
     },
@@ -151,7 +182,8 @@ export default {
       // AgGrid
       currentPage: 1,
       template: [],
-      content: ""
+      content: "",
+      previewImage: null
     }
   },
   watch: {
@@ -166,6 +198,18 @@ export default {
 </script>
 
 <style>
+.uploading-image {
+  display: flex;
+  width: 240px;
+  height: 144px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 1px;
+  border: 1px solid gray;
+  border-radius: 8px;
+}
+
 .template-box {
   position: relative;
   width: 242px;
@@ -206,25 +250,6 @@ export default {
   width: 100%;
   top: 10%;
   text-align: center !important;
-}
-
-.con-input-upload,
-.img-upload {
-  width: 240px !important;
-  height: 144px !important;
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-  margin-left: 0px !important;
-  margin-right: 1px !important;
-}
-
-.con-input-upload {
-  order: -1;
-}
-
-.img-upload {
-  margin-left: 1px !important;
-  margin-right: 1px !important;
 }
 
 .con-img-upload {

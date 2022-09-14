@@ -1,8 +1,8 @@
 // Core variables and mixins
-@import '~@resources/scss/base/bootstrap-extended/include';
+@import '~@resources/sass/base/bootstrap-extended/include';
 // Overrides user variable
-@import '~@resources/scss/base/components/include';
-@import '~vue-select/src/scss/vue-select.scss';
+@import '~@resources/sass/base/components/include';
+@import 'vue-select/src/scss/vue-select.scss';
 
 //--------- Simple Number Wizard ----------//
 .vue-form-wizard {
