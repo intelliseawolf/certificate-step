@@ -23,7 +23,10 @@
           <div class="mt-8 flex flex-wrap items-center justify-end">
             <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
-              <save-modal @saveCertificate="saveCertificate" />
+              <save-modal
+                ref="saveModal"
+                @saveCertificate="saveCertificate"
+              />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
                 @cancel="changeModal(null)" />
@@ -100,6 +103,9 @@ export default {
         content: JSON.stringify(this.content),
         certificate_image_id: this.image.certificate_image_id,
         type: 0
+      })
+      .then(() => {
+        this.$refs.saveModal.closeModal()
       })
     }
   }

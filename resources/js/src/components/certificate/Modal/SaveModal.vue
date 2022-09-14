@@ -66,10 +66,16 @@ export default {
     },
     close() {
       this.showDescription = false
-      this.textarea = ''
+      this.form = {
+        title: "",
+        description: ""
+      }
     },
     saveCertificate() {
       this.$emit("saveCertificate", this.form)
+    },
+    closeModal() {
+      this.activePrompt = false
     }
   }
 }

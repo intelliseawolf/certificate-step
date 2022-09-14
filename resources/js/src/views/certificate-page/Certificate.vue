@@ -110,7 +110,7 @@ export default {
 	data() {
 		return {
 			image: {},
-			template: -1,
+			template: 0,
 			content: [],
       width: 877,
       height: 620,
