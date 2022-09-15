@@ -122,9 +122,7 @@ export default {
       isClass: true,
       selectedStudent: [],
       mappingList: [],
-      isloading: false,
-      backgroundLoading: 'primary',
-      colorLoading: '#fff',
+      isloading: false
     }
   },
   mounted() {
@@ -351,7 +349,6 @@ export default {
 }
 
 .v-select .vs__dropdown-toggle {
-  margin-top: 1em !important;
   width: 100% !important;
 }
 
