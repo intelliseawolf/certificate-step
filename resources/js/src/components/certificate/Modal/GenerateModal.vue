@@ -38,8 +38,7 @@
                   </li>
                   <li v-for="item in studentList" :key="item.id" class="flex mb-4">
                     <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
-                    <img class="rounded-circle"
-                      :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
+                    <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="student avatar">
                     <span class="ml-2 my-auto">
                       {{ item.first_name + " " + item.last_name }}
@@ -172,7 +171,7 @@ export default {
     },
     handlePreview() {
       this.selectedStudent = this.student.map((studentId) => {
-        const studentIndex = this.studentList.findIndex((student) => student.client_users.id === studentId)
+        const studentIndex = this.studentList.findIndex((student) => student.id === studentId)
         return this.studentList[studentIndex]
       })
       this.$emit('preview')
