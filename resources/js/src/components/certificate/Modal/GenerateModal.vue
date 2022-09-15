@@ -24,13 +24,8 @@
           </vs-switch>
           <a href="/certificate/generate">Upload CSV</a>
         </div>
-        <v-select
-          v-model="selectedClass"
-          class="mt-3"
-          :options="classes"
-          :dir="$vs.rtl ? 'rtl' : 'ltr'"
-          @input="changeClassOrCourse"
-        />
+        <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          @input="changeClassOrCourse" />
         <br>
         <!-- Student & Staff Tabs -->
         <div class="mt-1">
@@ -44,7 +39,7 @@
                   <li v-for="item in studentList" :key="item.id" class="flex mb-4">
                     <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
                     <img class="rounded-circle"
-                      :src="item.picture ? item.picture : '/images/man-avatar.png'"
+                      :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
                       alt="student avatar">
                     <span class="ml-2 my-auto">
                       {{ item.first_name + " " + item.last_name }}
@@ -64,12 +59,7 @@
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
                     <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
-                    <v-select
-                      class="ml-auto"
-                      :options="staffList"
-                      dir="rtl'"
-                      @input="(e) => setStaff(e, item)"
-                    />
+                    <v-select class="ml-auto" :options="staffList" dir="rtl'" @input="(e) => setStaff(e, item)" />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
@@ -122,7 +112,8 @@ export default {
       allStuff: false,
       studentList: [],
       teacherList: [],
-      isClass: true
+      isClass: true,
+      selectedStudent: []
     }
   },
   mounted() {
@@ -180,7 +171,12 @@ export default {
         .valMultipe.value2 = ""
     },
     handlePreview() {
+      this.selectedStudent = this.student.map((studentId) => {
+        const studentIndex = this.studentList.findIndex((student) => student.client_users.id === studentId)
+        return this.studentList[studentIndex]
+      })
       this.$emit('preview')
+      this.$emit('selectedStudent', this.selectedStudent)
     },
     setStaff(e, item) {
       console.log('hhhhhhe', e, item)
@@ -221,32 +217,32 @@ export default {
           page: 1,
           limit: 1000
         })
-        .then(({data}) => {
-          this.classes = data.classes.map((item) => {
-            return {
-              id: item.class_id,
-              label: item.name
-            }
+          .then(({ data }) => {
+            this.classes = data.classes.map((item) => {
+              return {
+                id: item.class_id,
+                label: item.name
+              }
+            })
+            this.getClassDetail(data.classes[0].class_id)
+            this.selectedClass = this.classes[0]
           })
-          this.getClassDetail(data.classes[0].class_id);
-          this.selectedClass = this.classes[0]
-        })
       } else {
         this.$store.dispatch("getCourseList", {
           page: 1,
           limit: 1000
         })
-        .then(({data}) => {
-          this.studentList = data.course[0].students
-          this.teacherList = data.course[0].tutors
-          this.classes = data.course.map((item) => {
-            return {
-              id: item.id,
-              label: item.name
-            }
+          .then(({ data }) => {
+            this.studentList = data.course[0].students
+            this.teacherList = data.course[0].tutors
+            this.classes = data.course.map((item) => {
+              return {
+                id: item.id,
+                label: item.name
+              }
+            })
+            this.selectedClass = this.classes[0]
           })
-          this.selectedClass = this.classes[0]
-        })
       }
     }
   },
@@ -258,7 +254,7 @@ export default {
       }
     },
     isClass() {
-      this.getClassOrCourseList();
+      this.getClassOrCourseList()
     },
     content(newVal) {
       console.log(newVal)
