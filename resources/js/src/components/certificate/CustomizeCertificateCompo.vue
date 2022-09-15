@@ -66,29 +66,15 @@
 
             <vs-button type="border" class="uploading-image" @click="$refs.uploadImageInput.click()">Upload</vs-button>
           </div> -->
-          <certificate-file-upload
-            class="file-upload"
-            :file_repository_id="4103"
-            section_type="CertificateComponent"
-            @image="setImage"
-          />
-          <div
-            :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
-            v-for="(template, index) in templateList"
-            :key="index"
-            @click="selectTemplate(index)"
-          >
-            <TemplateSection
-              :type="index"
-              :style="{
-                width: `200px`,
-                height: `143px`
-              }"
-              :width="width"
-              :height="height"
-              :image="templateList[index].certificate_image_details"
-              :content="JSON.parse(template.content)"
-            />
+          <certificate-file-upload class="file-upload" :file_repository_id="4103" section_type="CertificateComponent"
+            @image="setImage" />
+          <div :class="`template-box mr-2 mt-5 ${selectedTemplate === index ? 'template-box-active' : ''}`"
+            v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
+            <TemplateSection :type="index" :style="{
+              width: `200px`,
+              height: `143px`
+            }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
+              :content="JSON.parse(template.content)" />
             <!-- <div class="template-placeholder">
               <p v-html="template.title" v-if="template && template.title !== null"></p>
               <p v-html="template.description" v-if="template && template.description !== null"></p>
@@ -323,5 +309,15 @@ export default {
 .vs-input {
   width: 107px;
   height: 34px;
+}
+
+.close-modal {
+  color: #6E6B7B;
+  transform: translate(-50%, 50%) !important;
+  box-shadow: none !important;
+}
+
+.vs-dialog-cancel:hover {
+  box-shadow: 0 5px 20px 0 rgb(0 0 0 / 10%) !important;
 }
 </style>
