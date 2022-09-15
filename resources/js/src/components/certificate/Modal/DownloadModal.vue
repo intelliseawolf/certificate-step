@@ -13,8 +13,7 @@
             </li>
             <li v-for="item in filterStudentList" :key="item.id" class="flex mb-4">
               <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
-              <img class="rounded-circle"
-                :src="item.picture ? item.picture : '/images/man-avatar.png'"
+              <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                 alt="student avatar">
               <span class="ml-2 my-auto">
                 {{ item.first_name + " " + item.last_name }}
@@ -27,7 +26,7 @@
           <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div>
             <vs-button @click="handlePreview" class="mr-2 primary" type="flat">Preview</vs-button>
-            <vs-button @click="downloadPDF">Download Certificates</vs-button>
+            <vs-button>Download Certificates</vs-button>
             <!-- <VueHtml2pdf :manual-pagination="true" :enable-download="true" filename="certificate_name-student_name"
               :pdf-quality="2" pdf-format="a4" pdf-orientation="landscape" pdf-content-width="877px" ref="DownloadComp">
               <section slot="pdf-content">
@@ -42,7 +41,7 @@
                   </div>
                 </div>
               </section>
-            </VueHtml2pdf> -->
+            </VueHtml2pdf> --> -->
           </div>
         </div>
       </div>
@@ -52,7 +51,7 @@
 
 <script>
 // import VueHtml2pdf from 'vue-html2pdf'
-import TemplateSection from '../editor/TemplateSection.vue'
+// import TemplateSection from '../editor/TemplateSection.vue'
 
 export default {
   props: {
@@ -79,8 +78,8 @@ export default {
     },
   },
   components: {
-    TemplateSection,
-    // VueHtml2pdf
+    // VueHtml2pdf,
+    // TemplateSection
   },
   data() {
     return {

@@ -4,7 +4,7 @@
     <vx-card class="my-5">
       <div class="tabs-container">
         <h3>Generate Certificate</h3>
-        <input type="file" accept=".csv" @change="handleFileUpload( $event )"/>
+        <input type="file" accept=".csv" @change="handleFileUpload( $event )" />
         <!-- Table -->
         <vs-table :data="users" class="my-5">
           <template slot="thead">
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Papa from 'papaparse';
+import Papa from 'papaparse'
 
 export default {
   components: {
@@ -76,28 +76,29 @@ export default {
       ],
       file: '',
       content: [],
-      parsed: false
+      parsed: false,
+      fields
     }
   },
   methods: {
-    handleFileUpload( event ) {
-      this.file = event.target.files[0];
-      this.parseFile();
+    handleFileUpload(event) {
+      this.file = event.target.files[0]
+      this.parseFile()
     },
     parseFile() {
       Papa.parse(this.file, {
-          header: true,
-          skipEmptyLines: true,
-          complete: function (results) {
-            this.content = results;
-            this.parsed = true;
-          }.bind(this)
-      });
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          this.content = results
+          this.parsed = true
+        }.bind(this)
+      })
     },
   },
   watch: {
     content(newVal) {
-      console.log(newVal)
+      console.log("newVal", newVal)
     }
   }
 }
