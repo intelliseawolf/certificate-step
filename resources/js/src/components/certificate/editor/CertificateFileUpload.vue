@@ -1,22 +1,9 @@
 <template>
-    <vs-row>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-            <vs-card class="cstm-card w-full mb-4 collapse-cstm-card">
+    <vs-row class="certificate-file-upload">
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12" style="position: relative;">
+            <vs-card class="cstm-card collapse-cstm-card">
                 <div class="collapse-item">
-                    <div
-                        class="flex justify-between header"
-                        slot="header"
-                        @click="isCollapseCard = !isCollapseCard"
-                        :class="{ activeCollapse: isCollapseCard }"
-                    >
-                        <h5>Files(Only JPEG and JPG files are allowed)</h5>
-                        <span class="material-icons">keyboard_arrow_down</span>
-                    </div>
-                    <div
-                        class="collapseContent"
-                        v-show="isCollapseCard"
-                        :class="{ active: isCollapseCard }"
-                    >
+                    <div class="collapseContent">
                         <div
                             class="cstm_vuefileagent_holder"
                             :class="edit ? 'pt-100' : ''"
@@ -45,16 +32,6 @@
                                     uploadEvent('upload:error', $event)
                                 "
                             ></VueFileAgent>
-                        </div>
-
-                        <div v-if="fileRecordsForUpload.length">
-                            <vs-divider />
-                            <vs-button
-                                :disabled="!fileRecordsForUpload.length"
-                                @click="uploadmodal = true"
-                            >
-                                Upload {{ fileRecordsForUpload.length }} files
-                            </vs-button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +62,6 @@
                                         movable: false,
                                         scalable: false,
                                     }"
-                                    :stencil-size="{ width: 1123, height: 794 }"
                                     image-restriction="stencil"
                                 />
                             </div>
@@ -145,7 +121,6 @@ export default {
             background_img_name: "",
             deletedIndex: null,
             uploadmodal: false,
-            isCollapseCard: true,
             imageHint: "Choose files or drag & drop here",
             imagevalidation: "image/*",
             auto: true,
@@ -277,6 +252,7 @@ export default {
             );
             this.fileRecordsForUpload =
                 this.fileRecordsForUpload.concat(validFileRecords);
+            this.uploadmodal = true
         },
         onBeforeDelete(fileRecord) {
             const i = this.fileRecordsForUpload.indexOf(fileRecord);
@@ -416,7 +392,43 @@ export default {
 .childImportPopUp {
     z-index: 53001;
 }
+
 .pt-100 {
     padding-top: 100px;
+}
+
+.file-preview {
+    .help-text {
+        display: none !important;
+    }
+}
+
+.collapse-cstm-card {
+    width: 220px !important;
+}
+
+.vs-card--content {
+    padding: 0;
+}
+
+.collapseContent {
+    padding: 0;
+}
+
+.con-vs-card {
+    margin: 0;
+}
+
+.certificate-file-upload {
+    width: unset !important;
+    margin-right: 0.5rem;
+}
+
+.cstm_vuefileagent_holder {
+    top: 18px;
+    position: absolute;
+    width: 100%;
+    border-radius: 10px;
+    height: 152px;
 }
 </style>

@@ -53,6 +53,10 @@ const getters = {
 
     getClassDetail: (state) => {
         return state.classDetail;
+    },
+
+    getCourseList: (state) => {
+        return state.courseList;
     }
 };
 

@@ -11,7 +11,6 @@ export default {
     },
     createFormData() {
       const formData = new FormData()
-      console.log(this.uploadedImage)
       formData.append('files[]', this.uploadedImage) // this is important! - the actual file for upload
       formData.append('upload_path', 'ads')
       return formData // edit: fixed. Thanks to Chauhan-Nitesh for the comment below

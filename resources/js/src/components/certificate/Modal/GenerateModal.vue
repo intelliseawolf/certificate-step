@@ -18,13 +18,18 @@
 
         <div class="flex justify-between">
           <span>Select Course / Class</span>
-          <a href="/certificate/generate" class="ml-auto">Upload CSV</a>
+          <vs-switch v-model="isClass" style="width: 60px;" class="ml-auto mr-4">
+            <span slot="on">Class</span>
+            <span slot="off">Course</span>
+          </vs-switch>
+          <a href="/certificate/generate">Upload CSV</a>
         </div>
         <v-select
           v-model="selectedClass"
+          class="mt-3"
           :options="classes"
           :dir="$vs.rtl ? 'rtl' : 'ltr'"
-          @input="changeClass"
+          @input="changeClassOrCourse"
         />
         <br>
         <!-- Student & Staff Tabs -->
@@ -59,7 +64,12 @@
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
                     <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
-                    <v-select class="ml-auto" v-model="staff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+                    <v-select
+                      class="ml-auto"
+                      :options="staffList"
+                      dir="rtl'"
+                      @input="(e) => setStaff(e, item)"
+                    />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
@@ -87,7 +97,11 @@ import PreviewModal from './PreviewModal.vue'
 
 export default {
   props: {
-    activePrompt: Boolean
+    activePrompt: Boolean,
+    content: {
+      type: Array,
+      require: true
+    }
   },
   data() {
     return {
@@ -100,31 +114,21 @@ export default {
       textarea: '',
       classes: [],
       selectedClass: {},
-      staff: [
-        { id: 1, label: 'Staff_Name 1' },
-        { id: 2, label: 'Staff_Name 2' },
-        { id: 3, label: 'Staff_Name 3' },
-      ],
-      staff_list: { id: 1, label: 'Staff_Name 1' },
       selectBox: false,
+      staffList: [{ id: -1, label: "None" }],
       student: [],
       allStudent: false,
       stuff: [],
       allStuff: false,
       studentList: [],
-      teacherList: []
+      teacherList: [],
+      isClass: true
     }
   },
   mounted() {
     // this.$store.dispatch("getStudents")
     // this.$store.dispatch("getTeachers")
-    this.$store.dispatch("getClasses", {
-      page: 1,
-      limit: 1000
-    })
-    .then(() => {
-      this.getClassDetail(this.classList[0].class_id);
-    })
+    this.getClassOrCourseList()
   },
   components: {
     'v-select': vSelect,
@@ -145,7 +149,10 @@ export default {
     },
     classDetail() {
       return this.$store.getters['getClassDetail']
-    }
+    },
+    courseList() {
+      return this.$store.getters['getCourseList']
+    },
   },
   methods: {
     handleShow() {
@@ -175,6 +182,10 @@ export default {
     handlePreview() {
       this.$emit('preview')
     },
+    setStaff(e, item) {
+      console.log('hhhhhhe', e, item)
+      this.$emit("setStaff")
+    },
     selectAllStudent() {
       this.student = []
       if (this.allStudent) {
@@ -194,27 +205,69 @@ export default {
     getClassDetail(classId) {
       return this.$store.dispatch("getClassDetail", classId)
     },
-    changeClass() {
-      this.getClassDetail(this.selectedClass.id)
+    changeClassOrCourse() {
+      if (this.isClass) {
+        this.getClassDetail(this.selectedClass.id)
+      } else {
+        const index = this.courseList.findIndex((item) => item.id == this.selectedClass.id)
+        console.log(this.courseList[index])
+        this.studentList = this.courseList[index].students
+        this.teacherList = this.courseList[index].tutors
+      }
+    },
+    getClassOrCourseList() {
+      if (this.isClass) {
+        this.$store.dispatch("getClasses", {
+          page: 1,
+          limit: 1000
+        })
+        .then(({data}) => {
+          this.classes = data.classes.map((item) => {
+            return {
+              id: item.class_id,
+              label: item.name
+            }
+          })
+          this.getClassDetail(data.classes[0].class_id);
+          this.selectedClass = this.classes[0]
+        })
+      } else {
+        this.$store.dispatch("getCourseList", {
+          page: 1,
+          limit: 1000
+        })
+        .then(({data}) => {
+          this.studentList = data.course[0].students
+          this.teacherList = data.course[0].tutors
+          this.classes = data.course.map((item) => {
+            return {
+              id: item.id,
+              label: item.name
+            }
+          })
+          this.selectedClass = this.classes[0]
+        })
+      }
     }
   },
   watch: {
-    classList(newVal) {
-      if (newVal.length) {
-        this.classes = newVal.map((item) => {
-          return {
-            id: item.class_id,
-            label: item.name
-          }
-        })
-        this.selectedClass = this.classes[0]
-      }
-    },
     classDetail(newVal) {
       if (newVal) {
         this.studentList = newVal.student.student_details
         this.teacherList = newVal.teacher.teacher_details
       }
+    },
+    isClass() {
+      this.getClassOrCourseList();
+    },
+    content(newVal) {
+      console.log(newVal)
+      newVal.map((item) => {
+        this.staffList.push({
+          id: item.id,
+          label: item.content
+        })
+      })
     }
   }
 }
@@ -270,5 +323,10 @@ export default {
 
 .vs__dropdown-toggle {
   margin: 0 !important;
+}
+
+.vs-dialog .vs-switch {
+  position: relative !important;
+  top: unset !important;
 }
 </style>

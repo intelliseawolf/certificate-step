@@ -94,13 +94,22 @@ const actions = {
       return axios.post(`/classes/list/184?page=${page}&limit=${limit}`, {is_archived: 1})
         .then(({data}) => {
           commit('GET_CLASS_LIST', data)
+          return Promise.resolve(data)
         })
     },
 
     getClassDetail({commit}, classId) {
-      return axios.get(`/classes/show/${classId}/184`)
+      axios.get(`/classes/show/${classId}/184`)
         .then(({data}) => {
           commit('GET_CLASS_DETAIL', data)
+        })
+    },
+
+    getCourseList({commit}, {page, limit}) {
+      return axios.post(`/V1/course/list/184?page=${page}`, {limit})
+        .then(({data}) => {
+          commit('GET_COURSE_LIST', data)
+          return Promise.resolve(data)
         })
     },
 }

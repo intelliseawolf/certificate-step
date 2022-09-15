@@ -9,7 +9,6 @@
             @setDynamicText="setDynamicText"
             @createStaticText="createStaticText"
             @removeStaticText="removeStaticText"
-            :activeDynamicTexts="activeDynamicTexts"
             :dynamicTextList="dynamicTextList"
             :staticTextList="staticTextList"
           />
@@ -22,6 +21,7 @@
             :width="width"
             :height="height"
             @changeMainContent="changeContent"
+            @removeStaticText="removeStaticText"
             ref="editor"
           />
         </div>
@@ -73,8 +73,6 @@ export default {
   methods: {
     setDynamicText(id) {
       this.$refs.editor.addDynamicText(id)
-      this.activeDynamicTexts.push(id)
-      this.$refs.editor.allowDraggable()
     },
     nextTab() {
       if (!this.$refs.editor.content.length) {
@@ -97,7 +95,6 @@ export default {
     createStaticText(text) {
       this.staticTextList.push(text);
       this.$refs.editor.addStaticText(text)
-      this.$refs.editor.allowDraggable()
     },
     removeStaticText(text) {
       this.staticTextList = this.staticTextList.filter((item) => item != text);
@@ -108,7 +105,7 @@ export default {
     },
     setEditorContent(content) {
       this.$refs.editor.setContent(content);
-    }
+    },
   },
   data() {
     return {
@@ -116,7 +113,6 @@ export default {
       // AgGrid
       currentPage: 1,
       selected: -1,
-      activeDynamicTexts: [],
       staticTextList: [],
     }
   },

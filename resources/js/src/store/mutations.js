@@ -142,6 +142,10 @@ const mutations = {
   GET_CLASS_DETAIL(state, payload) {
     state.classDetail = payload.data.classes;
   },
+
+  GET_COURSE_LIST(state, payload) {
+    state.courseList = payload.data.course;
+  },
 }
 
 export default mutations

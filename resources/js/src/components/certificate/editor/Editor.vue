@@ -44,6 +44,9 @@
       />
       <i class="material-icons ml-3" @click="toggleUnderline"> format_underline </i>
       <i class="material-icons ml-3" @click="toggleBold"> format_bold </i>
+      <i class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
+        delete
+      </i>
     </div>
     <img
       class="editor-bg"
@@ -126,7 +129,6 @@ export default {
       staticTextContent: [],
       activeIndex: -1,
       mainContent: "",
-      canEditable: true,
       dragOption: {
         fontSize: { id: 2, label: 'Normal', value: '18px' },
         color: "#000000"
@@ -167,20 +169,14 @@ export default {
     },
     addDynamicText(id) {
       this.content.push({
+        id: id,
         type: 'dynamic-text',
         style: { fontSize: '18px', width: 'max-content' },
         content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'],
         x: 100,
         y: 100
       })
-      this.canEditable = false
       // this.mainContent = this.mainContent.concat('', `<p>${this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code']}</p>`)
-    },
-    toggleDraggable() {
-      this.canEditable = !this.canEditable
-    },
-    allowDraggable() {
-      this.canEditable = false;
     },
     addStaticText(text) {
       this.content.push({
@@ -251,6 +247,15 @@ export default {
     },
     setContent(content) {
       this.content = content;
+    },
+    removeText() {
+      if (this.activeDragIndex == -1) return
+      const textInfo = this.content[this.activeDragIndex]
+      if (textInfo.type == 'static-text') {
+        this.$emit("removeStaticText", textInfo.content)
+      } else {
+        this.content = this.content.filter((item) => item.id != textInfo.id)
+      }
     }
   },
   watch: {

@@ -70,6 +70,7 @@ const state = {
     studentList             : [],
     teacherList             : [],
     classList               : [],
+    courseList              : [],
     classListMetaData       : {},
     classDetail             : {},
 

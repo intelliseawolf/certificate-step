@@ -123,8 +123,6 @@ export default {
       this.$emit('cancel')
     },
     handleOpen() {
-      // this.$emit('close')
-      console.error('this. active prmot')
       this.activePrompt = true
     },
     handleSend() {
