@@ -121,6 +121,30 @@ export default {
 </script>
 
 <style>
+.wizard-nav {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+span.stepTitle {
+	margin-left: 2em !important;
+}
+
+.wizard-nav li {
+	font-size: medium !important;
+	margin-right: 3em !important;
+}
+
+.wizard-icon-circle {
+	width: 37px !important;
+	height: 37px !important;
+}
+
+.vue-form-wizard .wizard-icon-circle .wizard-icon-container {
+	border-radius: 6px !important;
+	box-shadow: 0 3px 6px 0 rgb(105 108 255 / 40%) !important;
+}
+
 .wizard-card-footer {
 	display: none;
 }

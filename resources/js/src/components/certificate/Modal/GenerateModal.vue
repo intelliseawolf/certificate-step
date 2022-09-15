@@ -24,47 +24,55 @@
           </vs-switch>
           <a href="/certificate/generate">Upload CSV</a>
         </div>
-        <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-          @input="changeClassOrCourse" />
-        <br>
-        <!-- Student & Staff Tabs -->
-        <div class="mt-1">
-          <vs-tabs alignment="fixed">
-            <vs-tab label="Student">
-              <div>
-                <ul class="centerx">
-                  <li class="mb-4">
-                    <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
-                  </li>
-                  <li v-for="item in studentList" :key="item.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
-                    <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
-                      alt="student avatar">
-                    <span class="ml-2 my-auto">
-                      {{ item.first_name + " " + item.last_name }}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </vs-tab>
-            <vs-tab label="Staff">
-              <div>
-                <ul class="centerx">
-                  <li class="mb-4">
-                    <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
-                  </li>
-                  <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center;">
-                    <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
-                    <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
-                      alt="teacher image">
-                    <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
-                    <v-select class="ml-auto" :options="staffList" dir="rtl'" @input="(e) => setStaff(e, item)" />
-                    <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
-                  </li>
-                </ul>
-              </div>
-            </vs-tab>
-          </vs-tabs>
+        <div v-if="isloading">
+          <div class="flex justify-center">
+            Loading...
+          </div>
+        </div>
+        <div v-else>
+          <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            @input="changeClassOrCourse" />
+          <br>
+          <!-- Student & Staff Tabs -->
+          <div class="mt-1">
+            <vs-tabs alignment="fixed">
+              <vs-tab label="Student">
+                <div>
+                  <ul class="centerx">
+                    <li class="mb-4">
+                      <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
+                    </li>
+                    <li v-for="item in studentList" :key="item.id" class="flex mb-4">
+                      <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
+                      <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
+                        alt="student avatar">
+                      <span class="ml-2 my-auto">
+                        {{ item.first_name + " " + item.last_name }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </vs-tab>
+              <vs-tab label="Staff">
+                <div>
+                  <ul class="centerx">
+                    <li class="mb-4">
+                      <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
+                    </li>
+                    <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center;">
+                      <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
+                      <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
+                        alt="teacher image">
+                      <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
+                      <v-select class="ml-auto staff-select" :options="staffList" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        @input="(e) => setStaff(e, item)" />
+                      <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
+                    </li>
+                  </ul>
+                </div>
+              </vs-tab>
+            </vs-tabs>
+          </div>
         </div>
         <!-- Footer -->
         <div class="flex mt-3 justify-between">
@@ -112,7 +120,10 @@ export default {
       studentList: [],
       teacherList: [],
       isClass: true,
-      selectedStudent: []
+      selectedStudent: [],
+      isloading: false,
+      backgroundLoading: 'primary',
+      colorLoading: '#fff',
     }
   },
   mounted() {
@@ -122,7 +133,7 @@ export default {
   },
   components: {
     'v-select': vSelect,
-    PreviewModal
+    PreviewModal,
   },
   computed: {
     validName() {
@@ -212,11 +223,13 @@ export default {
     },
     getClassOrCourseList() {
       if (this.isClass) {
+        this.isloading = true
         this.$store.dispatch("getClasses", {
           page: 1,
           limit: 1000
         })
           .then(({ data }) => {
+            this.isloading = false
             this.classes = data.classes.map((item) => {
               return {
                 id: item.class_id,
@@ -227,11 +240,13 @@ export default {
             this.selectedClass = this.classes[0]
           })
       } else {
+        this.isloading = true
         this.$store.dispatch("getCourseList", {
           page: 1,
           limit: 1000
         })
           .then(({ data }) => {
+            this.isloading = false
             this.studentList = data.course[0].students
             this.teacherList = data.course[0].tutors
             this.classes = data.course.map((item) => {
@@ -312,8 +327,13 @@ export default {
 }
 
 .v-select .vs__dropdown-toggle {
-  margin-top: 1em;
+  margin-top: 1em !important;
   width: 100% !important;
+}
+
+.staff-select .vs__dropdown-toggle {
+  max-width: 200px !important;
+  min-width: 172px !important;
 }
 
 .vs__dropdown-toggle {
