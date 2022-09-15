@@ -53,7 +53,7 @@
 					<!-- tab 3 content -->
 					<tab-content title="Preview">
 						<Preview :template="template" :image="image" :width="width" :height="height" :content="content"
-							@prevTab="prevTab" />
+							@prevTab="prevTab" @mapDynamicContent="mapDynamicContent" />
 					</tab-content>
 				</form-wizard>
 			</div>
@@ -115,6 +115,11 @@ export default {
 		},
 		setInitialContent(content) {
 			this.$refs.textField.setEditorContent(content)
+		},
+		mapDynamicContent({id, name}) {
+			console.log(this.content, id, name)
+			const index = this.content.findIndex((item) => item.id == id)
+			this.content[index].content = name
 		}
 	}
 }

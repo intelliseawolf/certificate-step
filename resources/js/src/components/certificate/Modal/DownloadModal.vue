@@ -11,13 +11,12 @@
             <li class="mb-4">
               <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
             </li>
-            <li v-for="item in filterStudentList" :key="item.client_users.id" class="flex mb-4">
-              <vs-checkbox :vs-value="item.client_users.id" v-model="student"></vs-checkbox>
-              <img class="rounded-circle"
-                :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
+            <li v-for="item in filterStudentList" :key="item.id" class="flex mb-4">
+              <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
+              <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                 alt="student avatar">
               <span class="ml-2 my-auto">
-                {{ item.client_users.first_name + " " + item.client_users.last_name }}
+                {{ item.first_name + " " + item.last_name }}
               </span>
             </li>
           </ul>
@@ -31,16 +30,18 @@
             <!-- <VueHtml2pdf :manual-pagination="true" :enable-download="true" filename="certificate_name-student_name"
               :pdf-quality="2" pdf-format="a4" pdf-orientation="landscape" pdf-content-width="877px" ref="DownloadComp">
               <section slot="pdf-content">
-                <div class="mr-2 mt-5" v-for="(template, index) in templateList" :key="index"
-                  @click="selectTemplate(index)">
-                  <TemplateSection :type="index" :style="{
-                    width: `478px`,
-                    height: `334px`
-                  }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
-                    :content="JSON.parse(template.content)" />
+                <div :style="`width: ${width}px; height: ${height}px;`">
+                  <img :src="image && image.file && image.file.file_path" alt="template image">
+                  <div class="template-content-section flex" v-for="(item, index) in content" :key="index" :style="{
+                    ...item.style,
+                    left: `${item.x}px`,
+                    top: `${item.y}px`,
+                  }">
+                    <p v-html="item.content"></p>
+                  </div>
                 </div>
               </section>
-            </VueHtml2pdf> -->
+            </VueHtml2pdf> --> -->
           </div>
         </div>
       </div>
@@ -55,6 +56,26 @@
 export default {
   props: {
     activePrompt: Boolean,
+    selectedStudent: {
+      type: Array,
+      required: true
+    },
+    image: {
+      type: Object,
+      required: true
+    },
+    content: {
+      type: Array,
+      required: true
+    },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    },
   },
   components: {
     // VueHtml2pdf,
@@ -90,10 +111,12 @@ export default {
       return this.$store.getters['getStudentList']
     },
     filterStudentList() {
-      return this.selectedStudent.filter(student => {
-        this.full_name = student.client_users.first_name + student.client_users.last_name
-        return this.full_name.toLowerCase().includes(this.search.toLowerCase().replace(/\s/g, ''))
-      })
+      if (this.selectedStudent && this.selectedStudent.length) {
+        return this.selectedStudent.filter(student => {
+          this.full_name = student.first_name + student.last_name
+          return this.full_name.toLowerCase().includes(this.search.toLowerCase().replace(/\s/g, ''))
+        })
+      }
     }
   },
   mounted() {
@@ -104,7 +127,7 @@ export default {
       this.student = []
       if (this.allStudent) {
         this.selectedStudent.map((item) => {
-          this.student.push(item.client_users.id)
+          this.student.push(item.id)
         })
       }
     },
@@ -130,9 +153,9 @@ export default {
     handlePreview() {
       this.$emit('preview')
     },
-    // downloadPDF() {
-    //   this.$refs.DownloadComp.generatePdf()
-    // },
+    downloadPDF() {
+      this.$refs.DownloadComp.generatePdf()
+    },
     singlePdfDownload(id) {
       this.params.colDef.cellRendererParams.singlePdfDownload(id)
     }
