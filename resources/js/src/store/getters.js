@@ -46,6 +46,18 @@ const getters = {
     getTeacherList: (state) => {
         return state.teacherList;
     },
+
+    getClassList: (state) => {
+        return state.classList;
+    },
+
+    getClassDetail: (state) => {
+        return state.classDetail;
+    },
+
+    getCourseList: (state) => {
+        return state.courseList;
+    }
 };
 
 export default getters;

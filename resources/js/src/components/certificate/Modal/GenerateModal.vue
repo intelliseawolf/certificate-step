@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="generate-modal">
     <vs-prompt @accept="acceptAlert" @close="close" buttonAccept="false" buttonCancel="false" :active="activePrompt"
       title="Genrate Certificate">
       <div class="con-exemple-prompt">
@@ -18,9 +18,15 @@
 
         <div class="flex justify-between">
           <span>Select Course / Class</span>
-          <a href="/certificate/generate" class="ml-auto">Upload CSV</a>
+          <vs-switch v-model="isClass" style="width: 60px;" class="ml-auto mr-4">
+            <span slot="on">Class</span>
+            <span slot="off">Course</span>
+          </vs-switch>
+          <a href="/certificate/generate">Upload CSV</a>
         </div>
-        <v-select v-model="classes_list" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          @input="changeClassOrCourse" />
+        <br>
         <!-- Student & Staff Tabs -->
         <div class="mt-1">
           <vs-tabs alignment="fixed">
@@ -30,14 +36,13 @@
                   <li class="mb-4">
                     <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
                   </li>
-                  <li v-for="item in studentList" :key="item.client_users.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.client_users.id" v-model="student">
-                    </vs-checkbox>
+                  <li v-for="item in studentList" :key="item.id" class="flex mb-4">
+                    <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
                     <img class="rounded-circle"
                       :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
                       alt="student avatar">
                     <span class="ml-2 my-auto">
-                      {{ item.client_users.first_name + " " + item.client_users.last_name }}
+                      {{ item.first_name + " " + item.last_name }}
                     </span>
                   </li>
                 </ul>
@@ -49,12 +54,12 @@
                   <li class="mb-4">
                     <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
                   </li>
-                  <li v-for="item in teacherList" :key="item.user.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.user.id" v-model="stuff"></vs-checkbox>
+                  <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center;">
+                    <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
-                    <span class="ml-2 my-auto">{{ item.user.first_name + " " + item.user.last_name }}</span>
-                    <v-select class="ml-auto" v-model="staff_list" :options="stuff" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+                    <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
+                    <v-select class="ml-auto" :options="staffList" dir="rtl'" @input="(e) => setStaff(e, item)" />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
@@ -82,7 +87,11 @@ import PreviewModal from './PreviewModal.vue'
 
 export default {
   props: {
-    activePrompt: Boolean
+    activePrompt: Boolean,
+    content: {
+      type: Array,
+      require: true
+    }
   },
   data() {
     return {
@@ -93,29 +102,24 @@ export default {
         value2: ''
       },
       textarea: '',
-      classes: [
-        { id: 1, label: 'Class 1' },
-        { id: 2, label: 'Class 2' },
-        { id: 3, label: 'Class 3' },
-      ],
-      classes_list: { id: 1, label: 'Class 1' },
-      staff: [
-        { id: 1, label: 'Staff_Name 1' },
-        { id: 2, label: 'Staff_Name 2' },
-        { id: 3, label: 'Staff_Name 3' },
-      ],
-      staff_list: { id: 1, label: 'Staff_Name 1' },
+      classes: [],
+      selectedClass: {},
       selectBox: false,
+      staffList: [{ id: -1, label: "None" }],
       student: [],
       allStudent: false,
       stuff: [],
       allStuff: false,
+      studentList: [],
+      teacherList: [],
+      isClass: true,
       selectedStudent: []
     }
   },
   mounted() {
-    this.$store.dispatch("getStudents")
-    this.$store.dispatch("getTeachers")
+    // this.$store.dispatch("getStudents")
+    // this.$store.dispatch("getTeachers")
+    this.getClassOrCourseList()
   },
   components: {
     'v-select': vSelect,
@@ -125,11 +129,20 @@ export default {
     validName() {
       return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
     },
-    studentList: function () {
-      return this.$store.getters['getStudentList']
+    // studentList() {
+    //   return this.$store.getters['getStudentList']
+    // },
+    // teacherList() {
+    //   return this.$store.getters['getTeacherList']
+    // },
+    classList() {
+      return this.$store.getters['getClassList']
     },
-    teacherList: function () {
-      return this.$store.getters['getTeacherList']
+    classDetail() {
+      return this.$store.getters['getClassDetail']
+    },
+    courseList() {
+      return this.$store.getters['getCourseList']
     },
   },
   methods: {
@@ -165,11 +178,15 @@ export default {
       this.$emit('preview')
       this.$emit('selectedStudent', this.selectedStudent)
     },
+    setStaff(e, item) {
+      console.log('hhhhhhe', e, item)
+      this.$emit("setStaff")
+    },
     selectAllStudent() {
       this.student = []
       if (this.allStudent) {
         this.studentList.map((item) => {
-          this.student.push(item.client_users.id)
+          this.student.push(item.id)
         })
       }
     },
@@ -177,11 +194,78 @@ export default {
       this.stuff = []
       if (this.allStuff) {
         this.teacherList.map((item) => {
-          this.stuff.push(item.user.id)
+          this.stuff.push(item.id)
         })
+      }
+    },
+    getClassDetail(classId) {
+      return this.$store.dispatch("getClassDetail", classId)
+    },
+    changeClassOrCourse() {
+      if (this.isClass) {
+        this.getClassDetail(this.selectedClass.id)
+      } else {
+        const index = this.courseList.findIndex((item) => item.id == this.selectedClass.id)
+        console.log(this.courseList[index])
+        this.studentList = this.courseList[index].students
+        this.teacherList = this.courseList[index].tutors
+      }
+    },
+    getClassOrCourseList() {
+      if (this.isClass) {
+        this.$store.dispatch("getClasses", {
+          page: 1,
+          limit: 1000
+        })
+          .then(({ data }) => {
+            this.classes = data.classes.map((item) => {
+              return {
+                id: item.class_id,
+                label: item.name
+              }
+            })
+            this.getClassDetail(data.classes[0].class_id)
+            this.selectedClass = this.classes[0]
+          })
+      } else {
+        this.$store.dispatch("getCourseList", {
+          page: 1,
+          limit: 1000
+        })
+          .then(({ data }) => {
+            this.studentList = data.course[0].students
+            this.teacherList = data.course[0].tutors
+            this.classes = data.course.map((item) => {
+              return {
+                id: item.id,
+                label: item.name
+              }
+            })
+            this.selectedClass = this.classes[0]
+          })
       }
     }
   },
+  watch: {
+    classDetail(newVal) {
+      if (newVal) {
+        this.studentList = newVal.student.student_details
+        this.teacherList = newVal.teacher.teacher_details
+      }
+    },
+    isClass() {
+      this.getClassOrCourseList()
+    },
+    content(newVal) {
+      console.log(newVal)
+      newVal.map((item) => {
+        this.staffList.push({
+          id: item.id,
+          label: item.content
+        })
+      })
+    }
+  }
 }
 </script>
 
@@ -231,5 +315,14 @@ export default {
 .v-select .vs__dropdown-toggle {
   margin-top: 1em;
   width: 100% !important;
+}
+
+.vs__dropdown-toggle {
+  margin: 0 !important;
+}
+
+.vs-dialog .vs-switch {
+  position: relative !important;
+  top: unset !important;
 }
 </style>

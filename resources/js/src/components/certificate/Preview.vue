@@ -18,11 +18,11 @@
             <vs-button class="mr-auto mt-2 dark" type="flat" @click="prevTab">Back</vs-button>
             <div class="flex ml-auto mt-2">
               <vs-button class="mr-2 primary" type="flat" @click="changeModal('save')">Save</vs-button>
-              <save-modal :activePrompt="modal === 'save'" @saveCertificate="saveCertificate"
+              <save-modal ref="saveModal" :activePrompt="modal === 'save'" @saveCertificate="saveCertificate"
                 @generate="changeModal('generate')" @cancel="changeModal(null)" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
-                @cancel="changeModal(null)" @selectedStudent="receiveStudent" />
+                @cancel="changeModal(null)" :content="content" @selectedStudent="receiveStudent" />
               <preview-modal :activePrompt="modal === 'preview'" @download="changeModal('download')"
                 @send="changeModal('send')" @cancel="changeModal(null)" :selectedStudent="this.selectedStudent"
                 :template="template" :image="image" :content="content" />

@@ -42,12 +42,6 @@
         :key="text.field_id"
         @click="setDynamicText(text.field_id)"
         class="menu-button"
-        :style="
-          activeDynamicTexts.includes(text.field_id) && `
-            background-color: rgba(var(--vs-primary),1)!important;
-            color: white;
-          `
-        "
         color="primary"
         type="border"
         icon-pack="feather"
@@ -71,9 +65,6 @@ export default {
     StaticTextModal,
   },
   props: {
-    activeDynamicTexts: {
-      type: Array
-    },
     dynamicTextList: {
       required: true
     },
