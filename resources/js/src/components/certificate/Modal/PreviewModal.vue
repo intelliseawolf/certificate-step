@@ -17,18 +17,17 @@
             <div class="carousel-certificates">
               <swiper :options="swiperOption" :dir="$vs.rtl ? 'rtl' : 'ltr'" :key="$vs.rtl" ref="mySwiper"
                 @slide-change="changeSwiperIndex">
-                <swiper-slide v-for="(template, index) in templateList" :key="index" @click="selectTemplate(index)">
-                  <TemplateSection :type="index" :style="{
+                <swiper-slide v-for="(item, index) in selectedStudent" :key="item.client_users.id">
+                  <TemplateSection :style="{
                     width: `478px`,
                     height: `334px`
-                  }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
-                    :content="JSON.parse(template.content)" />
+                  }" :width="width" :height="height" :image="image" :content="content" />
                 </swiper-slide>
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>
               </swiper>
             </div>
-            <span>{{ this.count }}/{{ templateListMetaData.total }}</span>
+            <span>{{ this.count }}/{{ selectedStudent.length }}</span>
           </div>
         </div>
         <!-- Footer -->
@@ -54,6 +53,18 @@ import TemplateSection from '../editor/TemplateSection.vue'
 export default {
   props: {
     activePrompt: Boolean,
+    selectedStudent: {
+      type: Array,
+      required: true
+    },
+    image: {
+      type: Object,
+      required: true
+    },
+    content: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -123,8 +134,6 @@ export default {
       this.$emit('cancel')
     },
     handleOpen() {
-      // this.$emit('close')
-      console.error('this. active prmot')
       this.activePrompt = true
     },
     handleSend() {

@@ -22,11 +22,12 @@
                 @generate="changeModal('generate')" @cancel="changeModal(null)" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
-                @cancel="changeModal(null)" />
+                @cancel="changeModal(null)" @selectedStudent="receiveStudent" />
               <preview-modal :activePrompt="modal === 'preview'" @download="changeModal('download')"
-                @send="changeModal('send')" @cancel="changeModal(null)" />
+                @send="changeModal('send')" @cancel="changeModal(null)" :selectedStudent="this.selectedStudent"
+                :template="template" :image="image" :content="content" />
               <download-modal :activePrompt="modal === 'download'" @preview="changeModal('preview')"
-                @cancel="changeModal(null)" />
+                @cancel="changeModal(null)" :selectedStudent="this.selectedStudent" />
               <send-modal :activePrompt="modal === 'send'" @cancel="changeModal(null)" />
             </div>
           </div>
@@ -78,7 +79,8 @@ export default {
   },
   data() {
     return {
-      modal: null
+      modal: null,
+      selectedStudent: []
     }
   },
   computed: {
@@ -101,9 +103,17 @@ export default {
         certificate_image_id: this.image.certificate_image_id,
         type: 0
       })
-      .then(() => {
-        this.$refs.saveModal.closeModal()
-      })
+        .then(() => {
+          this.$refs.saveModal.closeModal()
+        })
+    },
+    receiveStudent(student) {
+      this.selectedStudent = []
+      if (student) {
+        student.map((item) => {
+          this.selectedStudent.push(item)
+        })
+      }
     }
   }
 }

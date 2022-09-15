@@ -27,20 +27,14 @@
           <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div>
             <vs-button @click="handlePreview" class="mr-2 primary" type="flat">Preview</vs-button>
-            <vs-button @click="downloadPDF">Download Certificates</vs-button>
-            <VueHtml2pdf :manual-pagination="true" :enable-download="true" filename="certificate_name-student_name"
+            <vs-button @click="singlePdfDownload(params.data.certificate_id)">Download Certificates</vs-button>
+            <!-- <vs-button @click="downloadPDF">Download Certificates</vs-button> -->
+            <!-- <VueHtml2pdf :manual-pagination="true" :enable-download="true" filename="certificate_name-student_name"
               :pdf-quality="2" pdf-format="a4" pdf-orientation="landscape" pdf-content-width="877px" ref="DownloadComp">
               <section slot="pdf-content">
-                <div class="mr-2 mt-5" v-for="(template, index) in templateList" :key="index"
-                  @click="selectTemplate(index)">
-                  <TemplateSection :type="index" :style="{
-                    width: `478px`,
-                    height: `334px`
-                  }" :width="width" :height="height" :image="templateList[index].certificate_image_details"
-                    :content="JSON.parse(template.content)" />
-                </div>
+                <p>asd</p>
               </section>
-            </VueHtml2pdf>
+            </VueHtml2pdf> -->
           </div>
         </div>
       </div>
@@ -49,16 +43,20 @@
 </template>
 
 <script>
-import VueHtml2pdf from 'vue-html2pdf'
-import TemplateSection from '../editor/TemplateSection.vue'
+// import VueHtml2pdf from 'vue-html2pdf'
+// import TemplateSection from '../editor/TemplateSection.vue'
 
 export default {
   props: {
     activePrompt: Boolean,
+    selectedStudent: {
+      type: Array,
+      required: true
+    }
   },
   components: {
-    VueHtml2pdf,
-    TemplateSection
+    // VueHtml2pdf,
+    // TemplateSection
   },
   data() {
     return {
@@ -70,19 +68,19 @@ export default {
       },
       student: [],
       allStudent: false,
-      template: [],
-      content: "",
-      width: 877,
-      height: 620,
+      // template: [],
+      // content: "",
+      // width: 877,
+      // height: 620,
     }
   },
   computed: {
-    templateList: function () {
-      return this.$store.getters['getTemplateList']
-    },
-    templateListMetaData: function () {
-      return this.$store.getters['getTemplateListMetaData']
-    },
+    // templateList: function () {
+    //   return this.$store.getters['getTemplateList']
+    // },
+    // templateListMetaData: function () {
+    //   return this.$store.getters['getTemplateListMetaData']
+    // },
     validName() {
       return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
     },
@@ -90,7 +88,7 @@ export default {
       return this.$store.getters['getStudentList']
     },
     filterStudentList() {
-      return this.studentList.filter(student => {
+      return this.selectedStudent.filter(student => {
         this.full_name = student.client_users.first_name + student.client_users.last_name
         return this.full_name.toLowerCase().includes(this.search.toLowerCase().replace(/\s/g, ''))
       })
@@ -103,7 +101,7 @@ export default {
     selectAllStudent() {
       this.student = []
       if (this.allStudent) {
-        this.studentList.map((item) => {
+        this.selectedStudent.map((item) => {
           this.student.push(item.client_users.id)
         })
       }
@@ -130,8 +128,11 @@ export default {
     handlePreview() {
       this.$emit('preview')
     },
-    downloadPDF() {
-      this.$refs.DownloadComp.generatePdf()
+    // downloadPDF() {
+    //   this.$refs.DownloadComp.generatePdf()
+    // },
+    singlePdfDownload(id) {
+      this.params.colDef.cellRendererParams.singlePdfDownload(id)
     }
   }
 }

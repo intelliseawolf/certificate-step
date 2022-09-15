@@ -31,7 +31,8 @@
                     <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
                   </li>
                   <li v-for="item in studentList" :key="item.client_users.id" class="flex mb-4">
-                    <vs-checkbox :vs-value="item.client_users.id" v-model="student"></vs-checkbox>
+                    <vs-checkbox :vs-value="item.client_users.id" v-model="student">
+                    </vs-checkbox>
                     <img class="rounded-circle"
                       :src="item.client_users.picture ? item.client_users.picture : '/images/man-avatar.png'"
                       alt="student avatar">
@@ -109,6 +110,7 @@ export default {
       allStudent: false,
       stuff: [],
       allStuff: false,
+      selectedStudent: []
     }
   },
   mounted() {
@@ -156,7 +158,12 @@ export default {
         .valMultipe.value2 = ""
     },
     handlePreview() {
+      this.selectedStudent = this.student.map((studentId) => {
+        const studentIndex = this.studentList.findIndex((student) => student.client_users.id === studentId)
+        return this.studentList[studentIndex]
+      })
       this.$emit('preview')
+      this.$emit('selectedStudent', this.selectedStudent)
     },
     selectAllStudent() {
       this.student = []
