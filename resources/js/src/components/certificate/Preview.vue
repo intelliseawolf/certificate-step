@@ -22,12 +22,12 @@
                 @generate="changeModal('generate')" @cancel="changeModal(null)" />
               <vs-button @click="changeModal('generate')">Generate & Save</vs-button>
               <generate-modal :activePrompt="modal === 'generate'" @preview="changeModal('preview')"
-                @cancel="changeModal(null)" :content="content" @selectedStudent="receiveStudent" />
+                @cancel="changeModal(null)" :content="content" @selectStudent="receiveStudent" @setStaffMapping="setStaffMapping" />
               <preview-modal :activePrompt="modal === 'preview'" @download="changeModal('download')"
-                @send="changeModal('send')" @cancel="changeModal(null)" :selectedStudent="this.selectedStudent"
-                :template="template" :image="image" :content="content" />
+                @send="changeModal('send')" @cancel="changeModal(null)" :selectedStudent="selectedStudent"
+                :template="template" :image="image" :content="content" :width="width" :height="height" />
               <download-modal :activePrompt="modal === 'download'" @preview="changeModal('preview')"
-                @cancel="changeModal(null)" :selectedStudent="this.selectedStudent" />
+                @cancel="changeModal(null)" :selectedStudent="selectedStudent" :image="image" :content="content" :width="width" :height="height" />
               <send-modal :activePrompt="modal === 'send'" @cancel="changeModal(null)" />
             </div>
           </div>
@@ -108,12 +108,28 @@ export default {
         })
     },
     receiveStudent(student) {
-      this.selectedStudent = []
-      if (student) {
-        student.map((item) => {
-          this.selectedStudent.push(item)
+      this.selectedStudent = student
+    },
+    setStaffMapping(mappingData) {
+      const updatedMappingData = []
+
+      mappingData.map((item) => {
+        const index = updatedMappingData.findIndex((mappingItem) => mappingItem.id == item.id)
+        if (index === -1) {
+          updatedMappingData.push({
+            id: item.id,
+            name: [item.name]
+          })
+        } else {
+          updatedMappingData[index]['name'].push(item.name)
+        }
+      })
+      updatedMappingData.map((item) => {
+        this.$emit("mapDynamicContent", {
+          id: item.id,
+          name: item.name.toString()
         })
-      }
+      })
     }
   }
 }

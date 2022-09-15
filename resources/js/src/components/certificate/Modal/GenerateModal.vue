@@ -22,7 +22,9 @@
             <span slot="on">Class</span>
             <span slot="off">Course</span>
           </vs-switch>
-          <a href="/certificate/generate">Upload CSV</a>
+          <router-link to="/certificate/generate">
+            Upload CSV
+          </router-link>
         </div>
         <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
           @input="changeClassOrCourse" />
@@ -58,7 +60,7 @@
                     <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
                       alt="teacher image">
                     <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
-                    <v-select class="ml-auto" :options="staffList" dir="rtl'" @input="(e) => setStaff(e, item)" />
+                    <v-select class="ml-auto" :options="staffList" dir="rtl'" @input="(staff) => setStaff(staff, item)" />
                     <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                   </li>
                 </ul>
@@ -112,7 +114,8 @@ export default {
       studentList: [],
       teacherList: [],
       isClass: true,
-      selectedStudent: []
+      selectedStudent: [],
+      mappingList: []
     }
   },
   mounted() {
@@ -164,22 +167,34 @@ export default {
       this.$emit('cancel')
       this.showDescription = false
       this.textarea = ''
-    },
-    clearValMultiple() {
-      this.valMultipe.value1 = ""
-        .valMultipe.value2 = ""
+      this.mappingList = []
     },
     handlePreview() {
       this.selectedStudent = this.student.map((studentId) => {
         const studentIndex = this.studentList.findIndex((student) => student.id === studentId)
         return this.studentList[studentIndex]
       })
+      if (!this.selectedStudent.length) {
+        return this.$vs.notify({
+          title: "Danger",
+          text: "You must select the students!",
+          color: "danger",
+          time: 2000,
+        });
+      }
+
+      const mappingList = this.mappingList.filter((item) => this.stuff.includes(item.teacherId) && item.id != -1)
+
       this.$emit('preview')
-      this.$emit('selectedStudent', this.selectedStudent)
+      this.$emit('selectStudent', this.selectedStudent)
+      this.$emit('setStaffMapping', mappingList)
     },
-    setStaff(e, item) {
-      console.log('hhhhhhe', e, item)
-      this.$emit("setStaff")
+    setStaff(staff, item) {
+      this.mappingList.push({
+        id: staff.id,
+        teacherId: item.id,
+        name: item.first_name + " " + item.last_name
+      })
     },
     selectAllStudent() {
       this.student = []
@@ -205,7 +220,6 @@ export default {
         this.getClassDetail(this.selectedClass.id)
       } else {
         const index = this.courseList.findIndex((item) => item.id == this.selectedClass.id)
-        console.log(this.courseList[index])
         this.studentList = this.courseList[index].students
         this.teacherList = this.courseList[index].tutors
       }
@@ -256,13 +270,20 @@ export default {
       this.getClassOrCourseList()
     },
     content(newVal) {
-      console.log(newVal)
+      this.staffList = [{id: -1, label: "None"}]
       newVal.map((item) => {
         this.staffList.push({
           id: item.id,
           label: item.content
         })
       })
+    },
+    activePrompt(newVal) {
+      if (!newVal) {
+        this.showDescription = false
+        this.textarea = ''
+        this.mappingList = []
+      }
     }
   }
 }

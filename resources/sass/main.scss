@@ -3817,3 +3817,7 @@ th.text-center .vs-table-text {
     margin-left: 12%;
   }
 }
+
+.vs-input--input.normal ~ .vs-input--icon.feather {
+  top: 18px !important;
+}

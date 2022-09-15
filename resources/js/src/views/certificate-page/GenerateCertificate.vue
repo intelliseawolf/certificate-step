@@ -4,7 +4,7 @@
     <vx-card class="my-5">
       <div class="tabs-container">
         <h3>Generate Certificate</h3>
-        <a href="#">UploadedFile.CSV</a>
+        <input type="file" accept=".csv" @change="handleFileUpload( $event )"/>
         <!-- Table -->
         <vs-table :data="users" class="my-5">
           <template slot="thead">
@@ -35,7 +35,6 @@
           <vs-button color="dark" class="mr-2 primary" type="flat">Back</vs-button>
           <div class="flex">
             <vs-button class="mr-2 primary" type="flat">Cancel</vs-button>
-            <preview-modal />
           </div>
         </div>
       </div>
@@ -44,11 +43,11 @@
 </template>
 
 <script>
-import PreviewModal from '../../components/certificate/Modal/PreviewModal.vue'
+import Papa from 'papaparse';
 
 export default {
   components: {
-    PreviewModal
+
   },
   data() {
     return {
@@ -74,10 +73,32 @@ export default {
           "input_to": "StuffName_1",
           "status": "active",
         }
-      ]
+      ],
+      file: '',
+      content: [],
+      parsed: false
     }
   },
   methods: {
+    handleFileUpload( event ) {
+      this.file = event.target.files[0];
+      this.parseFile();
+    },
+    parseFile() {
+      Papa.parse(this.file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function (results) {
+            this.content = results;
+            this.parsed = true;
+          }.bind(this)
+      });
+    },
+  },
+  watch: {
+    content(newVal) {
+      console.log(newVal)
+    }
   }
 }
 </script>

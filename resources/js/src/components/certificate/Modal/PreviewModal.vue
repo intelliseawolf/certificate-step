@@ -5,6 +5,7 @@
       <div class="flex">
         <vs-button class="ml-auto mr-2 primary" type="flat">Edit</vs-button>
         <vs-button @click="handleDownload" class="primary" type="flat">
+          <i class="material-icons ml-3"> file_download </i>
           <span>
             Download Certificates
           </span>
@@ -17,11 +18,11 @@
             <div class="carousel-certificates">
               <swiper :options="swiperOption" :dir="$vs.rtl ? 'rtl' : 'ltr'" :key="$vs.rtl" ref="mySwiper"
                 @slide-change="changeSwiperIndex">
-                <swiper-slide v-for="(item, index) in selectedStudent" :key="item.client_users.id">
+                <swiper-slide v-for="(item) in selectedStudent" :key="item.id">
                   <TemplateSection :style="{
                     width: `478px`,
                     height: `334px`
-                  }" :width="width" :height="height" :image="image" :content="content" />
+                  }" :width="width" :height="height" :image="image" :content="content" :type="item.id" />
                 </swiper-slide>
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>
@@ -45,10 +46,11 @@
 </template>
 
 <script>
-import 'swiper/dist/css/swiper.min.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import SendModal from './SendModal.vue'
 import TemplateSection from '../editor/TemplateSection.vue'
+
+import 'swiper/dist/css/swiper.min.css'
 
 export default {
   props: {
@@ -64,12 +66,18 @@ export default {
     content: {
       type: Array,
       required: true
+    },
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
     }
   },
   data() {
     return {
-      width: 478,
-      height: 334,
       swiperOption: {
         pagination: {
           el: '.swiper-pagination',
@@ -79,13 +87,10 @@ export default {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
         },
-        onSlideChangeEnd: function () {
-          this.onSwipe()
-        }
+        onSlideChangeEnd: function () {}
       },
       vueCanvas: null,
       count: 1,
-      swiper: null
     }
   },
   components: {
@@ -107,11 +112,6 @@ export default {
     swiper() {
       return this.$refs.mySwiper.swiper
     }
-  },
-  mounted() {
-    this.swiper.on('slideChange', () => {
-      this.onSwipe(this)
-    })
   },
   methods: {
     acceptAlert() {
