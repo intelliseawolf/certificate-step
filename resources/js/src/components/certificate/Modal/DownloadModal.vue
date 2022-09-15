@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import VueHtml2pdf from 'vue-html2pdf'
 import TemplateSection from '../editor/TemplateSection.vue'
 
 export default {
@@ -57,7 +56,6 @@ export default {
     activePrompt: Boolean,
   },
   components: {
-    VueHtml2pdf,
     TemplateSection
   },
   data() {
