@@ -5,7 +5,7 @@
       <div class="con-exemple-prompt">
         <!-- Body -->
         <span class="mb-1">Certificate Name</span>
-        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="val"
+        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="formData.title"
           class="w-full mb-3" />
         <!-- SLOT -->
         <!-- <slot></slot> -->
@@ -14,7 +14,7 @@
           Add Description
         </vs-button>
         <span class="mb-1" v-if="showDescription">Description</span>
-        <vs-textarea v-model="textarea" v-if="showDescription" placeholder="Lorem Ipsum" height="115px" />
+        <vs-textarea v-model="formData.description" v-if="showDescription" placeholder="Lorem Ipsum" height="115px" />
 
         <div class="flex justify-between">
           <span>Select Course / Class</span>
@@ -22,9 +22,7 @@
             <span slot="on">Class</span>
             <span slot="off">Course</span>
           </vs-switch>
-          <router-link to="/certificate/generate">
-            Upload CSV
-          </router-link>
+          <div @click="uploadCSV">Upload CSV</div>
         </div>
         <div v-if="isloading">
           <div class="flex justify-center">
@@ -105,12 +103,10 @@ export default {
   data() {
     return {
       showDescription: false,
-      val: '',
-      valMultipe: {
-        value1: '',
-        value2: ''
+      formData: {
+        title: "",
+        description: ""
       },
-      textarea: '',
       classes: [],
       selectedClass: {},
       selectBox: false,
@@ -121,7 +117,7 @@ export default {
       allStuff: false,
       studentList: [],
       teacherList: [],
-      isClass: true,
+      isClass: false,
       selectedStudent: [],
       mappingList: [],
       isloading: false
@@ -137,9 +133,6 @@ export default {
     PreviewModal,
   },
   computed: {
-    validName() {
-      return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
-    },
     // studentList() {
     //   return this.$store.getters['getStudentList']
     // },
@@ -159,6 +152,9 @@ export default {
   methods: {
     handleShow() {
       this.showDescription = true
+    },
+    uploadCSV() {
+      this.$emit('uploadCSV')
     },
     acceptAlert() {
       this.$vs.notify({
@@ -185,11 +181,19 @@ export default {
       })
       if (!this.selectedStudent.length) {
         return this.$vs.notify({
-          title: "Danger",
+          title: "Error",
           text: "You must select the students!",
           color: "danger",
           time: 2000,
         })
+      }
+      if (!this.formData.title) {
+        return this.$vs.notify({
+          title: "Error",
+          text: "Please enter a Certificate Name before saving",
+          color: "danger",
+          time: 2000,
+        });
       }
 
       const mappingList = this.mappingList.filter((item) => this.stuff.includes(item.teacherId) && item.id != -1)
@@ -202,6 +206,7 @@ export default {
       this.mappingList.push({
         id: staff.id,
         teacherId: item.id,
+        content: staff.label,
         name: item.first_name + " " + item.last_name
       })
     },

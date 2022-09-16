@@ -402,33 +402,4 @@ export default {
         display: none !important;
     }
 }
-
-.collapse-cstm-card {
-    width: 220px !important;
-}
-
-.vs-card--content {
-    padding: 0;
-}
-
-.collapseContent {
-    padding: 0;
-}
-
-.con-vs-card {
-    margin: 0;
-}
-
-.certificate-file-upload {
-    width: unset !important;
-    margin-right: 0.5rem;
-}
-
-.cstm_vuefileagent_holder {
-    top: 18px;
-    position: absolute;
-    width: 100%;
-    border-radius: 10px;
-    height: 152px;
-}
 </style>

@@ -195,7 +195,7 @@ export default {
       //     })
       //     .catch((error) => {
       //       return this.$vs.notify({
-      //         title:'Danger',
+      //         title:'Error',
       //         text:'Error occured when file uploading!',
       //         color:'danger',
       //         iconPack: 'feather',
@@ -247,7 +247,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .uploading-image {
   display: flex;
   margin-top: 0px;
@@ -319,5 +319,36 @@ export default {
 
 .vs-dialog-cancel:hover {
   box-shadow: 0 5px 20px 0 rgb(0 0 0 / 10%) !important;
+}
+
+.file-upload {
+  .collapse-cstm-card {
+    width: 220px !important;
+  }
+
+  .vs-card--content {
+    padding: 0;
+  }
+
+  .collapseContent {
+    padding: 0;
+  }
+
+  .con-vs-card {
+    margin: 0;
+  }
+
+  &.certificate-file-upload {
+    width: unset !important;
+    margin-right: 0.5rem;
+  }
+
+  .cstm_vuefileagent_holder {
+    top: 18px;
+    position: absolute;
+    width: 100%;
+    border-radius: 10px;
+    height: 152px;
+  }
 }
 </style>

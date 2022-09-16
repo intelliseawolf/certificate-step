@@ -35,36 +35,48 @@
       <color-picker v-model="dragOption.color" @input="changeColor" />
       <i class="material-icons ml-3" @click="toggleUnderline"> format_underline </i>
       <i class="material-icons ml-3" @click="toggleBold"> format_bold </i>
-      <i class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
-        delete
-      </i>
+      <i class="material-icons ml-auto" @click="togglePhoto"> insert_photo </i>
     </div>
     <img class="editor-bg" :src="image && image.file && image.file.file_path" alt="certificate-bg">
-    <draggable v-for="(item, index) in content" :key="index" :data="item" @endDrag="endDrag"
-      @onDragMove="(val) => onDragMove(index, val)">
-      <div :style="item.style" :class="{
-        flex: true,
-        activeDragItem: activeDragIndex == index
-      }" @mousedown="dragItem(index)">
+    <Draggable v-for="(item, index) in draggableContent" :key="index + item.content" :data="item" :class="{
+      activeDragItem: activeDragIndex == index
+    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(index, val)">
+      <div class="flex" :style="item.style" @mousedown="dragItem(index)">
         <vs-input v-if="activeIndex == index" class="inputx" placeholder="text" v-model="content[activeIndex].content"
           @keydown="(e) => changeContent(e)" />
-        <p v-else @dblclick="setActiveIndex(index)" v-html="item.content"></p>
+        <div v-else class="drag-item">
+          <p @dblclick="setActiveIndex(index)" v-html="item.content"></p>
+          <i v-if="activeDragIndex == index" class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
+            delete
+          </i>
+        </div>
+
       </div>
-    </draggable>
+    </Draggable>
+    <Resizable v-for="(item, index) in resizableContent" :key="index" :data="item" :class="{
+      activeDragItem: activeDragIndex == index
+    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(index, val)" @onResize="(val) => onResize(index, val)">
+      <div class="flex" :style="item.style" @mousedown="dragItem(index)">
+      </div>
+    </Resizable>
     <!-- <quill-editor
       v-if="canEditable"
       v-model="mainContent"
       @dblclick="toggleDraggable"
     /> -->
     <!-- <div class="editor-static-text" v-html="mainContent"></div> -->
+    <upload-image-modal ref="uploadImageModal" @handleOk="setEditorImage" />
   </div>
 </template>
 
 <script>
 import vSelect from 'vue-select'
+
 import ColorPicker from "./ColorPicker.vue"
 import QuillEditor from "./QuillEditor"
 import Draggable from './Draggable'
+import Resizable from "./Resizable"
+import UploadImageModal from '../Modal/UploadImageModal.vue'
 
 export default {
   props: {
@@ -98,7 +110,14 @@ export default {
           toolbar: '#toolbar'
         }
       },
-      content: [],
+      content: [{
+        type: 'image',
+        style: { width: "50px", height: "50px", backgroundImage: `url('https://scoolio-files.s3.ap-south-1.amazonaws.com/20211129063744097501/Default/kmBCI10023i6i2mO.jpg')` },
+        content: "",
+        x: 100,
+        y: 100
+      }],
+
       staticTextContent: [],
       activeIndex: -1,
       mainContent: "",
@@ -180,11 +199,19 @@ export default {
     Draggable,
     vSelect,
     ColorPicker,
+    UploadImageModal,
+    Resizable,
   },
   computed: {
     templateList: function () {
       return this.$store.getters["getTemplateList"]
     },
+    draggableContent() {
+      return this.content.filter((item) => item.type != 'image')
+    },
+    resizableContent() {
+      return this.content.filter((item) => item.type == 'image')
+    }
   },
   methods: {
     customButtonClick() {
@@ -199,15 +226,25 @@ export default {
       }
     },
     addDynamicText(id) {
+      const sameTextCount = this.getSameDynamicTextCount(id)
+
       this.content.push({
         id: id,
         type: 'dynamic-text',
         style: { fontSize: '18px', width: 'max-content', fontFamily: 'Sora' },
-        content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'],
+        content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'] + sameTextCount,
         x: 100,
         y: 100
       })
       // this.mainContent = this.mainContent.concat('', `<p>${this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code']}</p>`)
+    },
+    getSameDynamicTextCount(id) {
+      let count = 0
+
+      this.content.map((item) => {
+        if (item.id == id) count++
+      })
+      return count
     },
     addStaticText(text) {
       this.content.push({
@@ -290,8 +327,12 @@ export default {
       this.content[index].x = x
       this.content[index].y = y
     },
+    onResize(index, { width, height }) {
+      this.content[index].style.width = width + "px"
+      this.content[index].style.height = height + "px"
+    },
     setContent(content) {
-      this.content = content
+      this.content.push(content)
     },
     removeText() {
       if (this.activeDragIndex == -1) return
@@ -301,7 +342,21 @@ export default {
       } else {
         this.content = this.content.filter((item) => item.id != textInfo.id)
       }
-    }
+    },
+    togglePhoto() {
+      this.$refs.uploadImageModal.toggleModal()
+    },
+    setEditorImage(image) {
+      console.log('setEditorImage', image)
+      this.content.push({
+        type: 'image',
+        style: { width: "50px", height: "50px", backgroundImage: `url(${image})` },
+        content: "",
+        x: 100,
+        y: 100
+      })
+      console.log(image)
+    },
   },
   watch: {
     templateList(newVal) {
@@ -379,5 +434,15 @@ export default {
   padding: 5px 10px;
   border: 1px solid rgb(66, 66, 150);
   border-radius: 4px;
+}
+
+.draggable .drag-item {
+  position: relative;
+}
+
+.draggable .drag-item .material-icons {
+  position: absolute;
+  top: -35px;
+  left: 95%;
 }
 </style>
