@@ -1,7 +1,7 @@
 <template>
   <div class="my-5">
     <!-- Header -->
-    <div>
+    <div v-if="!isUploadCSV">
       <p><b>Preview</b></p>
       <div class="third-preview-section mt-5">
         <div class="flex template-pos">
@@ -34,6 +34,7 @@
         </div>
       </div>
     </div>
+    <UploadCSV v-else />
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import PreviewModal from './Modal/PreviewModal.vue'
 import SendModal from './Modal/SendModal.vue'
 import TemplateSection from "./editor/TemplateSection.vue"
 import DownloadModal from "./Modal/DownloadModal.vue"
+import UploadCSV from "./editor/UploadCSV.vue"
 
 import axios from '../../axios'
 
@@ -54,7 +56,8 @@ export default {
     PreviewModal,
     SendModal,
     TemplateSection,
-    DownloadModal
+    DownloadModal,
+    UploadCSV
   },
   props: {
     template: {
@@ -80,7 +83,8 @@ export default {
   data() {
     return {
       modal: null,
-      selectedStudent: []
+      selectedStudent: [],
+      isUploadCSV: false
     }
   },
   computed: {
@@ -105,6 +109,7 @@ export default {
       })
         .then(() => {
           this.$refs.saveModal.closeModal()
+          window.location.reload()
         })
     },
     receiveStudent(student) {
@@ -114,11 +119,12 @@ export default {
       const updatedMappingData = []
 
       mappingData.map((item) => {
-        const index = updatedMappingData.findIndex((mappingItem) => mappingItem.id == item.id)
+        const index = updatedMappingData.findIndex((mappingItem) => mappingItem.id == item.id && mappingItem.content == item.content)
         if (index === -1) {
           updatedMappingData.push({
             id: item.id,
-            name: [item.name]
+            content: item.content,
+            name: [item.name],
           })
         } else {
           updatedMappingData[index]['name'].push(item.name)
@@ -127,6 +133,7 @@ export default {
       updatedMappingData.map((item) => {
         this.$emit("mapDynamicContent", {
           id: item.id,
+          content: item.content,
           name: item.name.toString()
         })
       })

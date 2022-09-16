@@ -116,9 +116,8 @@ export default {
 		setInitialContent(content) {
 			this.$refs.textField.setEditorContent(content)
 		},
-		mapDynamicContent({id, name}) {
-			console.log(this.content, id, name)
-			const index = this.content.findIndex((item) => item.id == id)
+		mapDynamicContent({id, name, content}) {
+			const index = this.content.findIndex((item) => item.id == id && item.content == content)
 			this.content[index].content = name
 		}
 	}

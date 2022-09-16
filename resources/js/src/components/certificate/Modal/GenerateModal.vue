@@ -22,9 +22,7 @@
             <span slot="on">Class</span>
             <span slot="off">Course</span>
           </vs-switch>
-          <router-link to="/certificate/generate">
-            Upload CSV
-          </router-link>
+          <div @click="uploadCSV">Upload CSV</div>
         </div>
         <div v-if="isloading">
           <div class="flex justify-center">
@@ -119,7 +117,7 @@ export default {
       allStuff: false,
       studentList: [],
       teacherList: [],
-      isClass: true,
+      isClass: false,
       selectedStudent: [],
       mappingList: [],
       isloading: false
@@ -155,6 +153,9 @@ export default {
     handleShow() {
       this.showDescription = true
     },
+    uploadCSV() {
+      this.$emit('uploadCSV')
+    },
     acceptAlert() {
       this.$vs.notify({
         color: 'success',
@@ -180,7 +181,7 @@ export default {
       })
       if (!this.selectedStudent.length) {
         return this.$vs.notify({
-          title: "Danger",
+          title: "Error",
           text: "You must select the students!",
           color: "danger",
           time: 2000,
@@ -188,8 +189,8 @@ export default {
       }
       if (!this.formData.title) {
         return this.$vs.notify({
-          title: "Danger",
-          text: "You must fill the title!",
+          title: "Error",
+          text: "Please enter a Certificate Name before saving",
           color: "danger",
           time: 2000,
         });
@@ -205,6 +206,7 @@ export default {
       this.mappingList.push({
         id: staff.id,
         teacherId: item.id,
+        content: staff.label,
         name: item.first_name + " " + item.last_name
       })
     },

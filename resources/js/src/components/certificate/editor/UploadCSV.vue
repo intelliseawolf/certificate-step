@@ -69,6 +69,7 @@ import Papa from 'papaparse'
 import vSelect from 'vue-select'
 
 export default {
+  name: "UploadCSV",
   components: {
     'v-select': vSelect,
   },
@@ -145,6 +146,7 @@ th {
 
 .table {
   border: 1px solid black;
+  height: 524px !important;
 }
 
 .table-header {

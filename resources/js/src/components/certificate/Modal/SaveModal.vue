@@ -28,15 +28,10 @@
 </template>
 
 <script>
-import GenerateModal from './GenerateModal.vue'
-import PreviewModal from './PreviewModal.vue'
-import SendModal from './SendModal.vue'
-
 export default {
   props: {
     activePrompt: Boolean,
   },
-  components: { GenerateModal, PreviewModal, SendModal },
   data() {
     return {
       modal: null,
@@ -75,6 +70,14 @@ export default {
       }
     },
     saveCertificate() {
+      if (!this.form.title) {
+        return this.$vs.notify({
+          title: "Error",
+          text: "Please enter a Certificate Name before saving",
+          color: "danger",
+          time: 2000,
+        })
+      }
       this.$emit("saveCertificate", this.form)
     },
     closeModal() {
