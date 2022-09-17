@@ -1,114 +1,138 @@
 <template>
-  <!-- <quill-editor v-model="content" :options="editorOption" class="editor">
-    <div id="toolbar" slot="toolbar">
-      <button class="ql-bold">Bold</button>
-      <button class="ql-italic">Italic</button>
-      <select class="ql-size">
-        <option value="small"></option>
-        <option selected></option>
-        <option value="large"></option>
-        <option value="huge"></option>
-      </select>
-      <select class="ql-font">
-        <option selected="selected"></option>
-        <option value="serif"></option>
-        <option value="monospace"></option>
-      </select>
-      <button class="ql-script" value="sub"></button>
-      <button class="ql-script" value="super"></button>
-      <button style="width:auto" @click="customButtonClick">Click here</button>
-    </div>
-  </quill-editor> -->
-  <div class="editor-wrapper" :style="{
-    width: `${width}px`,
-    height: `${height}px`
-  }">
-    <!-- <vs-switch v-model="canEditable" style="width: 60px;">
-      <span slot="on">Editor</span>
-      <span slot="off">Drag</span>
-    </vs-switch> -->
+  <div
+    class="editor-wrapper"
+    :style="{
+      width: `${width}px`,
+      height: `${height}px`,
+    }"
+  >
     <div class="drag-toolbar">
-      <v-select class="mr-3" v-model="dragOption.fontFamily" :options="dragToolbarOptions.fontFamilyList"
-        :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="changeFontFamily" />
-      <v-select class="mr-3" v-model="dragOption.fontSize" :options="dragToolbarOptions.fontSizeList"
-        :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="changeFontSize" />
+      <v-select
+        class="mr-3"
+        v-model="dragOption.fontFamily"
+        :options="dragToolbarOptions.fontFamilyList"
+        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+        @input="changeFontFamily"
+      />
+      <v-select
+        class="mr-3"
+        v-model="dragOption.fontSize"
+        :options="dragToolbarOptions.fontSizeList"
+        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+        @input="changeFontSize"
+      />
       <color-picker v-model="dragOption.color" @input="changeColor" />
-      <i class="material-icons ml-3" @click="toggleUnderline"> format_underline </i>
+      <i class="material-icons ml-3" @click="toggleUnderline">
+        format_underline
+      </i>
       <i class="material-icons ml-3" @click="toggleBold"> format_bold </i>
+      <i class="material-icons ml-3" @click="handleAlignCenter">
+        format_align_center
+      </i>
       <i class="material-icons ml-auto" @click="togglePhoto"> insert_photo </i>
     </div>
-    <img class="editor-bg" :src="image && image.file && image.file.file_path" alt="certificate-bg">
-    <Draggable v-for="(item, index) in draggableContent" :key="index + item.content" :data="item" :class="{
-      activeDragItem: activeDragIndex == index
-    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(item, val)">
-      <div class="flex" :style="item.style" @mousedown="dragItem(index)">
-        <vs-input v-if="activeIndex == index" class="inputx" placeholder="text" v-model="content[activeIndex].content"
-          @keydown="(e) => changeContent(e)" />
+    <img
+      class="editor-bg"
+      :src="image && image.file && image.file.file_path"
+      alt="certificate-bg"
+    />
+    <Draggable
+      v-for="(item, index) in draggableContent"
+      :key="index + item.content"
+      :data="item"
+      :class="{
+        activeDragItem: activeDragIndex == index,
+      }"
+      @endDrag="endDrag"
+      @onDragMove="(val) => onDragMove(item, val)"
+    >
+      <div
+        class="flex"
+        :style="item.style"
+        @mousedown="dragItem(index)"
+        :ref="'dragItem' + index"
+      >
+        <vs-input
+          v-if="activeIndex == index"
+          class="inputx"
+          placeholder="text"
+          v-model="content[activeIndex].content"
+          @keydown="(e) => changeContent(e)"
+        />
         <div v-else class="drag-item">
           <p @dblclick="setActiveIndex(index)" v-html="item.content"></p>
-          <i v-if="activeDragIndex == index" class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
+          <i
+            v-if="activeDragIndex == index"
+            class="material-icons ml-auto text-red"
+            @click="removeText"
+            dir="rtl"
+          >
             delete
           </i>
         </div>
-
       </div>
     </Draggable>
-    <Resizable v-for="(item, index) in resizableContent" :key="index" :data="item" :class="{
-      activeDragItem: activeResizeIndex == index
-    }" @endDrag="endResize" @onDragMove="(val) => onDragMove(item, val)" @onResize="(val) => onResize(item, val)">
-      <div class="flex" :style="item.style" @mousedown="resizeItem(index)">
-      </div>
+    <Resizable
+      v-for="(item, index) in resizableContent"
+      :key="index"
+      :data="item"
+      :class="{
+        activeDragItem: activeResizeIndex == index,
+      }"
+      @endDrag="endResize"
+      @onDragMove="(val) => onDragMove(item, val)"
+      @onResize="(val) => onResize(item, val)"
+    >
+      <div
+        class="flex"
+        :style="item.style"
+        @mousedown="resizeItem(index)"
+      ></div>
     </Resizable>
-    <!-- <quill-editor
-      v-if="canEditable"
-      v-model="mainContent"
-      @dblclick="toggleDraggable"
-    /> -->
-    <!-- <div class="editor-static-text" v-html="mainContent"></div> -->
     <upload-image-modal ref="uploadImageModal" @handleOk="setEditorImage" />
   </div>
 </template>
 
 <script>
-import vSelect from 'vue-select'
+import vSelect from "vue-select";
 
-import ColorPicker from "./ColorPicker.vue"
-import QuillEditor from "./QuillEditor"
-import Draggable from './Draggable'
-import Resizable from "./Resizable"
-import UploadImageModal from '../Modal/UploadImageModal.vue'
+import ColorPicker from "./ColorPicker.vue";
+import QuillEditor from "./QuillEditor";
+import Draggable from "./Draggable";
+import Resizable from "./Resizable";
+import UploadImageModal from "../Modal/UploadImageModal.vue";
 
 export default {
   props: {
     template: {
-      required: true
+      required: true,
     },
     image: {
       type: Object,
-      required: true
+      required: true,
     },
     dynamicTextList: {
       type: Array,
-      required: false
+      required: false,
     },
     staticTextList: {
       type: Array,
     },
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       editorOption: {
         modules: {
-          toolbar: '#toolbar'
-        }
+          toolbar: "#toolbar",
+        },
       },
       content: [],
 
@@ -116,78 +140,82 @@ export default {
       activeIndex: -1,
       mainContent: "",
       dragOption: {
-        fontFamily: { id: 1, label: 'Sora', value: 'Sora' },
-        fontSize: { id: 2, label: 'Normal', value: '18px' },
-        color: "#000000"
+        fontFamily: { id: 1, label: "Sora", value: "Sora" },
+        fontSize: { id: 2, label: "Normal", value: "18px" },
+        color: "#000000",
       },
       dragToolbarOptions: {
         fontFamilyList: [
           // TOP 20 Best Fonts
-          { id: 1, label: 'Sora', value: 'Sora' },
-          { id: 2, label: 'Hahmlet', value: 'Hahmlet' },
-          { id: 3, label: 'JetBrains Mono', value: 'JetBrains Mono' },
-          { id: 4, label: 'Andada Pro', value: 'Andada Pro' },
-          { id: 5, label: 'Epilogue', value: 'Epilogue' },
-          { id: 6, label: 'Inter', value: 'Inter' },
-          { id: 7, label: 'Encode Sans', value: 'Encode Sans' },
-          { id: 8, label: 'Manrope', value: 'Manrope' },
-          { id: 9, label: 'Lora', value: 'Lora' },
-          { id: 10, label: 'BioRhyme', value: 'BioRhyme' },
-          { id: 11, label: 'Playfair Display', value: 'Playfair Display' },
-          { id: 12, label: 'Archivo', value: 'Archivo' },
-          { id: 13, label: 'Roboto', value: 'Roboto' },
-          { id: 14, label: 'Cormorant', value: 'Cormorant' },
-          { id: 15, label: 'Spectral', value: 'Spectral' },
-          { id: 16, label: 'Raleway', value: 'Raleway' },
-          { id: 17, label: 'Work Sans', value: 'Work Sans' },
-          { id: 18, label: 'Lato', value: 'Lato' },
-          { id: 19, label: 'Anton', value: 'Anton' },
-          { id: 20, label: 'Old Standard TT', value: 'Old Standard TT' },
-          { id: 21, label: 'Oswald', value: 'Oswald' },
-          { id: 22, label: 'Montserrat', value: 'Montserrat' },
-          { id: 23, label: 'Poppins', value: 'Poppins' },
-          { id: 24, label: 'Nunito', value: 'Nunito' },
-          { id: 25, label: 'Source Sans Pro', value: 'Source Sans Pro' },
-          { id: 26, label: 'Oxygen', value: 'Oxygen' },
-          { id: 27, label: 'Open Sans', value: 'Open Sans' },
+          { id: 1, label: "Sora", value: "Sora" },
+          { id: 2, label: "Hahmlet", value: "Hahmlet" },
+          { id: 3, label: "JetBrains Mono", value: "JetBrains Mono" },
+          { id: 4, label: "Andada Pro", value: "Andada Pro" },
+          { id: 5, label: "Epilogue", value: "Epilogue" },
+          { id: 6, label: "Inter", value: "Inter" },
+          { id: 7, label: "Encode Sans", value: "Encode Sans" },
+          { id: 8, label: "Manrope", value: "Manrope" },
+          { id: 9, label: "Lora", value: "Lora" },
+          { id: 10, label: "BioRhyme", value: "BioRhyme" },
+          { id: 11, label: "Playfair Display", value: "Playfair Display" },
+          { id: 12, label: "Archivo", value: "Archivo" },
+          { id: 13, label: "Roboto", value: "Roboto" },
+          { id: 14, label: "Cormorant", value: "Cormorant" },
+          { id: 15, label: "Spectral", value: "Spectral" },
+          { id: 16, label: "Raleway", value: "Raleway" },
+          { id: 17, label: "Work Sans", value: "Work Sans" },
+          { id: 18, label: "Lato", value: "Lato" },
+          { id: 19, label: "Anton", value: "Anton" },
+          { id: 20, label: "Old Standard TT", value: "Old Standard TT" },
+          { id: 21, label: "Oswald", value: "Oswald" },
+          { id: 22, label: "Montserrat", value: "Montserrat" },
+          { id: 23, label: "Poppins", value: "Poppins" },
+          { id: 24, label: "Nunito", value: "Nunito" },
+          { id: 25, label: "Source Sans Pro", value: "Source Sans Pro" },
+          { id: 26, label: "Oxygen", value: "Oxygen" },
+          { id: 27, label: "Open Sans", value: "Open Sans" },
           // 26 Best Cursive Fonts
-          { id: 28, label: 'Arizonia', value: 'Arizonia' },
-          { id: 29, label: 'Lobster', value: 'Lobster' },
-          { id: 30, label: 'Rouge Script', value: 'Rouge Script' },
-          { id: 31, label: 'Pacifico', value: 'Pacifico' },
-          { id: 32, label: 'Alex Brush', value: 'Alex Brush' },
-          { id: 33, label: 'Kaushan Script', value: 'Kaushan Script' },
-          { id: 34, label: 'Sail', value: 'Sail' },
-          { id: 35, label: 'Sacramento', value: 'Sacramento' },
-          { id: 36, label: 'Marck Script', value: 'Marck Script' },
-          { id: 37, label: 'Sonsie One', value: 'Sonsie One' },
-          { id: 38, label: 'Monsieur La Doulaise', value: 'Monsieur La Doulaise' },
-          { id: 39, label: 'Rock Salt', value: 'Rock Salt' },
-          { id: 40, label: 'Rochester', value: 'Rochester' },
-          { id: 41, label: 'Rancho', value: 'Rancho' },
-          { id: 42, label: 'Croissant One', value: 'Croissant One' },
-          { id: 43, label: 'Yesteryear', value: 'Yesteryear' },
-          { id: 44, label: 'Courgette', value: 'Courgette' },
-          { id: 45, label: 'Sofia', value: 'Sofia' },
-          { id: 46, label: 'Allura', value: 'Allura' },
-          { id: 47, label: 'Redressed', value: 'Redressed' },
-          { id: 48, label: 'Cookie', value: 'Cookie' },
-          { id: 49, label: 'Amita', value: 'Amita' },
-          { id: 50, label: 'Meie Script', value: 'Meie Script' },
-          { id: 51, label: 'Euphoria Script', value: 'Euphoria Script' },
-          { id: 52, label: 'Tangerine', value: 'Tangerine' },
-          { id: 53, label: 'Sevillana', value: 'Sevillana' },
+          { id: 28, label: "Arizonia", value: "Arizonia" },
+          { id: 29, label: "Lobster", value: "Lobster" },
+          { id: 30, label: "Rouge Script", value: "Rouge Script" },
+          { id: 31, label: "Pacifico", value: "Pacifico" },
+          { id: 32, label: "Alex Brush", value: "Alex Brush" },
+          { id: 33, label: "Kaushan Script", value: "Kaushan Script" },
+          { id: 34, label: "Sail", value: "Sail" },
+          { id: 35, label: "Sacramento", value: "Sacramento" },
+          { id: 36, label: "Marck Script", value: "Marck Script" },
+          { id: 37, label: "Sonsie One", value: "Sonsie One" },
+          {
+            id: 38,
+            label: "Monsieur La Doulaise",
+            value: "Monsieur La Doulaise",
+          },
+          { id: 39, label: "Rock Salt", value: "Rock Salt" },
+          { id: 40, label: "Rochester", value: "Rochester" },
+          { id: 41, label: "Rancho", value: "Rancho" },
+          { id: 42, label: "Croissant One", value: "Croissant One" },
+          { id: 43, label: "Yesteryear", value: "Yesteryear" },
+          { id: 44, label: "Courgette", value: "Courgette" },
+          { id: 45, label: "Sofia", value: "Sofia" },
+          { id: 46, label: "Allura", value: "Allura" },
+          { id: 47, label: "Redressed", value: "Redressed" },
+          { id: 48, label: "Cookie", value: "Cookie" },
+          { id: 49, label: "Amita", value: "Amita" },
+          { id: 50, label: "Meie Script", value: "Meie Script" },
+          { id: 51, label: "Euphoria Script", value: "Euphoria Script" },
+          { id: 52, label: "Tangerine", value: "Tangerine" },
+          { id: 53, label: "Sevillana", value: "Sevillana" },
         ],
         fontSizeList: [
-          { id: 1, label: 'Small', value: '12px' }, // 12px
-          { id: 2, label: 'Normal', value: '18px' }, // 18px
-          { id: 3, label: 'Large', value: '24px' }, // 24px
-          { id: 4, label: 'Huge', value: '30px' }, // 30px
+          { id: 1, label: "Small", value: "12px" }, // 12px
+          { id: 2, label: "Normal", value: "18px" }, // 18px
+          { id: 3, label: "Large", value: "24px" }, // 24px
+          { id: 4, label: "Huge", value: "30px" }, // 30px
         ],
       },
       activeDragIndex: -1,
       activeResizeIndex: -1,
-    }
+    };
   },
   components: {
     QuillEditor,
@@ -199,183 +227,217 @@ export default {
   },
   computed: {
     templateList: function () {
-      return this.$store.getters["getTemplateList"]
+      return this.$store.getters["getTemplateList"];
     },
     draggableContent() {
-      return this.content.filter((item) => item.type != 'image')
+      return this.content.filter((item) => item.type != "image");
     },
     resizableContent() {
-      return this.content.filter((item) => item.type == 'image')
-    }
+      return this.content.filter((item) => item.type == "image");
+    },
   },
   methods: {
-    customButtonClick() {
-      alert('Button clicked!')
-    },
     setActiveIndex(index) {
-      this.activeIndex = index
+      this.activeIndex = index;
     },
     changeContent(e) {
       if (e.keyCode === 13) {
-        this.activeIndex = -1
+        this.activeIndex = -1;
       }
     },
     addDynamicText(id) {
-      const sameTextCount = this.getSameDynamicTextCount(id)
+      const sameTextCount = this.getSameDynamicTextCount(id);
 
       this.content.push({
         id: id,
-        type: 'dynamic-text',
-        style: { fontSize: '18px', width: 'max-content', fontFamily: 'Sora' },
-        content: this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code'] + sameTextCount,
+        type: "dynamic-text",
+        style: { fontSize: "18px", width: "max-content", fontFamily: "Sora" },
+        content:
+          this.dynamicTextList.filter((text) => text.field_id == id)[0][
+            "field_code"
+          ] + sameTextCount,
         x: 100,
-        y: 100
-      })
+        y: 100,
+      });
       // this.mainContent = this.mainContent.concat('', `<p>${this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code']}</p>`)
     },
     getSameDynamicTextCount(id) {
-      let count = 0
+      let count = 0;
 
       this.content.map((item) => {
-        if (item.id == id) count++
-      })
-      return count
+        if (item.id == id) count++;
+      });
+      return count;
     },
     addStaticText(text) {
       this.content.push({
-        type: 'static-text',
-        style: { fontSize: '18px', width: 'max-content', fontFamily: 'Sora' },
+        type: "static-text",
+        style: { fontSize: "18px", width: "max-content", fontFamily: "Sora" },
         content: text,
         x: 300,
-        y: 300
-      })
+        y: 300,
+      });
     },
     removeStaticText(text) {
-      const index = this.content.findIndex((item) => item.content == text)
-      this.content.splice(index, 1)
+      const index = this.content.findIndex((item) => item.content == text);
+      this.content.splice(index, 1);
     },
     dragItem(index) {
-      this.activeDragIndex = index
-      this.dragOption.fontSize = this.getFontSizeOption(this.content[index].style.fontSize)
-      this.dragOption.fontFamily = this.getFontFamilyOption(this.content[index].style.fontFamily)
-      this.dragOption.color = this.content[index].style.color ? this.content[index].style.color : '#000000'
+      this.activeDragIndex = index;
+      this.dragOption.fontSize = this.getFontSizeOption(
+        this.content[index].style.fontSize
+      );
+      this.dragOption.fontFamily = this.getFontFamilyOption(
+        this.content[index].style.fontFamily
+      );
+      this.dragOption.color = this.content[index].style.color
+        ? this.content[index].style.color
+        : "#000000";
     },
     resizeItem(index) {
-      this.activeResizeIndex = index
+      this.activeResizeIndex = index;
     },
     endDrag() {
-      this.activeDragIndex = -1
+      this.activeDragIndex = -1;
     },
     endResize() {
-      this.activeResizeIndex = -1
+      this.activeResizeIndex = -1;
     },
     getFontSizeOption(size) {
       switch (size) {
         case "12px":
-          return { id: 1, label: 'Small', value: '12px' }
+          return { id: 1, label: "Small", value: "12px" };
         case "18px":
-          return { id: 2, label: 'Normal', value: '18px' }
+          return { id: 2, label: "Normal", value: "18px" };
         case "24px":
-          return { id: 3, label: 'Large', value: '24px' }
+          return { id: 3, label: "Large", value: "24px" };
         case "30px":
-          return { id: 4, label: 'Huge', value: '30px' }
+          return { id: 4, label: "Huge", value: "30px" };
         default:
-          return { id: 2, label: 'Normal', value: '18px' }
+          return { id: 2, label: "Normal", value: "18px" };
       }
     },
     getFontFamilyOption(family) {
       switch (family) {
         case "Sora":
-          return { id: 4, label: 'Sora', value: 'Sora' }
+          return { id: 4, label: "Sora", value: "Sora" };
         default:
-          return { id: 2, label: 'Sora', value: 'Sora' }
+          return { id: 2, label: "Sora", value: "Sora" };
       }
     },
     changeFontSize() {
       if (this.activeDragIndex != -1) {
-        this.content[this.activeDragIndex].style.fontSize = this.dragOption.fontSize.value
+        this.content[this.activeDragIndex].style.fontSize =
+          this.dragOption.fontSize.value;
       }
     },
     changeFontFamily() {
       if (this.activeDragIndex != -1) {
-        this.content[this.activeDragIndex].style.fontFamily = this.dragOption.fontFamily.value
+        this.content[this.activeDragIndex].style.fontFamily =
+          this.dragOption.fontFamily.value;
       }
     },
     changeColor() {
       if (this.activeDragIndex != -1) {
-        this.content[this.activeDragIndex].style.color = this.dragOption.color
+        this.content[this.activeDragIndex].style.color = this.dragOption.color;
       }
     },
     toggleUnderline() {
       if (this.activeDragIndex != -1) {
-        const value = this.content[this.activeDragIndex].style.textDecoration
+        const value = this.content[this.activeDragIndex].style.textDecoration;
         this.content[this.activeDragIndex].style = {
           ...this.content[this.activeDragIndex].style,
-          textDecoration: value && value == 'underline' ? 'unset' : 'underline'
-        }
+          textDecoration: value && value == "underline" ? "unset" : "underline",
+        };
       }
     },
     toggleBold() {
       if (this.activeDragIndex != -1) {
-        const value = this.content[this.activeDragIndex].style.fontWeight
+        const value = this.content[this.activeDragIndex].style.fontWeight;
         this.content[this.activeDragIndex].style = {
           ...this.content[this.activeDragIndex].style,
-          fontWeight: value && value == 'bold' ? 'normal' : 'bold'
-        }
+          fontWeight: value && value == "bold" ? "normal" : "bold",
+        };
+      }
+    },
+    handleAlignCenter() {
+      const elementWidth =
+        this.$refs[`dragItem${this.activeDragIndex}`][0].offsetWidth;
+
+      if (this.activeDragIndex != -1) {
+        this.content = [
+          ...this.content.map((item, index) =>
+            index === this.activeDragIndex
+              ? { ...item, x: this.width / 2 - elementWidth / 2 }
+              : item
+          ),
+        ];
       }
     },
     onDragMove(item, { x, y }) {
-      const index = this.content.findIndex((data) => data.type == item.type && data.style.backgroundImage == item.style.backgroundImage && data.content == item.content)
-      this.content[index].x = x
-      this.content[index].y = y
+      const index = this.content.findIndex(
+        (data) =>
+          data.type == item.type &&
+          data.style.backgroundImage == item.style.backgroundImage &&
+          data.content == item.content
+      );
+      this.content[index].x = x;
+      this.content[index].y = y;
+      console.log(this.content, "drag move");
     },
     onResize(item, { width, height }) {
-      const index = this.content.findIndex((data) => data.type == item.type && data.style.backgroundImage == item.style.backgroundImage)
-      this.content[index].style.width = width + "px"
-      this.content[index].style.height = height + "px"
+      const index = this.content.findIndex(
+        (data) =>
+          data.type == item.type &&
+          data.style.backgroundImage == item.style.backgroundImage
+      );
+      this.content[index].style.width = width + "px";
+      this.content[index].style.height = height + "px";
     },
     setContent(content) {
-      this.content = content
+      this.content = content;
     },
     removeText() {
-      if (this.activeDragIndex == -1) return
-      const textInfo = this.content[this.activeDragIndex]
-      if (textInfo.type == 'static-text') {
-        this.$emit("removeStaticText", textInfo.content)
+      if (this.activeDragIndex == -1) return;
+
+      const textInfo = this.content[this.activeDragIndex];
+
+      if (textInfo.type == "static-text") {
+        this.$emit("removeStaticText", textInfo.content);
       } else {
-        this.content = this.content.filter((item) => item.id != textInfo.id)
+        this.content = this.content.filter((item) => item.id != textInfo.id);
       }
     },
     togglePhoto() {
-      this.$refs.uploadImageModal.toggleModal()
+      this.$refs.uploadImageModal.toggleModal();
     },
     setEditorImage(image) {
       this.content.push({
-        type: 'image',
+        type: "image",
         style: {
-          fontSize: '18px',
+          fontSize: "18px",
           width: "50px",
           height: "50px",
           backgroundImage: `url(${image})`,
-          backgroundSize: "cover"
+          backgroundSize: "cover",
         },
         content: "",
         x: 100,
-        y: 100
-      })
+        y: 100,
+      });
     },
   },
   watch: {
     templateList(newVal) {
       if (newVal && newVal.length) {
-        this.mainContent = newVal[this.template].content
+        this.mainContent = newVal[this.template].content;
       }
     },
     mainContent(newVal) {
-      this.$emit('changeMainContent', newVal)
+      this.$emit("changeMainContent", newVal);
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
