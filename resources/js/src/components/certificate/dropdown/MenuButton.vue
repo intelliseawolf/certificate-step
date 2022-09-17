@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dynamicTexts-overflow">
     <vs-button class="menu-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle"
       v-if="template.length !== 0">
       Static Texts
@@ -10,25 +10,19 @@
         <i class="material-icons ml-auto" v-if="dropdown"> expand_less </i>
         <i class="material-icons ml-auto" v-else> expand_more </i>
       </div>
-      <ul class="dropdown-menu" v-if="dropdown">
-        <li
-          class="dropdown-item relative"
-          v-for="(text, index) in staticTextList"
-          :key="index"
-        >
+      <ul class="dropdown-menu staticTexts-field" v-if="dropdown">
+        <li class="dropdown-item relative" v-for="(text, index) in staticTextList" :key="index">
           <vs-button type="border" class="demo-text-dark text-button" text-color="rgb(30,30,30)">
             <p class="truncate pr-5">
               {{ text }}
             </p>
           </vs-button>
-
           <a class="absolute li-button">
             <i class="material-icons ml-auto text-red" @click="removeStaticText(text)">
               delete
             </i>
           </a>
         </li>
-
         <static-text-modal @createStaticText="createStaticText" />
       </ul>
     </div>
@@ -36,17 +30,9 @@
       <span><strong>Dynamic Texts</strong></span>
       <vs-switch v-model="dynamicTextSwitch" class="ml-auto" />
     </div>
-    <div v-if="dynamicTextSwitch">
-      <vs-button
-        v-for="text in dynamicTextList"
-        :key="text.field_id"
-        @click="setDynamicText(text.field_id)"
-        class="menu-button"
-        color="primary"
-        type="border"
-        icon-pack="feather"
-        icon="icon-plus-circle"
-      >
+    <div class="dynamicTexts-field" v-if="dynamicTextSwitch">
+      <vs-button v-for="text in dynamicTextList" :key="text.field_id" @click="setDynamicText(text.field_id)"
+        class="dynamicTexts-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle">
         {{ text.field_name }}
       </vs-button>
     </div>
@@ -55,7 +41,6 @@
 
 <script>
 import { Drag, Drop } from "vue-easy-dnd"
-
 import StaticTextModal from "../Modal/StaticTextModal.vue"
 
 export default {
@@ -78,7 +63,7 @@ export default {
       this.dropdown = !this.dropdown
     },
     setDynamicText(id) {
-      this.$emit("setDynamicText", id);
+      this.$emit("setDynamicText", id)
     },
     createStaticText(text) {
       this.$emit("createStaticText", text)
@@ -98,7 +83,7 @@ export default {
 </script>
 
 <style>
-.menu-button {
+.dynamicTexts-button {
   width: 308px;
   justify-content: left;
   padding: 8px 16px 8px 16px !important;
@@ -140,5 +125,21 @@ li.dropdown-item {
 
 .text-red {
   color: #F15D5F;
+}
+
+.dynamicTexts-overflow {
+  overflow-y: auto;
+  width: fit-content;
+  height: inherit;
+}
+
+.staticTexts-field {
+  margin-right: 1em;
+  padding-bottom: 1em;
+}
+
+.dynamicTexts-field {
+  margin-right: 1em;
+  padding-bottom: 1em;
 }
 </style>
