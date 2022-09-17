@@ -18,21 +18,19 @@
 
         <div class="flex justify-between">
           <span>Select Course / Class</span>
-          <vs-switch v-model="isClass" style="width: 60px;" class="ml-auto mr-4">
+          <vs-switch v-model="isClass" style="width: 60px" class="ml-auto mr-4">
             <span slot="on">Class</span>
             <span slot="off">Course</span>
           </vs-switch>
           <div @click="uploadCSV">Upload CSV</div>
         </div>
         <div v-if="isloading">
-          <div class="flex justify-center">
-            Loading...
-          </div>
+          <div class="flex justify-center">Loading...</div>
         </div>
         <div v-else>
           <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
             @input="changeClassOrCourse" />
-          <br>
+          <br />
           <!-- Student & Staff Tabs -->
           <div class="mt-1">
             <vs-tabs alignment="fixed">
@@ -44,8 +42,9 @@
                     </li>
                     <li v-for="item in studentList" :key="item.id" class="flex mb-4">
                       <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
-                      <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
-                        alt="student avatar">
+                      <img class="rounded-circle" :src="
+                        item.picture ? item.picture : '/images/man-avatar.png'
+                      " alt="student avatar" />
                       <span class="ml-2 my-auto">
                         {{ item.first_name + " " + item.last_name }}
                       </span>
@@ -59,11 +58,14 @@
                     <li class="mb-4">
                       <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
                     </li>
-                    <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center;">
+                    <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center">
                       <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
-                      <img class="rounded-circle" :src="item.picture ? item.picture : '/images/man-avatar.png'"
-                        alt="teacher image">
-                      <span class="ml-2 my-auto">{{ item.first_name + " " + item.last_name }}</span>
+                      <img class="rounded-circle" :src="
+                        item.picture ? item.picture : '/images/man-avatar.png'
+                      " alt="teacher image" />
+                      <span class="ml-2 my-auto">{{
+                      item.first_name + " " + item.last_name
+                      }}</span>
                       <v-select class="ml-auto staff-select" :options="staffList" :dir="$vs.rtl ? 'rtl' : 'ltr'"
                         @input="(e) => setStaff(e, item)" />
                       <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
@@ -78,7 +80,7 @@
         <div class="flex mt-3 justify-between">
           <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div class="flex">
-            <vs-button class="mr-2 primary" type="flat" @click="saveGenerateCertificate">Save</vs-button>
+            <vs-button class="mr-2 primary" type="flat" @click="saveTemplate">Save</vs-button>
             <!-- <vs-button>Next</vs-button> -->
             <vs-button @click="handlePreview">Preview</vs-button>
           </div>
@@ -89,23 +91,23 @@
 </template>
 
 <script>
-import vSelect from 'vue-select'
-import PreviewModal from './PreviewModal.vue'
+import vSelect from "vue-select"
+import PreviewModal from "./PreviewModal.vue"
 
 export default {
   props: {
     activePrompt: Boolean,
     content: {
       type: Array,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
       showDescription: false,
       formData: {
         title: "",
-        description: ""
+        description: "",
       },
       classes: [],
       selectedClass: {},
@@ -123,7 +125,7 @@ export default {
       isClass: false,
       selectedStudent: [],
       mappingList: [],
-      isloading: false
+      isloading: false,
     }
   },
   mounted() {
@@ -132,7 +134,7 @@ export default {
     this.getClassOrCourseList()
   },
   components: {
-    'v-select': vSelect,
+    "v-select": vSelect,
     PreviewModal,
   },
   computed: {
@@ -143,13 +145,13 @@ export default {
     //   return this.$store.getters['getTeacherList']
     // },
     classList() {
-      return this.$store.getters['getClassList']
+      return this.$store.getters["getClassList"]
     },
     classDetail() {
-      return this.$store.getters['getClassDetail']
+      return this.$store.getters["getClassDetail"]
     },
     courseList() {
-      return this.$store.getters['getCourseList']
+      return this.$store.getters["getCourseList"]
     },
   },
   methods: {
@@ -157,29 +159,31 @@ export default {
       this.showDescription = true
     },
     uploadCSV() {
-      this.$emit('uploadCSV')
+      this.$emit("uploadCSV")
     },
     acceptAlert() {
       this.$vs.notify({
-        color: 'success',
-        title: 'Accept Selected',
-        text: 'Lorem ipsum dolor sit amet, consectetur'
+        color: "success",
+        title: "Accept Selected",
+        text: "Lorem ipsum dolor sit amet, consectetur",
       })
     },
     close() {
       this.$vs.notify({
-        color: 'danger',
-        title: 'Closed',
-        text: 'You close a dialog!'
+        color: "danger",
+        title: "Closed",
+        text: "You close a dialog!",
       })
-      this.$emit('cancel')
+      this.$emit("cancel")
       this.showDescription = false
-      this.textarea = ''
+      this.textarea = ""
       this.mappingList = []
     },
     handlePreview() {
       this.selectedStudent = this.student.map((studentId) => {
-        const studentIndex = this.studentList.findIndex((student) => student.id === studentId)
+        const studentIndex = this.studentList.findIndex(
+          (student) => student.id === studentId
+        )
         return this.studentList[studentIndex]
       })
       if (!this.selectedStudent.length) {
@@ -199,18 +203,20 @@ export default {
         })
       }
 
-      const mappingList = this.mappingList.filter((item) => this.stuff.includes(item.teacherId) && item.id != -1)
+      const mappingList = this.mappingList.filter(
+        (item) => this.stuff.includes(item.teacherId) && item.id != -1
+      )
 
-      this.$emit('preview')
-      this.$emit('selectStudent', this.selectedStudent)
-      this.$emit('setStaffMapping', mappingList)
+      this.$emit("preview")
+      this.$emit("selectStudent", this.selectedStudent)
+      this.$emit("setStaffMapping", mappingList)
     },
     setStaff(staff, item) {
       this.mappingList.push({
         id: staff.id,
         teacherId: item.id,
         content: staff.label,
-        name: item.first_name + " " + item.last_name
+        name: item.first_name + " " + item.last_name,
       })
     },
     selectAllStudent() {
@@ -236,7 +242,9 @@ export default {
       if (this.isClass) {
         this.getClassDetail(this.selectedClass.id)
       } else {
-        const index = this.courseList.findIndex((item) => item.id == this.selectedClass.id)
+        const index = this.courseList.findIndex(
+          (item) => item.id == this.selectedClass.id
+        )
         this.studentList = this.courseList[index].students
         this.teacherList = this.courseList[index].tutors
       }
@@ -244,18 +252,17 @@ export default {
     getClassOrCourseList() {
       if (this.isClass) {
         this.isloading = true
-        this.$store.dispatch("getClasses", {
-          page: 1,
-          limit: 1000
-        })
-          .then(({
-            data
-          }) => {
+        this.$store
+          .dispatch("getClasses", {
+            page: 1,
+            limit: 1000,
+          })
+          .then(({ data }) => {
             this.isloading = false
             this.classes = data.classes.map((item) => {
               return {
                 id: item.class_id,
-                label: item.name
+                label: item.name,
               }
             })
             this.getClassDetail(data.classes[0].class_id)
@@ -263,36 +270,27 @@ export default {
           })
       } else {
         this.isloading = true
-        this.$store.dispatch("getCourseList", {
-          page: 1,
-          limit: 1000
-        })
-          .then(({
-            data
-          }) => {
+        this.$store
+          .dispatch("getCourseList", {
+            page: 1,
+            limit: 1000,
+          })
+          .then(({ data }) => {
             this.isloading = false
             this.studentList = data.course[0].students
             this.teacherList = data.course[0].tutors
             this.classes = data.course.map((item) => {
               return {
                 id: item.id,
-                label: item.name
+                label: item.name,
               }
             })
             this.selectedClass = this.classes[0]
           })
       }
     },
-    saveGenerateCertificate() {
-      if (!this.form.title) {
-        return this.$vs.notify({
-          title: "Error",
-          text: "Please enter a Certificate Name before saving",
-          color: "danger",
-          time: 2000,
-        })
-      }
-      this.$emit("saveGenerateCertificate", this.form)
+    saveTemplate() {
+      this.$emit("saveTemplate", this.formData)
     },
   },
   watch: {
@@ -306,25 +304,22 @@ export default {
       this.getClassOrCourseList()
     },
     content(newVal) {
-      this.staffList = [{
-        id: -1,
-        label: "None"
-      }]
+      this.staffList = [{ id: -1, label: "None" }]
       newVal.map((item) => {
         this.staffList.push({
           id: item.id,
-          label: item.content
+          label: item.content,
         })
       })
     },
     activePrompt(newVal) {
       if (!newVal) {
         this.showDescription = false
-        this.textarea = ''
+        this.textarea = ""
         this.mappingList = []
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -342,7 +337,7 @@ export default {
 }
 
 .vs-dialog-cancel {
-  color: #6E6B7B;
+  color: #6e6b7b;
   transform: translate(0, 0) !important;
   box-shadow: none !important;
 }
