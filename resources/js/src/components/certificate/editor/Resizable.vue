@@ -51,7 +51,6 @@ export default {
 
         listeners: {
           move (event) {
-            console.log('moving')
             var target = event.target
             var x = (parseFloat(target.getAttribute('data-x')) || 0)
             var y = (parseFloat(target.getAttribute('data-y')) || 0)
@@ -82,7 +81,7 @@ export default {
 
           // minimum size
           interact.modifiers.restrictSize({
-            min: { width: 100, height: 50 }
+            min: { width: 50, height: 50 }
           })
         ],
 

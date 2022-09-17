@@ -4,6 +4,8 @@
     <div class="template-content-section flex" v-for="(item, index) in content" :key="index" :style="{
       ...item.style,
       fontSize: `${Number(item.style.fontSize.slice(0, item.style.fontSize.length - 2)) * rate.y}px`,
+      width: `${item.style.width ? Number(item.style.width.slice(0, item.style.width.length - 2)) * rate.x + 'px' : 'auto'}`,
+      height: `${item.style.height ? Number(item.style.height.slice(0, item.style.height.length - 2)) * rate.y + 'px' : 'auto'}`,
       left: `${item.x * rate.x}px`,
       top: `${item.y * rate.y}px`,
     }">

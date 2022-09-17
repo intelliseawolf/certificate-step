@@ -40,7 +40,7 @@
     <img class="editor-bg" :src="image && image.file && image.file.file_path" alt="certificate-bg">
     <Draggable v-for="(item, index) in draggableContent" :key="index + item.content" :data="item" :class="{
       activeDragItem: activeDragIndex == index
-    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(index, val)">
+    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(item, val)">
       <div class="flex" :style="item.style" @mousedown="dragItem(index)">
         <vs-input v-if="activeIndex == index" class="inputx" placeholder="text" v-model="content[activeIndex].content"
           @keydown="(e) => changeContent(e)" />
@@ -54,9 +54,9 @@
       </div>
     </Draggable>
     <Resizable v-for="(item, index) in resizableContent" :key="index" :data="item" :class="{
-      activeDragItem: activeDragIndex == index
-    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(index, val)" @onResize="(val) => onResize(index, val)">
-      <div class="flex" :style="item.style" @mousedown="dragItem(index)">
+      activeDragItem: activeResizeIndex == index
+    }" @endDrag="endResize" @onDragMove="(val) => onDragMove(item, val)" @onResize="(val) => onResize(item, val)">
+      <div class="flex" :style="item.style" @mousedown="resizeItem(index)">
       </div>
     </Resizable>
     <!-- <quill-editor
@@ -110,13 +110,7 @@ export default {
           toolbar: '#toolbar'
         }
       },
-      content: [{
-        type: 'image',
-        style: { width: "50px", height: "50px", backgroundImage: `url('https://scoolio-files.s3.ap-south-1.amazonaws.com/20211129063744097501/Default/kmBCI10023i6i2mO.jpg')` },
-        content: "",
-        x: 100,
-        y: 100
-      }],
+      content: [],
 
       staticTextContent: [],
       activeIndex: -1,
@@ -192,6 +186,7 @@ export default {
         ],
       },
       activeDragIndex: -1,
+      activeResizeIndex: -1,
     }
   },
   components: {
@@ -265,8 +260,14 @@ export default {
       this.dragOption.fontFamily = this.getFontFamilyOption(this.content[index].style.fontFamily)
       this.dragOption.color = this.content[index].style.color ? this.content[index].style.color : '#000000'
     },
+    resizeItem(index) {
+      this.activeResizeIndex = index
+    },
     endDrag() {
       this.activeDragIndex = -1
+    },
+    endResize() {
+      this.activeResizeIndex = -1
     },
     getFontSizeOption(size) {
       switch (size) {
@@ -323,16 +324,18 @@ export default {
         }
       }
     },
-    onDragMove(index, { x, y }) {
+    onDragMove(item, { x, y }) {
+      const index = this.content.findIndex((data) => data.type == item.type && data.style.backgroundImage == item.style.backgroundImage && data.content == item.content)
       this.content[index].x = x
       this.content[index].y = y
     },
-    onResize(index, { width, height }) {
+    onResize(item, { width, height }) {
+      const index = this.content.findIndex((data) => data.type == item.type && data.style.backgroundImage == item.style.backgroundImage)
       this.content[index].style.width = width + "px"
       this.content[index].style.height = height + "px"
     },
     setContent(content) {
-      this.content.push(content)
+      this.content = content
     },
     removeText() {
       if (this.activeDragIndex == -1) return
@@ -347,15 +350,19 @@ export default {
       this.$refs.uploadImageModal.toggleModal()
     },
     setEditorImage(image) {
-      console.log('setEditorImage', image)
       this.content.push({
         type: 'image',
-        style: { width: "50px", height: "50px", backgroundImage: `url(${image})` },
+        style: {
+          fontSize: '18px',
+          width: "50px",
+          height: "50px",
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover"
+        },
         content: "",
         x: 100,
         y: 100
       })
-      console.log(image)
     },
   },
   watch: {
@@ -434,6 +441,10 @@ export default {
   padding: 5px 10px;
   border: 1px solid rgb(66, 66, 150);
   border-radius: 4px;
+}
+
+.resizable.activeDragItem {
+  padding: 0;
 }
 
 .draggable .drag-item {
