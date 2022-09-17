@@ -78,7 +78,7 @@
         <div class="flex mt-3 justify-between">
           <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
           <div class="flex">
-            <vs-button class="mr-2 primary" type="flat">Save</vs-button>
+            <vs-button class="mr-2 primary" type="flat" @click="saveGenerateCertificate">Save</vs-button>
             <!-- <vs-button>Next</vs-button> -->
             <vs-button @click="handlePreview">Preview</vs-button>
           </div>
@@ -110,7 +110,10 @@ export default {
       classes: [],
       selectedClass: {},
       selectBox: false,
-      staffList: [{ id: -1, label: "None" }],
+      staffList: [{
+        id: -1,
+        label: "None"
+      }],
       student: [],
       allStudent: false,
       stuff: [],
@@ -193,7 +196,7 @@ export default {
           text: "Please enter a Certificate Name before saving",
           color: "danger",
           time: 2000,
-        });
+        })
       }
 
       const mappingList = this.mappingList.filter((item) => this.stuff.includes(item.teacherId) && item.id != -1)
@@ -245,7 +248,9 @@ export default {
           page: 1,
           limit: 1000
         })
-          .then(({ data }) => {
+          .then(({
+            data
+          }) => {
             this.isloading = false
             this.classes = data.classes.map((item) => {
               return {
@@ -262,7 +267,9 @@ export default {
           page: 1,
           limit: 1000
         })
-          .then(({ data }) => {
+          .then(({
+            data
+          }) => {
             this.isloading = false
             this.studentList = data.course[0].students
             this.teacherList = data.course[0].tutors
@@ -275,7 +282,18 @@ export default {
             this.selectedClass = this.classes[0]
           })
       }
-    }
+    },
+    saveGenerateCertificate() {
+      if (!this.form.title) {
+        return this.$vs.notify({
+          title: "Error",
+          text: "Please enter a Certificate Name before saving",
+          color: "danger",
+          time: 2000,
+        })
+      }
+      this.$emit("saveGenerateCertificate", this.form)
+    },
   },
   watch: {
     classDetail(newVal) {
@@ -288,7 +306,10 @@ export default {
       this.getClassOrCourseList()
     },
     content(newVal) {
-      this.staffList = [{ id: -1, label: "None" }]
+      this.staffList = [{
+        id: -1,
+        label: "None"
+      }]
       newVal.map((item) => {
         this.staffList.push({
           id: item.id,
