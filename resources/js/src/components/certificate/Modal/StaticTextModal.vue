@@ -11,11 +11,22 @@
       Add Text
     </vs-button>
 
-    <vs-prompt @cancel="val = ''" @accept="acceptAlert" buttonAccept="false" buttonCancel="false"
-      :active.sync="activePrompt" title="" @close="close">
+    <vs-prompt
+      @cancel="val = ''"
+      @accept="acceptAlert"
+      buttonAccept="false"
+      buttonCancel="false"
+      :active.sync="activePrompt"
+      title=""
+      @close="close"
+    >
       <h3 class="text-center mb-4">Add Static Text</h3>
       <div class="con-exemple-prompt">
-        <vs-input vs-placeholder="static text" v-model="text" class="w-full mb-3" />
+        <vs-input
+          vs-placeholder="static text"
+          v-model="text"
+          class="w-full mb-3"
+        />
 
         <div class="flex mt-3">
           <vs-button class="ml-auto" @click="saveStaticText">Save</vs-button>
@@ -32,31 +43,31 @@ export default {
     return {
       modal: null,
       activePrompt: false,
-      text: ""
-    }
+      text: "",
+    };
   },
   methods: {
     changeModal(name) {
-      this.modal = name
+      this.modal = name;
     },
     acceptAlert() {
       this.$vs.notify({
-        color: 'success',
-        title: 'Accept Selected',
-        text: 'Lorem ipsum dolor sit amet, consectetur'
-      })
+        color: "success",
+        title: "Accept Selected",
+        text: "Lorem ipsum dolor sit amet, consectetur",
+      });
     },
     close() {
-      this.showDescription = false
-      this.textarea = ''
+      this.showDescription = false;
+      this.textarea = "";
     },
     saveStaticText() {
       this.$emit("createStaticText", this.text);
-      this.text = ""
+      this.text = "";
       this.activePrompt = false;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -74,7 +85,7 @@ export default {
 }
 
 .vs-dialog-cancel {
-  color: #6E6B7B;
+  color: #6e6b7b;
   transform: translate(0, 0) !important;
   box-shadow: none !important;
 }

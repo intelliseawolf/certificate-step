@@ -161,7 +161,11 @@ export default {
           { id: 8, label: "Manrope", value: "Manrope" },
           { id: 9, label: "Lora", value: "Lora" },
           { id: 10, label: "BioRhyme", value: "BioRhyme" },
-          { id: 11, label: "Playfair Display", value: "Playfair Display" },
+          {
+            id: 11,
+            label: "Playfair Display",
+            value: "Playfair Display",
+          },
           { id: 12, label: "Archivo", value: "Archivo" },
           { id: 13, label: "Roboto", value: "Roboto" },
           { id: 14, label: "Cormorant", value: "Cormorant" },
@@ -170,12 +174,20 @@ export default {
           { id: 17, label: "Work Sans", value: "Work Sans" },
           { id: 18, label: "Lato", value: "Lato" },
           { id: 19, label: "Anton", value: "Anton" },
-          { id: 20, label: "Old Standard TT", value: "Old Standard TT" },
+          {
+            id: 20,
+            label: "Old Standard TT",
+            value: "Old Standard TT",
+          },
           { id: 21, label: "Oswald", value: "Oswald" },
           { id: 22, label: "Montserrat", value: "Montserrat" },
           { id: 23, label: "Poppins", value: "Poppins" },
           { id: 24, label: "Nunito", value: "Nunito" },
-          { id: 25, label: "Source Sans Pro", value: "Source Sans Pro" },
+          {
+            id: 25,
+            label: "Source Sans Pro",
+            value: "Source Sans Pro",
+          },
           { id: 26, label: "Oxygen", value: "Oxygen" },
           { id: 27, label: "Open Sans", value: "Open Sans" },
           // 26 Best Cursive Fonts
@@ -184,7 +196,11 @@ export default {
           { id: 30, label: "Rouge Script", value: "Rouge Script" },
           { id: 31, label: "Pacifico", value: "Pacifico" },
           { id: 32, label: "Alex Brush", value: "Alex Brush" },
-          { id: 33, label: "Kaushan Script", value: "Kaushan Script" },
+          {
+            id: 33,
+            label: "Kaushan Script",
+            value: "Kaushan Script",
+          },
           { id: 34, label: "Sail", value: "Sail" },
           { id: 35, label: "Sacramento", value: "Sacramento" },
           { id: 36, label: "Marck Script", value: "Marck Script" },
@@ -206,7 +222,11 @@ export default {
           { id: 48, label: "Cookie", value: "Cookie" },
           { id: 49, label: "Amita", value: "Amita" },
           { id: 50, label: "Meie Script", value: "Meie Script" },
-          { id: 51, label: "Euphoria Script", value: "Euphoria Script" },
+          {
+            id: 51,
+            label: "Euphoria Script",
+            value: "Euphoria Script",
+          },
           { id: 52, label: "Tangerine", value: "Tangerine" },
           { id: 53, label: "Sevillana", value: "Sevillana" },
         ],
@@ -267,7 +287,11 @@ export default {
       this.content.push({
         id: id,
         type: "dynamic-text",
-        style: { fontSize: "18px", width: "max-content", fontFamily: "Sora" },
+        style: {
+          fontSize: "18px",
+          width: "max-content",
+          fontFamily: "Sora",
+        },
         content: content + (sameTextCount ? sameTextCount : ""),
         x: 100,
         y: 100,
@@ -284,7 +308,11 @@ export default {
     addStaticText(text) {
       this.content.push({
         type: "static-text",
-        style: { fontSize: "18px", width: "max-content", fontFamily: "Sora" },
+        style: {
+          fontSize: "18px",
+          width: "max-content",
+          fontFamily: "Sora",
+        },
         content: text,
         x: 300,
         y: 300,
@@ -331,10 +359,124 @@ export default {
     },
     getFontFamilyOption(family) {
       switch (family) {
+        // TOP 20 Best Fonts
         case "Sora":
-          return { id: 4, label: "Sora", value: "Sora" };
+          return { id: 1, label: "Sora", value: "Sora" };
+        case "Hahmlet":
+          return { id: 2, label: "Hahmlet", value: "Hahmlet" };
+        case "JetBrains Mono":
+          return { id: 3, label: "JetBrains Mono", value: "JetBrains Mono" };
+        case "Andada Pro":
+          return { id: 4, label: "Andada Pro", value: "Andada Pro" };
+        case "Epilogue":
+          return { id: 5, label: "Epilogue", value: "Epilogue" };
+        case "Inter":
+          return { id: 6, label: "Inter", value: "Inter" };
+        case "Encode Sans":
+          return { id: 7, label: "Encode Sans", value: "Encode Sans" };
+        case "Manrope":
+          return { id: 8, label: "Manrope", value: "Manrope" };
+        case "Lora":
+          return { id: 9, label: "Lora", value: "Lora" };
+        case "BioRhyme":
+          return { id: 10, label: "BioRhyme", value: "BioRhyme" };
+        case "Playfair Display":
+          return {
+            id: 11,
+            label: "Playfair Display",
+            value: "Playfair Display",
+          };
+        case "Archivo":
+          return { id: 12, label: "Archivo", value: "Archivo" };
+        case "Roboto":
+          return { id: 13, label: "Roboto", value: "Roboto" };
+        case "Cormorant":
+          return { id: 14, label: "Cormorant", value: "Cormorant" };
+        case "Spectral":
+          return { id: 15, label: "Spectral", value: "Spectral" };
+        case "Raleway":
+          return { id: 16, label: "Raleway", value: "Raleway" };
+        case "Work Sans":
+          return { id: 17, label: "Work Sans", value: "Work Sans" };
+        case "Lato":
+          return { id: 18, label: "Lato", value: "Lato" };
+        case "Anton":
+          return { id: 19, label: "Anton", value: "Anton" };
+        case "Old Standard TT":
+          return { id: 20, label: "Old Standard TT", value: "Old Standard TT" };
+        case "Oswald":
+          return { id: 21, label: "Oswald", value: "Oswald" };
+        case "Montserrat":
+          return { id: 22, label: "Montserrat", value: "Montserrat" };
+        case "Poppins":
+          return { id: 23, label: "Poppins", value: "Poppins" };
+        case "Nunito":
+          return { id: 24, label: "Nunito", value: "Nunito" };
+        case "Source Sans Pro":
+          return { id: 25, label: "Source Sans Pro", value: "Source Sans Pro" };
+        case "Oxygen":
+          return { id: 26, label: "Oxygen", value: "Oxygen" };
+        case "Open Sans":
+          return { id: 27, label: "Open Sans", value: "Open Sans" };
+        // 26 Best Cursive Fonts
+        case "Arizonia":
+          return { id: 28, label: "Arizonia", value: "Arizonia" };
+        case "Lobster":
+          return { id: 29, label: "Lobster", value: "Lobster" };
+        case "Rouge Script":
+          return { id: 30, label: "Rouge Script", value: "Rouge Script" };
+        case "Pacifico":
+          return { id: 31, label: "Pacifico", value: "Pacifico" };
+        case "Alex Brush":
+          return { id: 32, label: "Alex Brush", value: "Alex Brush" };
+        case "Kaushan Script":
+          return { id: 33, label: "Kaushan Script", value: "Kaushan Script" };
+        case "Sail":
+          return { id: 34, label: "Sail", value: "Sail" };
+        case "Sacramento":
+          return { id: 35, label: "Sacramento", value: "Sacramento" };
+        case "Marck Script":
+          return { id: 36, label: "Marck Script", value: "Marck Script" };
+        case "Sonsie One":
+          return { id: 37, label: "Sonsie One", value: "Sonsie One" };
+        case "Monsieur La Doulaise":
+          return {
+            id: 38,
+            label: "Monsieur La Doulaise",
+            value: "Monsieur La Doulaise",
+          };
+        case "Rock Salt":
+          return { id: 39, label: "Rock Salt", value: "Rock Salt" };
+        case "Rochester":
+          return { id: 40, label: "Rochester", value: "Rochester" };
+        case "Rancho":
+          return { id: 41, label: "Rancho", value: "Rancho" };
+        case "Croissant One":
+          return { id: 42, label: "Croissant One", value: "Croissant One" };
+        case "Yesteryear":
+          return { id: 43, label: "Yesteryear", value: "Yesteryear" };
+        case "Courgette":
+          return { id: 44, label: "Courgette", value: "Courgette" };
+        case "Sofia":
+          return { id: 45, label: "Sofia", value: "Sofia" };
+        case "Allura":
+          return { id: 46, label: "Allura", value: "Allura" };
+        case "Redressed":
+          return { id: 47, label: "Redressed", value: "Redressed" };
+        case "Cookie":
+          return { id: 48, label: "Cookie", value: "Cookie" };
+        case "Amita":
+          return { id: 49, label: "Amita", value: "Amita" };
+        case "Meie Script":
+          return { id: 50, label: "Meie Script", value: "Meie Script" };
+        case "Euphoria Script":
+          return { id: 51, label: "Euphoria Script", value: "Euphoria Script" };
+        case "Tangerine":
+          return { id: 52, label: "Tangerine", value: "Tangerine" };
+        case "Sevillana":
+          return { id: 53, label: "Sevillana", value: "Sevillana" };
         default:
-          return { id: 2, label: "Sora", value: "Sora" };
+          return { id: 1, label: "Sora", value: "Sora" };
       }
     },
     changeFontSize() {

@@ -1,7 +1,6 @@
 <template>
   <div class="custom-quill-editor">
-    <quill-editor v-model="content" theme="snow">
-    </quill-editor>
+    <quill-editor v-model="content" theme="snow"> </quill-editor>
   </div>
 </template>
 
@@ -19,27 +18,27 @@ export default {
   },
   props: {
     value: {
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      content: this.value
-    }
+      content: this.value,
+    };
   },
   methods: {
     customButtonClick() {
       alert("Button clicked!");
-    }
+    },
   },
   watch: {
     content(newVal) {
-      this.$emit("input", newVal)
+      this.$emit("input", newVal);
     },
     value(newVal) {
-      this.content = newVal
-    }
-  }
+      this.content = newVal;
+    },
+  },
 };
 </script>
 
@@ -63,6 +62,4 @@ export default {
     border: none !important;
   }
 }
-
-
 </style>
