@@ -1,7 +1,13 @@
 <template>
   <div class="dynamicTexts-overflow">
-    <vs-button class="menu-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle"
-      v-if="template.length !== 0">
+    <vs-button
+      class="menu-button"
+      color="primary"
+      type="border"
+      icon-pack="feather"
+      icon="icon-plus-circle"
+      v-if="template.length !== 0"
+    >
       Static Texts
     </vs-button>
     <div v-else>
@@ -11,14 +17,25 @@
         <i class="material-icons ml-auto" v-else> expand_more </i>
       </div>
       <ul class="dropdown-menu staticTexts-field" v-if="dropdown">
-        <li class="dropdown-item relative" v-for="(text, index) in staticTextList" :key="index">
-          <vs-button type="border" class="demo-text-dark text-button" text-color="rgb(30,30,30)">
+        <li
+          class="dropdown-item relative"
+          v-for="(text, index) in staticTextList"
+          :key="index"
+        >
+          <vs-button
+            type="border"
+            class="demo-text-dark text-button"
+            text-color="rgb(30,30,30)"
+          >
             <p class="truncate pr-5">
               {{ text }}
             </p>
           </vs-button>
           <a class="absolute li-button">
-            <i class="material-icons ml-auto text-red" @click="removeStaticText(text)">
+            <i
+              class="material-icons ml-auto text-red"
+              @click="removeStaticText(text)"
+            >
               delete
             </i>
           </a>
@@ -31,8 +48,16 @@
       <vs-switch v-model="dynamicTextSwitch" class="ml-auto" />
     </div>
     <div class="dynamicTexts-field" v-if="dynamicTextSwitch">
-      <vs-button v-for="text in dynamicTextList" :key="text.field_id" @click="setDynamicText(text.field_id)"
-        class="dynamicTexts-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle">
+      <vs-button
+        v-for="text in dynamicTextList"
+        :key="text.field_id"
+        @click="setDynamicText(text)"
+        class="dynamicTexts-button"
+        color="primary"
+        type="border"
+        icon-pack="feather"
+        icon="icon-plus-circle"
+      >
         {{ text.field_name }}
       </vs-button>
     </div>
@@ -40,10 +65,11 @@
 </template>
 
 <script>
-import { Drag, Drop } from "vue-easy-dnd"
-import StaticTextModal from "../Modal/StaticTextModal.vue"
+import { Drag, Drop } from "vue-easy-dnd";
+import StaticTextModal from "../Modal/StaticTextModal.vue";
 
 export default {
+  name: "MenuButton",
   components: {
     Drag,
     Drop,
@@ -51,35 +77,35 @@ export default {
   },
   props: {
     dynamicTextList: {
-      required: true
+      required: true,
     },
     staticTextList: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     handleDropDown() {
-      this.dropdown = !this.dropdown
+      this.dropdown = !this.dropdown;
     },
-    setDynamicText(id) {
-      this.$emit("setDynamicText", id)
+    setDynamicText(text) {
+      this.$emit("setDynamicText", text.field_id);
     },
     createStaticText(text) {
-      this.$emit("createStaticText", text)
+      this.$emit("createStaticText", text);
     },
     removeStaticText(text) {
-      this.$emit("removeStaticText", text)
-    }
+      this.$emit("removeStaticText", text);
+    },
   },
   data() {
     return {
       template: [],
       dynamicTextSwitch: true,
       dropdown: false,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style>
@@ -116,7 +142,7 @@ li.dropdown-item {
   text-align: left;
   padding: 8px 16px 8px 16px !important;
   font-size: 16px !important;
-  border: 2px, solid, #FFFFFF;
+  border: 2px, solid, #ffffff;
 }
 
 .vs-button-text.vs-button--text {
@@ -124,7 +150,7 @@ li.dropdown-item {
 }
 
 .text-red {
-  color: #F15D5F;
+  color: #f15d5f;
 }
 
 .dynamicTexts-overflow {

@@ -11,107 +11,108 @@ import axios from '../axios'
 
 const actions = {
 
-    // /////////////////////////////////////////////
-    // COMPONENTS
-    // /////////////////////////////////////////////
+  // /////////////////////////////////////////////
+  // COMPONENTS
+  // /////////////////////////////////////////////
 
-    // Vertical NavMenu
-    updateVerticalNavMenuWidth({ commit }, width) {
-      commit('UPDATE_VERTICAL_NAV_MENU_WIDTH', width)
-    },
+  // Vertical NavMenu
+  updateVerticalNavMenuWidth({ commit }, width) {
+    commit('UPDATE_VERTICAL_NAV_MENU_WIDTH', width)
+  },
 
-    // VxAutoSuggest
-    updateStarredPage({ commit }, payload) {
-      commit('UPDATE_STARRED_PAGE', payload)
-    },
+  // VxAutoSuggest
+  updateStarredPage({ commit }, payload) {
+    commit('UPDATE_STARRED_PAGE', payload)
+  },
 
-    // The Navbar
-    arrangeStarredPagesLimited({ commit }, list) {
-      commit('ARRANGE_STARRED_PAGES_LIMITED', list)
-    },
-    arrangeStarredPagesMore({ commit }, list) {
-      commit('ARRANGE_STARRED_PAGES_MORE', list)
-    },
+  // The Navbar
+  arrangeStarredPagesLimited({ commit }, list) {
+    commit('ARRANGE_STARRED_PAGES_LIMITED', list)
+  },
+  arrangeStarredPagesMore({ commit }, list) {
+    commit('ARRANGE_STARRED_PAGES_MORE', list)
+  },
 
-    // /////////////////////////////////////////////
-    // UI
-    // /////////////////////////////////////////////
+  // /////////////////////////////////////////////
+  // UI
+  // /////////////////////////////////////////////
 
-    toggleContentOverlay({ commit }) {
-      commit('TOGGLE_CONTENT_OVERLAY')
-    },
-    updateTheme({ commit }, val) {
-      commit('UPDATE_THEME', val)
-    },
+  toggleContentOverlay({ commit }) {
+    commit('TOGGLE_CONTENT_OVERLAY')
+  },
+  updateTheme({ commit }, val) {
+    commit('UPDATE_THEME', val)
+  },
 
-    // /////////////////////////////////////////////
-    // User/Account
-    // /////////////////////////////////////////////
+  // /////////////////////////////////////////////
+  // User/Account
+  // /////////////////////////////////////////////
 
-    updateUserInfo({ commit }, payload) {
-      commit('UPDATE_USER_INFO', payload)
-    },
+  updateUserInfo({ commit }, payload) {
+    commit('UPDATE_USER_INFO', payload)
+  },
 
-    // Get templates from backend
+  // Get templates from backend
 
-    getTemplates({commit}, {page}) {
-      axios.post(`/certificate/template/list/184?page=${page}`, {
-        type: "string"
-      })
-      .then(({data}) => {
+  getTemplates({ commit }, { page }) {
+    axios.post(`/certificate/template/list/184?page=${page}`, {
+      type: "string"
+    })
+      .then(({ data }) => {
         commit('GET_CETIFICATE_TEMPLATE_LIST', data)
       })
-    },
+  },
 
-    getDynamicTexts({commit}, payload) {
-      axios.post('/certificate/dynamic_field_list', {
-        type: "string"
-      })
-      .then(({data}) => {
+  getDynamicTexts({ commit }, payload) {
+    axios.post('/certificate/dynamic_field_list', {
+      type: "string"
+    })
+      .then(({ data }) => {
         commit('GET_CETIFICATE_DYNAMIC_TEXTS', data)
+        console.log(data)
       })
-    },
+  },
 
-    getStudents({commit}) {
-      axios.post('/classes/schedules/students/184', {
-        type: "string"
-      })
-      .then(({data}) => {
+  getStudents({ commit }) {
+    axios.post('/classes/schedules/students/184', {
+      type: "string"
+    })
+      .then(({ data }) => {
         commit('GET_STUDENTS_LIST', data)
       })
-    },
+  },
 
-    getTeachers({commit}) {
-      axios.post('/classes/schedules/teachers/184', {
-        type: "string"
-      })
-      .then(({data}) => {
+  getTeachers({ commit }) {
+    axios.post('/classes/schedules/teachers/184', {
+      type: "string"
+    })
+      .then(({ data }) => {
         commit('GET_TEACHERS_LIST', data)
       })
-    },
+  },
 
-    getClasses({commit}, {page, limit}) {
-      return axios.post(`/classes/list/184?page=${page}&limit=${limit}`, {is_archived: 1})
-        .then(({data}) => {
-          commit('GET_CLASS_LIST', data)
-          return Promise.resolve(data)
-        })
-    },
+  getClasses({ commit }, { page, limit }) {
+    return axios.post(`/classes/list/184?page=${page}&limit=${limit}`, { is_archived: 1 })
+      .then(({ data }) => {
+        commit('GET_CLASS_LIST', data)
+        return Promise.resolve(data)
+      })
+  },
 
-    getClassDetail({commit}, classId) {
-      axios.get(`/classes/show/${classId}/184`)
-        .then(({data}) => {
-          commit('GET_CLASS_DETAIL', data)
-        })
-    },
+  getClassDetail({ commit }, classId) {
+    axios.get(`/classes/show/${classId}/184`)
+      .then(({ data }) => {
+        commit('GET_CLASS_DETAIL', data)
+      })
+  },
 
-    getCourseList({commit}, {page, limit}) {
-      return axios.post(`/V1/course/list/184?page=${page}`, {limit})
-        .then(({data}) => {
-          commit('GET_COURSE_LIST', data)
-          return Promise.resolve(data)
-        })
-    },
+  getCourseList({ commit }, { page, limit }) {
+    return axios.post(`/V1/course/list/184?page=${page}`, { limit })
+      .then(({ data }) => {
+        commit('GET_COURSE_LIST', data)
+        return Promise.resolve(data)
+      })
+  },
 }
 
 export default actions

@@ -1,20 +1,42 @@
 <template>
   <div class="generate-modal">
-    <vs-prompt @accept="acceptAlert" @close="close" buttonAccept="false" buttonCancel="false" :active="activePrompt"
-      title="Genrate Certificate">
+    <vs-prompt
+      @accept="acceptAlert"
+      @close="close"
+      buttonAccept="false"
+      buttonCancel="false"
+      :active="activePrompt"
+      title="Genrate Certificate"
+    >
       <div class="con-exemple-prompt">
         <!-- Body -->
         <span class="mb-1">Certificate Name</span>
-        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="formData.title"
-          class="w-full mb-3" />
+        <vs-input
+          placeholder="Batch 14' S.Y.19-20"
+          vs-placeholder="Batch 14' S.Y.19-20"
+          v-model="formData.title"
+          class="w-full mb-3"
+        />
         <!-- SLOT -->
         <!-- <slot></slot> -->
-        <vs-button class="menu-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle"
-          @click="handleShow" v-if="!showDescription">
+        <vs-button
+          class="menu-button"
+          color="primary"
+          type="border"
+          icon-pack="feather"
+          icon="icon-plus-circle"
+          @click="handleShow"
+          v-if="!showDescription"
+        >
           Add Description
         </vs-button>
         <span class="mb-1" v-if="showDescription">Description</span>
-        <vs-textarea v-model="formData.description" v-if="showDescription" placeholder="Lorem Ipsum" height="115px" />
+        <vs-textarea
+          v-model="formData.description"
+          v-if="showDescription"
+          placeholder="Lorem Ipsum"
+          height="115px"
+        />
 
         <div class="flex justify-between">
           <span>Select Course / Class</span>
@@ -28,8 +50,13 @@
           <div class="flex justify-center">Loading...</div>
         </div>
         <div v-else>
-          <v-select v-model="selectedClass" class="mt-3" :options="classes" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-            @input="changeClassOrCourse" />
+          <v-select
+            v-model="selectedClass"
+            class="mt-3"
+            :options="classes"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            @input="changeClassOrCourse"
+          />
           <br />
           <!-- Student & Staff Tabs -->
           <div class="mt-1">
@@ -38,13 +65,28 @@
                 <div>
                   <ul class="centerx">
                     <li class="mb-4">
-                      <vs-checkbox v-model="allStudent" @change="selectAllStudent">Select All</vs-checkbox>
+                      <vs-checkbox
+                        v-model="allStudent"
+                        @change="selectAllStudent"
+                        >Select All</vs-checkbox
+                      >
                     </li>
-                    <li v-for="item in studentList" :key="item.id" class="flex mb-4">
-                      <vs-checkbox :vs-value="item.id" v-model="student"></vs-checkbox>
-                      <img class="rounded-circle" :src="
-                        item.picture ? item.picture : '/images/man-avatar.png'
-                      " alt="student avatar" />
+                    <li
+                      v-for="item in studentList"
+                      :key="item.id"
+                      class="flex mb-4"
+                    >
+                      <vs-checkbox
+                        :vs-value="item.id"
+                        v-model="student"
+                      ></vs-checkbox>
+                      <img
+                        class="rounded-circle"
+                        :src="
+                          item.picture ? item.picture : '/images/man-avatar.png'
+                        "
+                        alt="student avatar"
+                      />
                       <span class="ml-2 my-auto">
                         {{ item.first_name + " " + item.last_name }}
                       </span>
@@ -56,18 +98,36 @@
                 <div>
                   <ul class="centerx">
                     <li class="mb-4">
-                      <vs-checkbox v-model="allStuff" @change="selectAllStuff">Select All</vs-checkbox>
+                      <vs-checkbox v-model="allStuff" @change="selectAllStuff"
+                        >Select All</vs-checkbox
+                      >
                     </li>
-                    <li v-for="item in teacherList" :key="item.id" class="flex mb-4" style="align-items: center">
-                      <vs-checkbox :vs-value="item.id" v-model="stuff"></vs-checkbox>
-                      <img class="rounded-circle" :src="
-                        item.picture ? item.picture : '/images/man-avatar.png'
-                      " alt="teacher image" />
+                    <li
+                      v-for="item in teacherList"
+                      :key="item.id"
+                      class="flex mb-4"
+                      style="align-items: center"
+                    >
+                      <vs-checkbox
+                        :vs-value="item.id"
+                        v-model="stuff"
+                      ></vs-checkbox>
+                      <img
+                        class="rounded-circle"
+                        :src="
+                          item.picture ? item.picture : '/images/man-avatar.png'
+                        "
+                        alt="teacher image"
+                      />
                       <span class="ml-2 my-auto">{{
-                      item.first_name + " " + item.last_name
+                        item.first_name + " " + item.last_name
                       }}</span>
-                      <v-select class="ml-auto staff-select" :options="staffList" :dir="$vs.rtl ? 'rtl' : 'ltr'"
-                        @input="(e) => setStaff(e, item)" />
+                      <v-select
+                        class="ml-auto staff-select"
+                        :options="staffList"
+                        :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                        @input="(e) => setStaff(e, item)"
+                      />
                       <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
                     </li>
                   </ul>
@@ -78,9 +138,17 @@
         </div>
         <!-- Footer -->
         <div class="flex mt-3 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
+          <vs-button
+            color="dark"
+            class="mr-2 primary"
+            type="flat"
+            @click="close"
+            >Cancel</vs-button
+          >
           <div class="flex">
-            <vs-button class="mr-2 primary" type="flat" @click="saveTemplate">Save</vs-button>
+            <vs-button class="mr-2 primary" type="flat" @click="saveTemplate"
+              >Save</vs-button
+            >
             <!-- <vs-button>Next</vs-button> -->
             <vs-button @click="handlePreview">Preview</vs-button>
           </div>
@@ -91,8 +159,8 @@
 </template>
 
 <script>
-import vSelect from "vue-select"
-import PreviewModal from "./PreviewModal.vue"
+import vSelect from "vue-select";
+import PreviewModal from "./PreviewModal.vue";
 
 export default {
   props: {
@@ -112,10 +180,12 @@ export default {
       classes: [],
       selectedClass: {},
       selectBox: false,
-      staffList: [{
-        id: -1,
-        label: "None"
-      }],
+      staffList: [
+        {
+          id: -1,
+          label: "None",
+        },
+      ],
       student: [],
       allStudent: false,
       stuff: [],
@@ -126,73 +196,67 @@ export default {
       selectedStudent: [],
       mappingList: [],
       isloading: false,
-    }
+    };
   },
   mounted() {
     // this.$store.dispatch("getStudents")
     // this.$store.dispatch("getTeachers")
-    this.getClassOrCourseList()
+    this.getClassOrCourseList();
   },
   components: {
     "v-select": vSelect,
     PreviewModal,
   },
   computed: {
-    // studentList() {
-    //   return this.$store.getters['getStudentList']
-    // },
-    // teacherList() {
-    //   return this.$store.getters['getTeacherList']
-    // },
     classList() {
-      return this.$store.getters["getClassList"]
+      return this.$store.getters["getClassList"];
     },
     classDetail() {
-      return this.$store.getters["getClassDetail"]
+      return this.$store.getters["getClassDetail"];
     },
     courseList() {
-      return this.$store.getters["getCourseList"]
+      return this.$store.getters["getCourseList"];
     },
   },
   methods: {
     handleShow() {
-      this.showDescription = true
+      this.showDescription = true;
     },
     uploadCSV() {
-      this.$emit("uploadCSV")
+      this.$emit("uploadCSV");
     },
     acceptAlert() {
       this.$vs.notify({
         color: "success",
         title: "Accept Selected",
         text: "Lorem ipsum dolor sit amet, consectetur",
-      })
+      });
     },
     close() {
       this.$vs.notify({
         color: "danger",
         title: "Closed",
         text: "You close a dialog!",
-      })
-      this.$emit("cancel")
-      this.showDescription = false
-      this.textarea = ""
-      this.mappingList = []
+      });
+      this.$emit("cancel");
+      this.showDescription = false;
+      this.textarea = "";
+      this.mappingList = [];
     },
     handlePreview() {
       this.selectedStudent = this.student.map((studentId) => {
         const studentIndex = this.studentList.findIndex(
           (student) => student.id === studentId
-        )
-        return this.studentList[studentIndex]
-      })
+        );
+        return this.studentList[studentIndex];
+      });
       if (!this.selectedStudent.length) {
         return this.$vs.notify({
           title: "Error",
           text: "You must select the students!",
           color: "danger",
           time: 2000,
-        })
+        });
       }
       if (!this.formData.title) {
         return this.$vs.notify({
@@ -200,16 +264,16 @@ export default {
           text: "Please enter a Certificate Name before saving",
           color: "danger",
           time: 2000,
-        })
+        });
       }
 
       const mappingList = this.mappingList.filter(
         (item) => this.stuff.includes(item.teacherId) && item.id != -1
-      )
+      );
 
-      this.$emit("preview")
-      this.$emit("selectStudent", this.selectedStudent)
-      this.$emit("setStaffMapping", mappingList)
+      this.$emit("preview");
+      this.$emit("selectStudent", this.selectedStudent);
+      this.$emit("setStaffMapping", mappingList);
     },
     setStaff(staff, item) {
       this.mappingList.push({
@@ -217,110 +281,111 @@ export default {
         teacherId: item.id,
         content: staff.label,
         name: item.first_name + " " + item.last_name,
-      })
+      });
     },
     selectAllStudent() {
-      this.student = []
+      this.student = [];
       if (this.allStudent) {
         this.studentList.map((item) => {
-          this.student.push(item.id)
-        })
+          this.student.push(item.id);
+        });
       }
     },
     selectAllStuff() {
-      this.stuff = []
+      this.stuff = [];
       if (this.allStuff) {
         this.teacherList.map((item) => {
-          this.stuff.push(item.id)
-        })
+          this.stuff.push(item.id);
+        });
       }
     },
     getClassDetail(classId) {
-      return this.$store.dispatch("getClassDetail", classId)
+      return this.$store.dispatch("getClassDetail", classId);
     },
     changeClassOrCourse() {
       if (this.isClass) {
-        this.getClassDetail(this.selectedClass.id)
+        this.getClassDetail(this.selectedClass.id);
       } else {
         const index = this.courseList.findIndex(
           (item) => item.id == this.selectedClass.id
-        )
-        this.studentList = this.courseList[index].students
-        this.teacherList = this.courseList[index].tutors
+        );
+        this.studentList = this.courseList[index].students;
+        this.teacherList = this.courseList[index].tutors;
       }
     },
     getClassOrCourseList() {
       if (this.isClass) {
-        this.isloading = true
+        this.isloading = true;
         this.$store
           .dispatch("getClasses", {
             page: 1,
             limit: 1000,
           })
           .then(({ data }) => {
-            this.isloading = false
+            this.isloading = false;
             this.classes = data.classes.map((item) => {
               return {
                 id: item.class_id,
                 label: item.name,
-              }
-            })
-            this.getClassDetail(data.classes[0].class_id)
-            this.selectedClass = this.classes[0]
-          })
+              };
+            });
+            this.getClassDetail(data.classes[0].class_id);
+            this.selectedClass = this.classes[0];
+          });
       } else {
-        this.isloading = true
+        this.isloading = true;
         this.$store
           .dispatch("getCourseList", {
             page: 1,
             limit: 1000,
           })
           .then(({ data }) => {
-            this.isloading = false
-            this.studentList = data.course[0].students
-            this.teacherList = data.course[0].tutors
+            this.isloading = false;
+            this.studentList = data.course[0].students;
+            this.teacherList = data.course[0].tutors;
             this.classes = data.course.map((item) => {
               return {
                 id: item.id,
                 label: item.name,
-              }
-            })
-            this.selectedClass = this.classes[0]
-          })
+              };
+            });
+            this.selectedClass = this.classes[0];
+          });
       }
     },
     saveTemplate() {
-      this.$emit("saveTemplate", this.formData)
+      this.$emit("saveTemplate", this.formData);
     },
   },
   watch: {
     classDetail(newVal) {
       if (newVal) {
-        this.studentList = newVal.student.student_details
-        this.teacherList = newVal.teacher.teacher_details
+        this.studentList = newVal.student.student_details;
+        this.teacherList = newVal.teacher.teacher_details;
       }
     },
     isClass() {
-      this.getClassOrCourseList()
+      this.getClassOrCourseList();
     },
     content(newVal) {
-      this.staffList = [{ id: -1, label: "None" }]
+      this.staffList = [{ id: -1, label: "None" }];
       newVal.map((item) => {
-        this.staffList.push({
-          id: item.id,
-          label: item.content,
-        })
-      })
+        if (item.content.includes("staff_name"))
+          this.staffList.push({
+            id: item.id,
+            label: item.content,
+          });
+      });
     },
     activePrompt(newVal) {
       if (!newVal) {
-        this.showDescription = false
-        this.textarea = ""
-        this.mappingList = []
+        this.showDescription = false;
+        this.textarea = "";
+        this.mappingList = [];
       }
     },
   },
-}
+};
 </script>
 
 <style>

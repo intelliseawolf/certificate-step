@@ -1,14 +1,28 @@
 <template>
   <div :class="`template-section template-section-${type ? type : ''}`">
-    <img :src="image && image.file && image.file.file_path" alt="template image" width="100%" height="100%">
-    <div class="template-content-section flex" v-for="(item, index) in content" :key="index" :style="{
-      ...item.style,
-      fontSize: `${Number(item.style.fontSize.slice(0, item.style.fontSize.length - 2)) * rate.y}px`,
-      width: `${item.style.width ? Number(item.style.width.slice(0, item.style.width.length - 2)) * rate.x + 'px' : 'auto'}`,
-      height: `${item.style.height ? Number(item.style.height.slice(0, item.style.height.length - 2)) * rate.y + 'px' : 'auto'}`,
-      left: `${item.x * rate.x}px`,
-      top: `${item.y * rate.y}px`,
-    }">
+    <img
+      :src="image && image.file && image.file.file_path"
+      alt="template image"
+      width="100%"
+      height="100%"
+    />
+    <div
+      :class="`template-content-section flex index-${index}`"
+      v-for="(item, index) in content"
+      :key="index"
+      :style="{
+        ...item.style,
+        fontSize: getStyleValue(item.style.fontSize, rate.x),
+        width: `${
+          item.style.width ? getStyleValue(item.style.width, rate.x) : 'auto'
+        }`,
+        height: `${
+          item.style.height ? getStyleValue(item.style.height, rate.y) : 'auto'
+        }`,
+        top: `${item.style.top ? getStyleValue(item.style.top, rate.y) : 0}`,
+        left: `${item.style.left ? getStyleValue(item.style.left, rate.x) : 0}`,
+      }"
+    >
       <p v-html="item.content"></p>
     </div>
   </div>
@@ -19,53 +33,70 @@ export default {
   name: "TemplateSection",
   props: {
     type: {
-      required: false
+      required: false,
     },
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
+      required: true,
     },
     image: {
       type: Object,
-      required: false
+      required: false,
     },
     content: {
       type: Array,
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
       innerWidth: 0,
       innerHeight: 0,
-      rate: { x: 1, y: 1 }
-    }
+      rate: { x: 1, y: 1 },
+    };
   },
   mounted() {
-    this.setInnerBoxParams()
+    this.setInnerBoxParams();
   },
   methods: {
     setInnerBoxParams() {
-      const box = document.querySelector(`.template-section-${this.type ? this.type : ''}`)
-      this.innerWidth = box.offsetWidth ? box.offsetWidth : this.width
-      this.innerHeight = box.offsetHeight ? box.offsetHeight : this.height
-      this.rate.x = this.innerWidth / this.width
-      this.rate.y = this.innerHeight / this.height
-    }
+      const box = document.querySelector(
+        `.template-section-${this.type ? this.type : ""}`
+      );
+      this.innerWidth = box.offsetWidth ? box.offsetWidth : this.width;
+      this.innerHeight = box.offsetHeight ? box.offsetHeight : this.height;
+      this.rate.x = this.innerWidth / this.width;
+      this.rate.y = this.innerHeight / this.height;
+    },
+    extractNumber(text) {
+      const reg = new RegExp(/\d+/);
+
+      return reg.exec(text);
+    },
+    extractString(text) {
+      const reg = new RegExp(/\D+/);
+
+      return reg.exec(text);
+    },
+    getStyleValue(value, rate) {
+      return this.extractString(value) == "%"
+        ? this.extractNumber(value) + this.extractString(value)
+        : this.extractNumber(value) * rate + this.extractString(value);
+    },
   },
   watch: {
     width() {
-      this.setInnerBoxParams()
+      this.setInnerBoxParams();
     },
     height() {
-      this.setInnerBoxParams()
-    }
-  }
-}
+      this.setInnerBoxParams();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -82,7 +82,6 @@ export default {
     data(newVal) {
       if (newVal.x && newVal.y) {
         this.translate(this.$refs.myDraggable, newVal.x, newVal.y);
-        console.log(newVal.x, newVal.y);
       }
     },
   },
@@ -92,6 +91,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .draggable {
+  border: 1px solid transparent;
   position: absolute;
   top: 0;
   left: 0;

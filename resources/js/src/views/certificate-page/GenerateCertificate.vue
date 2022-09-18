@@ -4,7 +4,7 @@
     <vx-card class="my-5">
       <div class="tabs-container">
         <h3>Generate Certificate</h3>
-        <input type="file" accept=".csv" @change="handleFileUpload( $event )" />
+        <input type="file" accept=".csv" @change="handleFileUpload($event)" />
         <!-- Table -->
         <!-- <vs-table :data="users" class="my-5">
           <template slot="thead">
@@ -45,7 +45,11 @@
               </p>
             </td>
             <td class="td-select">
-              <v-select v-model="selected" :options="options" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+              <v-select
+                v-model="selected"
+                :options="options"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+              /><br />
             </td>
             <td>
               <vs-button color="success" type="filled">Active</vs-button>
@@ -54,7 +58,9 @@
         </table>
         <!-- Footer -->
         <div class="flex mt-3 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat">Back</vs-button>
+          <vs-button color="dark" class="mr-2 primary" type="flat"
+            >Back</vs-button
+          >
           <div class="flex">
             <vs-button class="mr-2 primary" type="flat">Cancel</vs-button>
           </div>
@@ -65,63 +71,62 @@
 </template>
 
 <script>
-import Papa from 'papaparse'
-import vSelect from 'vue-select'
+import Papa from "papaparse";
+import vSelect from "vue-select";
 
 export default {
   components: {
-    'v-select': vSelect,
+    "v-select": vSelect,
   },
   data() {
     return {
-      file: '',
+      file: "",
       content: [],
       parsed: false,
       field: [],
       info: [],
       options: [
-        { id: 1, label: '[Student_1]' },
-        { id: 2, label: '[StaffName_1]' },
-        { id: 3, label: 'Inactive' },
+        { id: 1, label: "[Student_1]" },
+        { id: 2, label: "[StaffName_1]" },
+        { id: 3, label: "Inactive" },
       ],
-      selected: { id: 2, label: '' },
-    }
+      selected: { id: 2, label: "" },
+    };
   },
   methods: {
     handleFileUpload(event) {
-      this.file = event.target.files[0]
-      this.parseFile()
+      this.file = event.target.files[0];
+      this.parseFile();
     },
     parseFile() {
       Papa.parse(this.file, {
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
-          this.content = results
-          this.parsed = true
-        }.bind(this)
-      })
+          this.content = results;
+          this.parsed = true;
+        }.bind(this),
+      });
     },
   },
   watch: {
     content(newVal) {
-      console.log("newVal", newVal)
-      this.info = []
-      this.field = []
+      this.info = [];
+      this.field = [];
       if (newVal && newVal.data) {
         newVal.data.map((item) => {
-          this.info.push(item)
-        })
+          this.info.push(item);
+        });
       }
 
       if (newVal && newVal.meta && newVal.meta.fields) {
         newVal.meta.fields.map((item) => {
-          this.field.push(item)
-        })
+          this.field.push(item);
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

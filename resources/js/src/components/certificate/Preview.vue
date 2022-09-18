@@ -56,6 +56,7 @@
                 :template="template"
                 :image="image"
                 :content="content"
+                :mappingData="mappingData"
                 :width="width"
                 :height="height"
                 @download="changeModal('download')"
@@ -132,6 +133,7 @@ export default {
       modal: null,
       selectedStudent: [],
       isUploadCSV: false,
+      mappingData: [],
     };
   },
   computed: {
@@ -147,6 +149,14 @@ export default {
       this.$emit("prevTab");
     },
     saveTemplate({ title, description }) {
+      if (!title) {
+        return this.$vs.notify({
+          title: "Error",
+          text: "Please enter a Certificate Name before saving",
+          color: "danger",
+          time: 2000,
+        });
+      }
       axios
         .post("/certificate/template/create/184", {
           title,
@@ -182,7 +192,7 @@ export default {
         }
       });
       updatedMappingData.map((item) => {
-        this.$emit("mapDynamicContent", {
+        this.mappingData.push({
           id: item.id,
           content: item.content,
           name: item.name.toString(),
