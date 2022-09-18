@@ -1,26 +1,51 @@
 <template>
   <div>
-    <vs-prompt @close="close" @accept="acceptAlert" buttonAccept="false" buttonCancel="false" :active="activePrompt"
-      title="">
+    <vs-prompt
+      @close="close"
+      @accept="acceptAlert"
+      buttonAccept="false"
+      buttonCancel="false"
+      :active="activePrompt"
+      title=""
+    >
       <h3 class="text-center mb-4">Save Certificate Template</h3>
       <div class="con-exemple-prompt">
         <span class="mb-1">Certificate Name</span>
-        <vs-input placeholder="Batch 14' S.Y.19-20" vs-placeholder="Batch 14' S.Y.19-20" v-model="form.title"
-          class="w-full mb-3" />
+        <vs-input
+          placeholder="Batch 14' S.Y.19-20"
+          vs-placeholder="Batch 14' S.Y.19-20"
+          v-model="form.title"
+          class="w-full mb-3"
+        />
         <!-- <slot></slot> -->
-        <vs-button class="menu-button" color="primary" type="border" icon-pack="feather" icon="icon-plus-circle"
-          @click="handleShow" v-if="!showDescription">
+        <vs-button
+          class="menu-button"
+          color="primary"
+          type="border"
+          icon-pack="feather"
+          icon="icon-plus-circle"
+          @click="handleShow"
+          v-if="!showDescription"
+        >
           Add Description
         </vs-button>
         <span class="mb-1" v-if="showDescription">Description</span>
-        <vs-textarea v-model="form.description" v-if="showDescription" placeholder="Lorem Ipsum" rows="4" />
+        <vs-textarea
+          v-model="form.description"
+          v-if="showDescription"
+          placeholder="Lorem Ipsum"
+          rows="4"
+        />
 
         <div class="flex">
-          <vs-button class="ml-auto primary" type="flat" @click="handleGenerate">Generate Certificate Now
+          <vs-button class="ml-auto primary" type="flat" @click="handleGenerate"
+            >Generate Certificate Now
           </vs-button>
         </div>
         <div class="flex mt-3">
-          <vs-button class="ml-auto" @click="saveCertificate">Save Certificate</vs-button>
+          <vs-button class="ml-auto" @click="saveCertificate"
+            >Save Certificate</vs-button
+          >
         </div>
       </div>
     </vs-prompt>
@@ -38,56 +63,48 @@ export default {
       showDescription: false,
       form: {
         title: "",
-        description: ""
+        description: "",
       },
-    }
+    };
   },
   methods: {
     changeModal(name) {
-      this.modal = name
+      this.modal = name;
     },
     handleShow() {
-      this.showDescription = true
+      this.showDescription = true;
     },
     acceptAlert() {
       this.$vs.notify({
-        color: 'success',
-        title: 'Accept Selected',
-        text: 'Lorem ipsum dolor sit amet, consectetur'
-      })
+        color: "success",
+        title: "Accept Selected",
+        text: "Lorem ipsum dolor sit amet, consectetur",
+      });
     },
     close() {
       this.$vs.notify({
-        color: 'danger',
-        title: 'Closed',
-        text: 'You close a dialog!'
-      })
-      this.$emit('cancel')
-      this.showDescription = false
+        color: "danger",
+        title: "Closed",
+        text: "You close a dialog!",
+      });
+      this.$emit("cancel");
+      this.showDescription = false;
       this.form = {
         title: "",
-        description: ""
-      }
+        description: "",
+      };
     },
     saveCertificate() {
-      if (!this.form.title) {
-        return this.$vs.notify({
-          title: "Error",
-          text: "Please enter a Certificate Name before saving",
-          color: "danger",
-          time: 2000,
-        })
-      }
-      this.$emit("saveCertificate", this.form)
+      this.$emit("saveCertificate", this.form);
     },
     closeModal() {
-      this.activePrompt = false
+      this.activePrompt = false;
     },
     handleGenerate() {
-      this.$emit('generate')
-    }
-  }
-}
+      this.$emit("generate");
+    },
+  },
+};
 </script>
 
 <style>
@@ -105,7 +122,7 @@ export default {
 }
 
 .vs-dialog-cancel {
-  color: #6E6B7B;
+  color: #6e6b7b;
   transform: translate(0, 0) !important;
   box-shadow: none !important;
 }

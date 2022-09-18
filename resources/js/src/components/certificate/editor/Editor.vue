@@ -22,7 +22,12 @@
     <Draggable v-for="(item, index) in draggableContent" :key="index + item.content" :data="item" :class="{
       activeDragItem: activeDragIndex == index,
     }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(item, val)">
-      <div class="flex" :style="item.style" @mousedown="dragItem(index)" :ref="'dragItem' + index">
+      <div class="flex" :style="{
+        ...item.style,
+        left: 'unset',
+        top: 'unset',
+        transform: 'unset',
+      }" @mousedown="dragItem(index)" :ref="'dragItem' + index">
         <input v-if="activeIndex == index && item.type !== 'dynamic-text'" class="inputx input-text" placeholder="text"
           v-model="content[activeIndex].content" @keydown="(e) => changeContent(e)" />
         <div v-else class="drag-item">
@@ -196,19 +201,27 @@ export default {
     },
     addDynamicText(id) {
       const sameTextCount = this.getSameDynamicTextCount(id)
+      const content = this.dynamicTextList.filter(
+        (text) => text.field_id == id
+      )[0]["field_code"]
+
+      if (content == "{staff_name}" && sameTextCount == 5)
+        return this.$vs.notify({
+          title: "Error",
+          text: "You can select a maximum of 5 Staff Name",
+          color: "danger",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+        })
 
       this.content.push({
         id: id,
         type: "dynamic-text",
         style: { fontSize: "18px", width: "max-content", fontFamily: "Sora" },
-        content:
-          this.dynamicTextList.filter((text) => text.field_id == id)[0][
-          "field_code"
-          ] + sameTextCount,
+        content: content + (sameTextCount ? sameTextCount : ""),
         x: 100,
         y: 100,
       })
-      // this.mainContent = this.mainContent.concat('', `<p>${this.dynamicTextList.filter((text) => text.field_id == id)[0]['field_code']}</p>`)
     },
     getSameDynamicTextCount(id) {
       let count = 0
@@ -310,14 +323,22 @@ export default {
       }
     },
     handleAlignCenter() {
-      const elementWidth =
-        this.$refs[`dragItem${this.activeDragIndex}`][0].offsetWidth
-
       if (this.activeDragIndex != -1) {
+        const elementWidth =
+          this.$refs[`dragItem${this.activeDragIndex}`][0].offsetWidth
+
         this.content = [
           ...this.content.map((item, index) =>
             index === this.activeDragIndex
-              ? { ...item, x: this.width / 2 - elementWidth / 2 }
+              ? {
+                ...item,
+                x: this.width / 2 - elementWidth / 2,
+                style: {
+                  ...item.style,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                },
+              }
               : item
           ),
         ]
@@ -330,9 +351,10 @@ export default {
           data.style.backgroundImage == item.style.backgroundImage &&
           data.content == item.content
       )
-      this.content[index].x = x
-      this.content[index].y = y
-      console.log(this.content, "drag move")
+      this.content[index].x = Math.floor(x)
+      this.content[index].y = Math.floor(y)
+      this.content[index].style.left = Math.floor(x) + "px"
+      this.content[index].style.top = Math.floor(y) + "px"
     },
     onResize(item, { width, height }) {
       const index = this.content.findIndex(
@@ -454,8 +476,7 @@ export default {
 }
 
 .activeDragItem {
-  padding: 5px 10px;
-  border: 1px solid rgb(66, 66, 150);
+  border: 1px solid rgb(66, 66, 150) !important;
   border-radius: 4px;
 }
 

@@ -1,14 +1,19 @@
 <template>
   <div>
-    <vs-prompt @accept="acceptAlert" @close="close" buttonAccept="false" buttonCancel="false" :active="activePrompt"
-      title="Preview" class="flex">
+    <vs-prompt
+      @accept="acceptAlert"
+      @close="close"
+      buttonAccept="false"
+      buttonCancel="false"
+      :active="activePrompt"
+      title="Preview"
+      class="flex"
+    >
       <div class="flex">
         <vs-button class="ml-auto mr-2 primary" type="flat">Edit</vs-button>
         <vs-button @click="handleDownload" class="primary" type="flat">
           <i class="material-icons ml-3"> file_download </i>
-          <span>
-            Download Certificates
-          </span>
+          <span> Download Certificates </span>
         </vs-button>
       </div>
       <div class="con-exemple-prompt">
@@ -16,13 +21,25 @@
           <div class="flex template-pos flex-col">
             <!-- Carousel Certificates -->
             <div class="carousel-certificates">
-              <swiper :options="swiperOption" :dir="$vs.rtl ? 'rtl' : 'ltr'" :key="$vs.rtl" ref="mySwiper"
-                @slide-change="changeSwiperIndex">
-                <swiper-slide v-for="(item) in selectedStudent" :key="item.id">
-                  <TemplateSection :style="{
-                    width: `478px`,
-                    height: `334px`
-                  }" :width="width" :height="height" :image="image" :content="content" :type="item.id" />
+              <swiper
+                :options="swiperOption"
+                :dir="$vs.rtl ? 'rtl' : 'ltr'"
+                :key="$vs.rtl"
+                ref="mySwiper"
+                @slide-change="changeSwiperIndex"
+              >
+                <swiper-slide v-for="item in selectedStudent" :key="item.id">
+                  <TemplateSection
+                    :style="{
+                      width: `478px`,
+                      height: `334px`,
+                    }"
+                    :width="width"
+                    :height="height"
+                    :image="image"
+                    :content="mappedContent"
+                    :type="item.id"
+                  />
                 </swiper-slide>
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>
@@ -33,7 +50,13 @@
         </div>
         <!-- Footer -->
         <div class="flex mt-1 justify-between">
-          <vs-button color="dark" class="mr-2 primary" type="flat" @click="close">Cancel</vs-button>
+          <vs-button
+            color="dark"
+            class="mr-2 primary"
+            type="flat"
+            @click="close"
+            >Cancel</vs-button
+          >
           <div class="flex">
             <vs-button class="mr-2 primary" type="flat">Save</vs-button>
             <vs-button @click="handleSend">Send Certificates</vs-button>
@@ -46,107 +69,131 @@
 </template>
 
 <script>
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import SendModal from './SendModal.vue'
-import TemplateSection from '../editor/TemplateSection.vue'
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import SendModal from "./SendModal.vue";
+import TemplateSection from "../editor/TemplateSection.vue";
 
-import 'swiper/dist/css/swiper.min.css'
+import "swiper/dist/css/swiper.min.css";
 
 export default {
   props: {
     activePrompt: Boolean,
     selectedStudent: {
       type: Array,
-      required: true
+      required: true,
     },
     image: {
       type: Object,
-      required: true
+      required: true,
     },
     content: {
       type: Array,
-      required: true
+      required: true,
     },
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
+    mappingData: {
+      type: Array,
+      required: false,
+    },
   },
   data() {
     return {
       swiperOption: {
         pagination: {
-          el: '.swiper-pagination',
-          type: 'progressbar'
+          el: ".swiper-pagination",
+          type: "progressbar",
         },
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
         },
-        onSlideChangeEnd: function () {}
+        onSlideChangeEnd: function () {},
       },
       vueCanvas: null,
       count: 1,
-    }
+    };
   },
   components: {
     swiper,
     swiperSlide,
     SendModal,
-    TemplateSection
+    TemplateSection,
   },
   computed: {
     templateList: function () {
-      return this.$store.getters['getTemplateList']
+      return this.$store.getters["getTemplateList"];
     },
     templateListMetaData: function () {
-      return this.$store.getters['getTemplateListMetaData']
+      return this.$store.getters["getTemplateListMetaData"];
     },
     validName() {
-      return (this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0)
+      return (
+        this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0
+      );
     },
     swiper() {
-      return this.$refs.mySwiper.swiper
-    }
+      return this.$refs.mySwiper.swiper;
+    },
+    mappedContent() {
+      const content = [];
+
+      for (let item of this.content) {
+        const index = this.mappingData.findIndex(
+          (mapping) => mapping.id == item.id && mapping.content == item.content
+        );
+
+        if (index != -1)
+          content.push({
+            ...item,
+            content: this.mappingData[index].name,
+          });
+        else content.push({ ...item });
+      }
+
+      return content;
+    },
   },
   methods: {
     acceptAlert() {
       this.$vs.notify({
-        color: 'success',
-        title: 'Accept Selected',
-        text: 'Lorem ipsum dolor sit amet, consectetur'
-      })
+        color: "success",
+        title: "Accept Selected",
+        text: "Lorem ipsum dolor sit amet, consectetur",
+      });
     },
     clearValMultiple() {
-      this.valMultipe.value1 = ""
-      this.valMultipe.value2 = ""
+      this.valMultipe.value1 = "";
+      this.valMultipe.value2 = "";
     },
     close() {
       this.$vs.notify({
-        color: 'danger',
-        title: 'Closed',
-        text: 'You close a dialog!'
-      })
-      this.$emit('cancel')
+        color: "danger",
+        title: "Closed",
+        text: "You close a dialog!",
+      });
+      this.$emit("cancel");
     },
     handleOpen() {
-      this.activePrompt = true
+      this.activePrompt = true;
     },
     handleSend() {
-      this.$emit('send')
+      this.$emit("send");
     },
     handleDownload() {
-      this.$emit('download')
+      this.$emit("download");
     },
     changeSwiperIndex() {
-      this.count = this.$refs.mySwiper.swiper.activeIndex + 1
-    }
-  }
-}
+      this.count = this.$refs.mySwiper.swiper.activeIndex + 1;
+    },
+  },
+};
 </script>
 
 <style>
@@ -173,7 +220,7 @@ export default {
 .modal-preview-section {
   width: 100%;
   height: 454px;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }
 
 .template-pos {
@@ -187,7 +234,7 @@ export default {
 }
 
 .vs-dialog-cancel {
-  color: #6E6B7B;
+  color: #6e6b7b;
   transform: translate(0, 0) !important;
   box-shadow: none !important;
 }
