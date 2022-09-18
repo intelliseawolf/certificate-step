@@ -1,26 +1,13 @@
 <template>
-  <div
-    class="editor-wrapper"
-    :style="{
-      width: `${width}px`,
-      height: `${height}px`,
-    }"
-  >
+  <div class="editor-wrapper" :style="{
+    width: `${width}px`,
+    height: `${height}px`,
+  }">
     <div class="drag-toolbar">
-      <v-select
-        class="mr-3"
-        v-model="dragOption.fontFamily"
-        :options="dragToolbarOptions.fontFamilyList"
-        :dir="$vs.rtl ? 'rtl' : 'ltr'"
-        @input="changeFontFamily"
-      />
-      <v-select
-        class="mr-3"
-        v-model="dragOption.fontSize"
-        :options="dragToolbarOptions.fontSizeList"
-        :dir="$vs.rtl ? 'rtl' : 'ltr'"
-        @input="changeFontSize"
-      />
+      <v-select class="mr-3" v-model="dragOption.fontFamily" :options="dragToolbarOptions.fontFamilyList"
+        :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="changeFontFamily" />
+      <v-select class="mr-3" v-model="dragOption.fontSize" :options="dragToolbarOptions.fontSizeList"
+        :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="changeFontSize" />
       <color-picker v-model="dragOption.color" @input="changeColor" />
       <i class="material-icons ml-3" @click="toggleUnderline">
         format_underline
@@ -31,81 +18,43 @@
       </i>
       <i class="material-icons ml-auto" @click="togglePhoto"> insert_photo </i>
     </div>
-    <img
-      class="editor-bg"
-      :src="image && image.file && image.file.file_path"
-      alt="certificate-bg"
-    />
-    <Draggable
-      v-for="(item, index) in draggableContent"
-      :key="index + item.content"
-      :data="item"
-      :class="{
-        activeDragItem: activeDragIndex == index,
-      }"
-      @endDrag="endDrag"
-      @onDragMove="(val) => onDragMove(item, val)"
-    >
-      <div
-        class="flex"
-        :style="{
-          ...item.style,
-          left: 'unset',
-          top: 'unset',
-          transform: 'unset',
-        }"
-        @mousedown="dragItem(index)"
-        :ref="'dragItem' + index"
-      >
-        <vs-input
-          v-if="activeIndex == index"
-          class="inputx"
-          placeholder="text"
-          v-model="content[activeIndex].content"
-          @keydown="(e) => changeContent(e)"
-        />
+    <img class="editor-bg" :src="image && image.file && image.file.file_path" alt="certificate-bg" />
+    <Draggable v-for="(item, index) in draggableContent" :key="index + item.content" :data="item" :class="{
+      activeDragItem: activeDragIndex == index,
+    }" @endDrag="endDrag" @onDragMove="(val) => onDragMove(item, val)">
+      <div class="flex" :style="{
+        ...item.style,
+        left: 'unset',
+        top: 'unset',
+        transform: 'unset',
+      }" @mousedown="dragItem(index)" :ref="'dragItem' + index">
+        <input v-if="activeIndex == index && item.type !== 'dynamic-text'" class="inputx input-text" placeholder="text"
+          v-model="content[activeIndex].content" @keydown="(e) => changeContent(e)" />
         <div v-else class="drag-item">
           <p @dblclick="setActiveIndex(index)" v-html="item.content"></p>
-          <i
-            v-if="activeDragIndex == index"
-            class="material-icons ml-auto text-red"
-            @click="removeText"
-            dir="rtl"
-          >
+          <!-- <i v-if="activeDragIndex == index" class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
             delete
-          </i>
+          </i> -->
         </div>
       </div>
     </Draggable>
-    <Resizable
-      v-for="(item, index) in resizableContent"
-      :key="index"
-      :data="item"
-      :class="{
-        activeDragItem: activeResizeIndex == index,
-      }"
-      @endDrag="endResize"
-      @onDragMove="(val) => onDragMove(item, val)"
-      @onResize="(val) => onResize(item, val)"
-    >
-      <div
-        class="flex"
-        :style="item.style"
-        @mousedown="resizeItem(index)"
-      ></div>
+    <Resizable v-for="(item, index) in resizableContent" :key="index" :data="item" :class="{
+      activeDragItem: activeResizeIndex == index,
+    }" @endDrag="endResize" @onDragMove="(val) => onDragMove(item, val)" @onResize="(val) => onResize(item, val)">
+      <div class="flex" :style="item.style" @mousedown="resizeItem(index)"></div>
     </Resizable>
-    <upload-image-modal ref="uploadImageModal" @handleOk="setEditorImage" />
+    <upload-image-modal ref="uploadImageModal" @click="activePrompt = true" @handleOk="setEditorImage" />
   </div>
 </template>
 
 <script>
-import vSelect from "vue-select";
+import vSelect from "vue-select"
 
-import ColorPicker from "./ColorPicker.vue";
-import QuillEditor from "./QuillEditor";
-import Draggable from "./Draggable";
-import Resizable from "./Resizable";
-import UploadImageModal from "../Modal/UploadImageModal.vue";
+import ColorPicker from "./ColorPicker.vue"
+import QuillEditor from "./QuillEditor"
+import Draggable from "./Draggable"
+import Resizable from "./Resizable"
+import UploadImageModal from "../Modal/UploadImageModal.vue"
 
 export default {
   props: {
@@ -220,7 +169,7 @@ export default {
       },
       activeDragIndex: -1,
       activeResizeIndex: -1,
-    };
+    }
   },
   components: {
     QuillEditor,
@@ -232,29 +181,29 @@ export default {
   },
   computed: {
     templateList: function () {
-      return this.$store.getters["getTemplateList"];
+      return this.$store.getters["getTemplateList"]
     },
     draggableContent() {
-      return this.content.filter((item) => item.type != "image");
+      return this.content.filter((item) => item.type != "image")
     },
     resizableContent() {
-      return this.content.filter((item) => item.type == "image");
+      return this.content.filter((item) => item.type == "image")
     },
   },
   methods: {
     setActiveIndex(index) {
-      this.activeIndex = index;
+      this.activeIndex = index
     },
     changeContent(e) {
       if (e.keyCode === 13) {
-        this.activeIndex = -1;
+        this.activeIndex = -1
       }
     },
     addDynamicText(id) {
-      const sameTextCount = this.getSameDynamicTextCount(id);
+      const sameTextCount = this.getSameDynamicTextCount(id)
       const content = this.dynamicTextList.filter(
         (text) => text.field_id == id
-      )[0]["field_code"];
+      )[0]["field_code"]
 
       if (content == "{staff_name}" && sameTextCount == 5)
         return this.$vs.notify({
@@ -263,7 +212,7 @@ export default {
           color: "danger",
           iconPack: "feather",
           icon: "icon-alert-circle",
-        });
+        })
 
       this.content.push({
         id: id,
@@ -272,15 +221,15 @@ export default {
         content: content + (sameTextCount ? sameTextCount : ""),
         x: 100,
         y: 100,
-      });
+      })
     },
     getSameDynamicTextCount(id) {
-      let count = 0;
+      let count = 0
 
       this.content.map((item) => {
-        if (item.id == id) count++;
-      });
-      return count;
+        if (item.id == id) count++
+      })
+      return count
     },
     addStaticText(text) {
       this.content.push({
@@ -289,110 +238,110 @@ export default {
         content: text,
         x: 300,
         y: 300,
-      });
+      })
     },
     removeStaticText(text) {
-      const index = this.content.findIndex((item) => item.content == text);
-      this.content.splice(index, 1);
+      const index = this.content.findIndex((item) => item.content == text)
+      this.content.splice(index, 1)
     },
     dragItem(index) {
-      this.activeDragIndex = index;
+      this.activeDragIndex = index
       this.dragOption.fontSize = this.getFontSizeOption(
         this.content[index].style.fontSize
-      );
+      )
       this.dragOption.fontFamily = this.getFontFamilyOption(
         this.content[index].style.fontFamily
-      );
+      )
       this.dragOption.color = this.content[index].style.color
         ? this.content[index].style.color
-        : "#000000";
+        : "#000000"
     },
     resizeItem(index) {
-      this.activeResizeIndex = index;
+      this.activeResizeIndex = index
     },
     endDrag() {
-      this.activeDragIndex = -1;
+      this.activeDragIndex = -1
     },
     endResize() {
-      this.activeResizeIndex = -1;
+      this.activeResizeIndex = -1
     },
     getFontSizeOption(size) {
       switch (size) {
         case "12px":
-          return { id: 1, label: "Small", value: "12px" };
+          return { id: 1, label: "Small", value: "12px" }
         case "18px":
-          return { id: 2, label: "Normal", value: "18px" };
+          return { id: 2, label: "Normal", value: "18px" }
         case "24px":
-          return { id: 3, label: "Large", value: "24px" };
+          return { id: 3, label: "Large", value: "24px" }
         case "30px":
-          return { id: 4, label: "Huge", value: "30px" };
+          return { id: 4, label: "Huge", value: "30px" }
         default:
-          return { id: 2, label: "Normal", value: "18px" };
+          return { id: 2, label: "Normal", value: "18px" }
       }
     },
     getFontFamilyOption(family) {
       switch (family) {
         case "Sora":
-          return { id: 4, label: "Sora", value: "Sora" };
+          return { id: 4, label: "Sora", value: "Sora" }
         default:
-          return { id: 2, label: "Sora", value: "Sora" };
+          return { id: 2, label: "Sora", value: "Sora" }
       }
     },
     changeFontSize() {
       if (this.activeDragIndex != -1) {
         this.content[this.activeDragIndex].style.fontSize =
-          this.dragOption.fontSize.value;
+          this.dragOption.fontSize.value
       }
     },
     changeFontFamily() {
       if (this.activeDragIndex != -1) {
         this.content[this.activeDragIndex].style.fontFamily =
-          this.dragOption.fontFamily.value;
+          this.dragOption.fontFamily.value
       }
     },
     changeColor() {
       if (this.activeDragIndex != -1) {
-        this.content[this.activeDragIndex].style.color = this.dragOption.color;
+        this.content[this.activeDragIndex].style.color = this.dragOption.color
       }
     },
     toggleUnderline() {
       if (this.activeDragIndex != -1) {
-        const value = this.content[this.activeDragIndex].style.textDecoration;
+        const value = this.content[this.activeDragIndex].style.textDecoration
         this.content[this.activeDragIndex].style = {
           ...this.content[this.activeDragIndex].style,
           textDecoration: value && value == "underline" ? "unset" : "underline",
-        };
+        }
       }
     },
     toggleBold() {
       if (this.activeDragIndex != -1) {
-        const value = this.content[this.activeDragIndex].style.fontWeight;
+        const value = this.content[this.activeDragIndex].style.fontWeight
         this.content[this.activeDragIndex].style = {
           ...this.content[this.activeDragIndex].style,
           fontWeight: value && value == "bold" ? "normal" : "bold",
-        };
+        }
       }
     },
     handleAlignCenter() {
       if (this.activeDragIndex != -1) {
         const elementWidth =
-          this.$refs[`dragItem${this.activeDragIndex}`][0].offsetWidth;
+          this.$refs[`dragItem${this.activeDragIndex}`][0].offsetWidth
 
         this.content = [
           ...this.content.map((item, index) =>
             index === this.activeDragIndex
               ? {
-                  ...item,
-                  x: this.width / 2 - elementWidth / 2,
-                  style: {
-                    ...item.style,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                  },
-                }
+                ...item,
+                x: this.width / 2 - elementWidth / 2,
+                style: {
+                  ...item.style,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                },
+              }
               : item
           ),
-        ];
+        ]
       }
     },
     onDragMove(item, { x, y }) {
@@ -401,37 +350,26 @@ export default {
           data.type == item.type &&
           data.style.backgroundImage == item.style.backgroundImage &&
           data.content == item.content
-      );
-      this.content[index].x = Math.floor(x);
-      this.content[index].y = Math.floor(y);
-      this.content[index].style.left = Math.floor(x) + "px";
-      this.content[index].style.top = Math.floor(y) + "px";
+      )
+      this.content[index].x = Math.floor(x)
+      this.content[index].y = Math.floor(y)
+      this.content[index].style.left = Math.floor(x) + "px"
+      this.content[index].style.top = Math.floor(y) + "px"
     },
     onResize(item, { width, height }) {
       const index = this.content.findIndex(
         (data) =>
           data.type == item.type &&
           data.style.backgroundImage == item.style.backgroundImage
-      );
-      this.content[index].style.width = width + "px";
-      this.content[index].style.height = height + "px";
+      )
+      this.content[index].style.width = width + "px"
+      this.content[index].style.height = height + "px"
     },
     setContent(content) {
-      this.content = content;
-    },
-    removeText() {
-      if (this.activeDragIndex == -1) return;
-
-      const textInfo = this.content[this.activeDragIndex];
-
-      if (textInfo.type == "static-text") {
-        this.$emit("removeStaticText", textInfo.content);
-      } else {
-        this.content = this.content.filter((item) => item.id != textInfo.id);
-      }
+      this.content = content
     },
     togglePhoto() {
-      this.$refs.uploadImageModal.toggleModal();
+      this.$refs.uploadImageModal.toggleModal()
     },
     setEditorImage(image) {
       this.content.push({
@@ -446,20 +384,36 @@ export default {
         content: "",
         x: 100,
         y: 100,
-      });
+      })
     },
   },
   watch: {
     templateList(newVal) {
       if (newVal && newVal.length) {
-        this.mainContent = newVal[this.template].content;
+        this.mainContent = newVal[this.template].content
       }
     },
     mainContent(newVal) {
-      this.$emit("changeMainContent", newVal);
+      this.$emit("changeMainContent", newVal)
     },
   },
-};
+  mounted() {
+    document.addEventListener('keyup', (e) => {
+      if (e.key === "Delete") {
+        console.log("Key pressed!!!")
+        if (this.activeDragIndex == -1) return
+
+        const textInfo = this.content[this.activeDragIndex]
+
+        if (textInfo.type == "static-text") {
+          this.$emit("removeStaticText", textInfo.content)
+        } else {
+          this.content = this.content.filter((item) => item.id != textInfo.id)
+        }
+      }
+    })
+  }
+}
 </script>
 
 <style>
@@ -538,5 +492,10 @@ export default {
   position: absolute;
   top: -35px;
   left: 95%;
+}
+
+.input-text {
+  border: none;
+  background: center;
 }
 </style>
