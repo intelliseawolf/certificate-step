@@ -69,7 +69,6 @@ const actions = {
     })
       .then(({ data }) => {
         commit('GET_CETIFICATE_DYNAMIC_TEXTS', data)
-        console.log(data)
       })
   },
 
