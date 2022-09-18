@@ -125,7 +125,6 @@ export default {
       importedFileData: [], // maintain an upload queue
     };
   },
-  // config.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem('access_token'))}`
 
   async created() {
     const customer_id = "184";
@@ -265,8 +264,6 @@ export default {
       this.deletedIndex = index;
 
       this.$refs.vueFileAgent.deleteFileRecord(fileRecord); // will trigger 'delete' event
-
-      // this.$refs.vueFileAgent.deleteFileRecord(fileRecord) // will trigger 'delete' event
     },
     fileDeleted(fileRecord) {
       const i = this.fileRecordsForUpload.indexOf(fileRecord);
@@ -280,9 +277,6 @@ export default {
       const res = await getUploadedFilesId(file_id_payload);
 
       if (res.data.message === "files.createFile") {
-        /* const newRecord = this.generateFileForVueAgent(response[i].data.data.files[0])
-
-               */
         const file = {
           file: res.data.data.files[0],
         };
@@ -327,13 +321,6 @@ export default {
           this.SaveuploadedSFiles("upload");
         }
 
-        //
-
-        // const fileIdObject = {
-        //   question_index:this.question_detail_index,
-        //   file_id
-        // }
-
         this.$vs.loading.close();
 
         if (type === "drive") {
@@ -343,8 +330,6 @@ export default {
 
           this.$emit("getFileId", fileIdObject);
         }
-
-        //section type checking
       }
     },
     bytesToSize(bytes) {

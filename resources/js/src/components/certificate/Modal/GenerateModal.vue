@@ -44,7 +44,9 @@
             <span slot="on">Class</span>
             <span slot="off">Course</span>
           </vs-switch>
-          <div @click="uploadCSV">Upload CSV</div>
+          <div style="cursor: pointer" @click="toggleCsvUploading">
+            Upload CSV
+          </div>
         </div>
         <div v-if="isloading">
           <div class="flex justify-center">Loading...</div>
@@ -128,7 +130,6 @@
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
                         @input="(e) => setStaff(e, item)"
                       />
-                      <!-- <img class="ml-auto" src="/images/staff_icon.png" width="27" height="24" alt="staff_icon"> -->
                     </li>
                   </ul>
                 </div>
@@ -222,8 +223,8 @@ export default {
     handleShow() {
       this.showDescription = true;
     },
-    uploadCSV() {
-      this.$emit("uploadCSV");
+    toggleCsvUploading() {
+      this.$emit("toggleCsvUploading");
     },
     acceptAlert() {
       this.$vs.notify({

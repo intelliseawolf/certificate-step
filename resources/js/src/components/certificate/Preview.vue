@@ -49,6 +49,7 @@
                 @selectStudent="receiveStudent"
                 @setStaffMapping="setStaffMapping"
                 @saveTemplate="saveTemplate"
+                @toggleCsvUploading="toggleCsvUploading"
               />
               <preview-modal
                 :activePrompt="modal === 'preview'"
@@ -82,7 +83,12 @@
         </div>
       </div>
     </div>
-    <UploadCSV v-else />
+    <UploadCSV
+      v-else
+      :content="content"
+      @toggleCsvUploading="toggleCsvUploading"
+      @addCsvMapping="addCsvMapping"
+    />
   </div>
 </template>
 
@@ -142,6 +148,9 @@ export default {
     },
   },
   methods: {
+    toggleCsvUploading() {
+      this.isUploadCSV = !this.isUploadCSV;
+    },
     changeModal(name) {
       this.modal = name;
     },
@@ -198,6 +207,9 @@ export default {
           name: item.name.toString(),
         });
       });
+    },
+    addCsvMapping(mappingData) {
+      this.mappingData = [...this.mappingData, ...mappingData];
     },
   },
 };
