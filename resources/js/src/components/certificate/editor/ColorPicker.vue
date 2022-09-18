@@ -1,33 +1,43 @@
 <template>
   <div class="input-group color-picker" ref="colorpicker">
-    <vs-input class="form-control" type="text" v-model="colorValue" @focus="showPicker()" @input="updateFromInput" />
+    <vs-input
+      class="form-control"
+      type="text"
+      v-model="colorValue"
+      @focus="showPicker()"
+      @input="updateFromInput"
+    />
     <span class="input-group-addon color-picker-container">
-      <span class="current-color" :style="'background-color: ' + colorValue" @click="togglePicker()"></span>
+      <span
+        class="current-color"
+        :style="'background-color: ' + colorValue"
+        @click="togglePicker()"
+      ></span>
       <chrome :value="colors" @input="updateFromPicker" v-if="displayPicker" />
     </span>
   </div>
 </template>
 
 <script>
-import { Chrome } from "vue-color"
+import { Chrome } from "vue-color";
 
 export default {
   name: "ColorPicker",
-  props: ['value'],
+  props: ["value"],
   components: {
-    Chrome
+    Chrome,
   },
   data() {
     return {
       colors: {
-        hex: '#000000',
+        hex: "#000000",
       },
-      colorValue: '',
+      colorValue: "",
       displayPicker: false,
-    }
+    };
   },
   mounted() {
-    this.setColor(this.value || '#000000');
+    this.setColor(this.value || "#000000");
   },
   methods: {
     setColor(color) {
@@ -35,26 +45,34 @@ export default {
       this.colorValue = color;
     },
     updateColors(color) {
-      if(color.slice(0, 1) == '#') {
+      if (color.slice(0, 1) == "#") {
         this.colors = {
-          hex: color
+          hex: color,
         };
-      }
-      else if(color.slice(0, 4) == 'rgba') {
-        var rgba = color.replace(/^rgba?\(|\s+|\)$/g,'').split(','),
-          hex = '#' + ((1 << 24) + (parseInt(rgba[0]) << 16) + (parseInt(rgba[1]) << 8) + parseInt(rgba[2])).toString(16).slice(1);
+      } else if (color.slice(0, 4) == "rgba") {
+        var rgba = color.replace(/^rgba?\(|\s+|\)$/g, "").split(","),
+          hex =
+            "#" +
+            (
+              (1 << 24) +
+              (parseInt(rgba[0]) << 16) +
+              (parseInt(rgba[1]) << 8) +
+              parseInt(rgba[2])
+            )
+              .toString(16)
+              .slice(1);
         this.colors = {
           hex: hex,
           a: rgba[3],
-        }
+        };
       }
     },
     showPicker() {
-      document.addEventListener('click', this.documentClick);
+      document.addEventListener("click", this.documentClick);
       this.displayPicker = true;
     },
     hidePicker() {
-      document.removeEventListener('click', this.documentClick);
+      document.removeEventListener("click", this.documentClick);
       this.displayPicker = false;
     },
     togglePicker() {
@@ -65,30 +83,38 @@ export default {
     },
     updateFromPicker(color) {
       this.colors = color;
-      if(color.rgba.a == 1) {
+      if (color.rgba.a == 1) {
         this.colorValue = color.hex;
-      }
-      else {
-        this.colorValue = 'rgba(' + color.rgba.r + ', ' + color.rgba.g + ', ' + color.rgba.b + ', ' + color.rgba.a + ')';
+      } else {
+        this.colorValue =
+          "rgba(" +
+          color.rgba.r +
+          ", " +
+          color.rgba.g +
+          ", " +
+          color.rgba.b +
+          ", " +
+          color.rgba.a +
+          ")";
       }
     },
     documentClick(e) {
       var el = this.$refs.colorpicker,
         target = e.target;
-      if(el !== target && !el.contains(target)) {
-        this.hidePicker()
+      if (el !== target && !el.contains(target)) {
+        this.hidePicker();
       }
-    }
+    },
   },
   watch: {
     colorValue(val) {
-      if(val) {
+      if (val) {
         this.updateColors(val);
-        this.$emit('input', val);
+        this.$emit("input", val);
       }
-    }
+    },
   },
-}
+};
 </script>
 
 <style>

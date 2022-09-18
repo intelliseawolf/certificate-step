@@ -98,7 +98,7 @@
                 <div>
                   <ul class="centerx">
                     <li class="mb-4">
-                      <vs-checkbox v-model="allStuff" @change="selectAllStuff"
+                      <vs-checkbox v-model="allStaff" @change="selectallStaff"
                         >Select All</vs-checkbox
                       >
                     </li>
@@ -110,7 +110,7 @@
                     >
                       <vs-checkbox
                         :vs-value="item.id"
-                        v-model="stuff"
+                        v-model="staff"
                       ></vs-checkbox>
                       <img
                         class="rounded-circle"
@@ -128,7 +128,7 @@
                         :dir="$vs.rtl ? 'rtl' : 'ltr'"
                         @input="(e) => setStaff(e, item)"
                       />
-                      <!-- <img class="ml-auto" src="/images/stuff_icon.png" width="27" height="24" alt="stuff_icon"> -->
+                      <!-- <img class="ml-auto" src="/images/staff_icon.png" width="27" height="24" alt="staff_icon"> -->
                     </li>
                   </ul>
                 </div>
@@ -188,8 +188,8 @@ export default {
       ],
       student: [],
       allStudent: false,
-      stuff: [],
-      allStuff: false,
+      staff: [],
+      allStaff: false,
       studentList: [],
       teacherList: [],
       isClass: false,
@@ -241,6 +241,10 @@ export default {
       this.$emit("cancel");
       this.showDescription = false;
       this.textarea = "";
+      this.allStudent = false;
+      this.allStaff = false;
+      this.student = [];
+      this.staff = [];
       this.mappingList = [];
     },
     handlePreview() {
@@ -268,7 +272,7 @@ export default {
       }
 
       const mappingList = this.mappingList.filter(
-        (item) => this.stuff.includes(item.teacherId) && item.id != -1
+        (item) => this.staff.includes(item.teacherId) && item.id != -1
       );
 
       this.$emit("preview");
@@ -291,11 +295,11 @@ export default {
         });
       }
     },
-    selectAllStuff() {
-      this.stuff = [];
-      if (this.allStuff) {
+    selectallStaff() {
+      this.staff = [];
+      if (this.allStaff) {
         this.teacherList.map((item) => {
-          this.stuff.push(item.id);
+          this.staff.push(item.id);
         });
       }
     },
