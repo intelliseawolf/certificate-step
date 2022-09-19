@@ -61,13 +61,13 @@ const mutations = {
 
   ARRANGE_STARRED_PAGES_LIMITED(state, list) {
     const starredPagesMore = state.starredPages.slice(10)
-    state.starredPages     = list.concat(starredPagesMore)
+    state.starredPages = list.concat(starredPagesMore)
   },
   ARRANGE_STARRED_PAGES_MORE(state, list) {
-    let downToUp                 = false
+    let downToUp = false
     let lastItemInStarredLimited = state.starredPages[10]
-    const starredPagesLimited    = state.starredPages.slice(0, 10)
-    state.starredPages           = starredPagesLimited.concat(list)
+    const starredPagesLimited = state.starredPages.slice(0, 10)
+    state.starredPages = starredPagesLimited.concat(list)
 
     state.starredPages.slice(0, 10).map((i) => {
       if (list.indexOf(i) > -1) downToUp = true
@@ -83,11 +83,11 @@ const mutations = {
   // UI
   // ////////////////////////////////////////////
 
-  TOGGLE_CONTENT_OVERLAY(state, val) { state.bodyOverlay       = val   },
-  UPDATE_PRIMARY_COLOR(state, val)   { state.themePrimaryColor = val   },
-  UPDATE_THEME(state, val)           { state.theme             = val   },
-  UPDATE_WINDOW_WIDTH(state, width)  { state.windowWidth       = width },
-  UPDATE_WINDOW_SCROLL_Y(state, val) { state.scrollY           = val   },
+  TOGGLE_CONTENT_OVERLAY(state, val) { state.bodyOverlay = val },
+  UPDATE_PRIMARY_COLOR(state, val) { state.themePrimaryColor = val },
+  UPDATE_THEME(state, val) { state.theme = val },
+  UPDATE_WINDOW_WIDTH(state, width) { state.windowWidth = width },
+  UPDATE_WINDOW_SCROLL_Y(state, val) { state.scrollY = val },
 
 
   // /////////////////////////////////////////////
@@ -123,7 +123,25 @@ const mutations = {
   },
 
   GET_CETIFICATE_DYNAMIC_TEXTS(state, payload) {
-    state.dynamicTextList = payload.data.certificate_dynamic_field
+    payload.data.certificate_dynamic_field.map((dynamicText) => {
+      let field_name = dynamicText.field_name
+      let field_code = dynamicText.field_code
+
+      if (field_name == "Name of Staff Recipient") field_name = "Staff Name"
+      if (field_name == "Name of Course Teacher") return
+      if (field_name == "Class Teacher Name") return
+      if (field_name == "Name of Course") field_name = 'Course Name'
+      if (field_name == "Name of Client Recipient") {
+        field_name = 'Student Name'
+        field_code = '{student_name}'
+      }
+
+      state.dynamicTextList.push({
+        ...dynamicText,
+        field_code,
+        field_name,
+      })
+    })
   },
 
   GET_STUDENTS_LIST(state, payload) {

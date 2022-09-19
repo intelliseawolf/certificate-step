@@ -284,6 +284,15 @@ export default {
           icon: "icon-alert-circle",
         });
 
+      if (content == "{student_name}" && sameTextCount == 1)
+        return this.$vs.notify({
+          title: "Error",
+          text: "You can select only one Student Name",
+          color: "danger",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+        });
+
       this.content.push({
         id: id,
         type: "dynamic-text",
@@ -293,8 +302,8 @@ export default {
           fontFamily: "Sora",
         },
         content: content + (sameTextCount ? sameTextCount : ""),
-        x: 100,
-        y: 100,
+        x: 0,
+        y: 0,
       });
     },
     getSameDynamicTextCount(id) {
@@ -554,8 +563,8 @@ export default {
           data.type == item.type &&
           data.style.backgroundImage == item.style.backgroundImage
       );
-      this.content[index].style.width = width + "px";
-      this.content[index].style.height = height + "px";
+      this.content[index].style.width = Math.floor(width) + "px";
+      this.content[index].style.height = Math.floor(height) + "px";
     },
     setContent(content) {
       this.content = content;
@@ -574,8 +583,8 @@ export default {
           backgroundSize: "cover",
         },
         content: "",
-        x: 100,
-        y: 100,
+        x: 0,
+        y: 0,
       });
     },
   },

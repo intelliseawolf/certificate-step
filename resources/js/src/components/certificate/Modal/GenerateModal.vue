@@ -240,20 +240,28 @@ export default {
         text: "You close a dialog!",
       });
       this.$emit("cancel");
+      this.init();
+    },
+    init() {
       this.showDescription = false;
-      this.textarea = "";
       this.allStudent = false;
       this.allStaff = false;
       this.student = [];
       this.staff = [];
       this.mappingList = [];
+      this.formData = {
+        title: "",
+        description: "",
+      };
     },
     handlePreview() {
       this.selectedStudent = this.student.map((studentId) => {
         const studentIndex = this.studentList.findIndex(
           (student) => student.id === studentId
         );
-        return this.studentList[studentIndex];
+
+        if (studentIndex != -1) return this.studentList[studentIndex];
+        return;
       });
       if (!this.selectedStudent.length) {
         return this.$vs.notify({
@@ -276,9 +284,35 @@ export default {
         (item) => this.staff.includes(item.teacherId) && item.id != -1
       );
 
+      const dynamicCourseName = this.isClass ? "{class_name}" : "{course_name}";
+      const courseOrClassNameIndex = this.content.findIndex(
+        (item) => item.content == dynamicCourseName
+      );
+
+      if (courseOrClassNameIndex !== -1)
+        this.$emit("addMappingData", [
+          {
+            id: this.content[courseOrClassNameIndex].id,
+            content: dynamicCourseName,
+            name: this.selectedClass.label,
+          },
+        ]);
+
+      const createdByNameIndex = this.content.findIndex(
+        (item) => item.content == "{created_by}"
+      );
+      this.$emit("addMappingData", [
+        {
+          id: this.content[createdByNameIndex].id,
+          content: "{created_by}",
+          name: "John Doe",
+        },
+      ]);
+
       this.$emit("preview");
       this.$emit("selectStudent", this.selectedStudent);
       this.$emit("setStaffMapping", mappingList);
+      this.init();
     },
     setStaff(staff, item) {
       this.mappingList.push({
@@ -308,6 +342,8 @@ export default {
       return this.$store.dispatch("getClassDetail", classId);
     },
     changeClassOrCourse() {
+      this.student = [];
+      this.staff = [];
       if (this.isClass) {
         this.getClassDetail(this.selectedClass.id);
       } else {
@@ -384,9 +420,7 @@ export default {
     },
     activePrompt(newVal) {
       if (!newVal) {
-        this.showDescription = false;
-        this.textarea = "";
-        this.mappingList = [];
+        this.init();
       }
     },
   },
