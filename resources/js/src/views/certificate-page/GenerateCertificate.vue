@@ -37,7 +37,10 @@
             <th>INPUT TO:</th>
             <th>STATUS</th>
           </tr>
-          <tr :key="index" v-for="(column, index) in content.data">
+          <tr v-if="content.length === 0">
+            <td>Nothing To Show</td>
+          </tr>
+          <tr :key="index" v-for="(column, index) in content.data" v-else>
             <td>{{ field[index] }}</td>
             <td>
               <p :key="indexInfo" v-for="(item, indexInfo) in content.data">

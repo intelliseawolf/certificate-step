@@ -47,7 +47,7 @@ const router = new Router({
                         import(
                             "./views/certificate-page/GenerateCertificate.vue"
                         ),
-                },
+                }
             ],
         },
         // =============================================================================
