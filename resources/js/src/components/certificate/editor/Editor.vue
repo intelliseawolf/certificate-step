@@ -66,9 +66,6 @@
         />
         <div v-else class="drag-item">
           <p @dblclick="setActiveIndex(index)" v-html="item.content"></p>
-          <!-- <i v-if="activeDragIndex == index" class="material-icons ml-auto text-red" @click="removeText" dir="rtl">
-            delete
-          </i> -->
         </div>
       </div>
     </Draggable>

@@ -12,31 +12,6 @@
         <button class="custom-file-input" @click="handleChooseFile">
           {{ file ? file.name : "Choose File" }}
         </button>
-        <!-- Table -->
-        <!-- <vs-table :data="users" class="my-5">
-          <template slot="thead">
-            <vs-th>COLUMNS</vs-th>
-            <vs-th>CONTENT</vs-th>
-            <vs-th>INPUT TO:</vs-th>
-            <vs-th>STATUS</vs-th>
-          </template>
-          <template slot-scope="{data}">
-            <vs-tr :key="indextr" v-for="(tr, indextr) in field">
-              <vs-td :data="field[indextr].columns">
-                {{ field[indextr] }}
-              </vs-td>
-              <vs-td :data="data[indextr].content">
-                {{ info[indextr].field[indextr] }}
-              </vs-td>
-              <vs-td :data="data[indextr].input_to">
-                {{ data[indextr].input_to }}
-              </vs-td>
-              <vs-td :data="data[indextr].status">
-                {{ data[indextr].status }}
-              </vs-td>
-            </vs-tr>
-          </template>
-        </vs-table> -->
         <table class="table">
           <thead>
             <tr class="table-header">
@@ -71,7 +46,6 @@
             </tr>
           </tbody>
         </table>
-        <!-- Footer -->
         <div class="flex mt-3 justify-between">
           <vs-button
             color="dark"

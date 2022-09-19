@@ -115,7 +115,6 @@ export default {
       auto: true,
       fileRecords: [],
       uploadUrl: "",
-      ///file/upload/${platform_customer_id}
       uploadHeaders: {
         "X-Test-Header": "vue-file-agent",
         Authorization: "",
@@ -194,17 +193,9 @@ export default {
       if (result) {
         const payload = "184";
         const data = await UploadImage(this.cropImage, payload);
-
-        // this.$vs.loading({
-        //   type: 'material',
-        //   text: 'Please Wait We Are Uploading Files'
-        // })
-
         const cdn = data.data.data.cdn;
-
         const file_name = data.data.data.files[0].file_name;
         const file_path = data.data.data.files[0].file_path;
-
         const raw = JSON.stringify({
           file_repository_id: this.file_repository_id,
           files: [
@@ -214,12 +205,10 @@ export default {
             },
           ],
         });
-
         const file_id_payload = raw;
 
         this.getUploadFiles(file_id_payload);
         this.imageDataUrl = null;
-
         this.fileRecords = [];
         this.fileRecordsForUpload = [];
       }
@@ -243,7 +232,6 @@ export default {
     onBeforeDelete(fileRecord) {
       const i = this.fileRecordsForUpload.indexOf(fileRecord);
       if (i !== -1) {
-        // queued file, not yet uploaded. Just remove from the arrays
         this.fileRecordsForUpload.splice(i, 1);
         const k = this.fileRecords.indexOf(fileRecord);
         if (k !== -1) this.fileRecords.splice(k, 1);

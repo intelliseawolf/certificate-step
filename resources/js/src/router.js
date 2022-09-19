@@ -40,14 +40,6 @@ const router = new Router({
                     component: () =>
                         import("./views/certificate-page/Certificate.vue"),
                 },
-                {
-                    path: "/certificate/generate",
-                    name: "generate-certificate",
-                    component: () =>
-                        import(
-                            "./views/certificate-page/GenerateCertificate.vue"
-                        ),
-                }
             ],
         },
         // =============================================================================

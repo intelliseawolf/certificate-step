@@ -29,7 +29,6 @@
             </li>
           </ul>
         </div>
-        <!-- Footer -->
         <div class="flex mt-3 justify-between">
           <vs-button
             color="dark"

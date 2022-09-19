@@ -27,21 +27,16 @@ export default {
   methods: {
     initInteract(selector) {
       interact(selector).draggable({
-        // enable inertial throwing
         inertia: true,
-        // keep the element within the area of it's parent
         restrict: {
           restriction: "parent",
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
         },
-        // enable autoScroll
         autoScroll: true,
 
         onstart: this.onDragStart,
-        // call this function on every dragmove event
         onmove: this.dragMoveListener,
-        // call this function on every dragend event
         onend: this.onDragEnd,
       });
       this.translate(selector, this.screenX, this.screenY);
@@ -60,11 +55,9 @@ export default {
       this.$emit("onDragMove", { x, y });
     },
     translate(target, x, y) {
-      // translate the element
       target.style.webkitTransform =
         target.style.transform = `translate(${x}px, ${y}px)`;
 
-      // update the posiion attributes
       target.setAttribute("data-x", x);
       target.setAttribute("data-y", y);
     },
@@ -88,7 +81,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .draggable {
   border: 1px solid transparent;

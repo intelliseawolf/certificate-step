@@ -27,7 +27,6 @@
         </div>
       </div>
 
-      <!-- Next Button -->
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">

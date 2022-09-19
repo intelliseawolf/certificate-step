@@ -17,7 +17,6 @@
           v-model="form.title"
           class="w-full mb-3"
         />
-        <!-- <slot></slot> -->
         <vs-button
           class="menu-button"
           color="primary"

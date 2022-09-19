@@ -19,7 +19,6 @@
       <div class="con-exemple-prompt">
         <div class="modal-preview-section mt-5">
           <div class="flex template-pos flex-col">
-            <!-- Carousel Certificates -->
             <div class="carousel-certificates">
               <swiper
                 :options="swiperOption"

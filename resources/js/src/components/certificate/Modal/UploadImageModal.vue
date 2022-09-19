@@ -16,10 +16,6 @@
           section_type="CertificateComponent"
           @image="setImagePath"
         />
-        <!-- <div class="flex mt-3">
-          <vs-button class="ml-auto mr-3" @click="toggleModal">Cancel</vs-button>
-          <vs-button @click="handleOk">Ok</vs-button>
-        </div> -->
       </div>
     </vs-prompt>
   </div>
@@ -63,10 +59,6 @@ export default {
     toggleModal() {
       this.activePrompt = !this.activePrompt;
     },
-    // handleOk() {
-    //   this.activePrompt = false
-    //   this.$emit("handleOk", this.image)
-    // }
   },
 };
 </script>

@@ -9,7 +9,6 @@
       title="Genrate Certificate"
     >
       <div class="con-exemple-prompt">
-        <!-- Body -->
         <span class="mb-1">Certificate Name</span>
         <vs-input
           placeholder="Batch 14' S.Y.19-20"
@@ -17,8 +16,6 @@
           v-model="formData.title"
           class="w-full mb-3"
         />
-        <!-- SLOT -->
-        <!-- <slot></slot> -->
         <vs-button
           class="menu-button"
           color="primary"
@@ -200,8 +197,6 @@ export default {
     };
   },
   mounted() {
-    // this.$store.dispatch("getStudents")
-    // this.$store.dispatch("getTeachers")
     this.getClassOrCourseList();
   },
   components: {

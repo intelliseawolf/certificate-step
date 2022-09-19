@@ -56,22 +56,6 @@
               >Preview</vs-button
             >
             <vs-button>Download Certificates</vs-button>
-            <!-- <VueHtml2pdf :manual-pagination="true" :enable-download="true" filename="certificate_name-student_name"
-              :pdf-quality="2" pdf-format="a4" pdf-orientation="landscape" pdf-content-width="877px" ref="DownloadComp">
-              <section slot="pdf-content">
-                <div :style="`width: ${width}px; height: ${height}px;`">
-                  <img :src="image && image.file && image.file.file_path" alt="template image">
-                  <div class="template-content-section flex" v-for="(item, index) in content" :key="index" :style="{
-                    ...item.style,
-                    left: `${item.x}px`,
-                    top: `${item.y}px`,
-                  }">
-                    <p v-html="item.content"></p>
-                  </div>
-                </div>
-              </section>
-            </VueHtml2pdf> -->
-            -->
           </div>
         </div>
       </div>
@@ -80,9 +64,6 @@
 </template>
 
 <script>
-// import VueHtml2pdf from 'vue-html2pdf'
-// import TemplateSection from '../editor/TemplateSection.vue'
-
 export default {
   props: {
     activePrompt: Boolean,
@@ -107,10 +88,6 @@ export default {
       required: true,
     },
   },
-  components: {
-    // VueHtml2pdf,
-    // TemplateSection
-  },
   data() {
     return {
       search: "",
@@ -121,19 +98,9 @@ export default {
       },
       student: [],
       allStudent: false,
-      // template: [],
-      // content: "",
-      // width: 877,
-      // height: 620,
     };
   },
   computed: {
-    // templateList: function () {
-    //   return this.$store.getters['getTemplateList']
-    // },
-    // templateListMetaData: function () {
-    //   return this.$store.getters['getTemplateListMetaData']
-    // },
     validName() {
       return (
         this.valMultipe.value1.length > 0 && this.valMultipe.value2.length > 0

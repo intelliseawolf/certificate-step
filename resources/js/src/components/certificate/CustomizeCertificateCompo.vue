@@ -1,10 +1,8 @@
 <template>
   <div class="my-5">
-    <!-- Size Section -->
     <div>
       <p><b>Choose a template or upload your own certificate to start</b></p>
       <div class="flex mt-5">
-        <!-- Orientation -->
         <div class="mr-10">
           <p>Orientation</p>
           <div class="flex">
@@ -20,7 +18,6 @@
             </div>
           </div>
         </div>
-        <!-- Size -->
         <div>
           <p>Size</p>
           <div class="flex">

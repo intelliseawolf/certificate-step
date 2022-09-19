@@ -1,6 +1,5 @@
 <template>
   <div class="my-5">
-    <!-- Header -->
     <div v-if="!isUploadCSV">
       <p><b>Preview</b></p>
       <div class="third-preview-section mt-5">
@@ -17,7 +16,6 @@
           />
         </div>
       </div>
-      <!-- Next Button -->
       <div class="vx-row">
         <div class="vx-col w-full">
           <div class="mt-8 flex flex-wrap items-center justify-end">
