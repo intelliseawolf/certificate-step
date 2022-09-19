@@ -105,6 +105,9 @@ export default {
       if (prevIndex == 1 && nextIndex == 2) {
         this.content = [...this.$refs.textField.getEditorContent()];
       }
+      if (prevIndex == 1 && nextIndex == 0) {
+        this.$refs.textField.setEditorContent([]);
+      }
     },
     changeImageSize({ width, height }) {
       this.width = width;

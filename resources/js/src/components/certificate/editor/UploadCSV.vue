@@ -143,7 +143,9 @@ export default {
       this.content.map((item) => {
         if (
           (!item.content.includes("staff_name") ||
-            !item.content.includes("student_name")) &&
+            !item.content.includes("student_name") ||
+            !item.content.includes("course_name") ||
+            !item.content.includes("class_name")) &&
           item.type == "dynamic-text"
         )
           this.dynamicTexts.push({

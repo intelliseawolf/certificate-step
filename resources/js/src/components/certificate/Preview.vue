@@ -50,6 +50,7 @@
                 @setStaffMapping="setStaffMapping"
                 @saveTemplate="saveTemplate"
                 @toggleCsvUploading="toggleCsvUploading"
+                @addMappingData="addMappingData"
               />
               <preview-modal
                 :activePrompt="modal === 'preview'"
@@ -87,7 +88,7 @@
       v-else
       :content="content"
       @toggleCsvUploading="toggleCsvUploading"
-      @addCsvMapping="addCsvMapping"
+      @addCsvMapping="addMappingData"
     />
   </div>
 </template>
@@ -208,8 +209,15 @@ export default {
         });
       });
     },
-    addCsvMapping(mappingData) {
-      this.mappingData = [...this.mappingData, ...mappingData];
+    addMappingData(mappingData) {
+      mappingData.map((data) => {
+        const index = this.mappingData.findIndex(
+          (item) => item.id == data.id && item.content == data.content
+        );
+
+        if (index != -1) this.mappingData.splice(index, 1, data);
+        else this.mappingData = [...this.mappingData, data];
+      });
     },
   },
 };

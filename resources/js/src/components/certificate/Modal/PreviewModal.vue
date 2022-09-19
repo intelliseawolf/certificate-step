@@ -37,7 +37,7 @@
                     :width="width"
                     :height="height"
                     :image="image"
-                    :content="mappedContent"
+                    :content="getMappedContent(item)"
                     :type="item.id"
                   />
                 </swiper-slide>
@@ -141,24 +141,6 @@ export default {
     swiper() {
       return this.$refs.mySwiper.swiper;
     },
-    mappedContent() {
-      const content = [];
-
-      for (let item of this.content) {
-        const index = this.mappingData.findIndex(
-          (mapping) => mapping.id == item.id && mapping.content == item.content
-        );
-
-        if (index != -1)
-          content.push({
-            ...item,
-            content: this.mappingData[index].name,
-          });
-        else content.push({ ...item });
-      }
-
-      return content;
-    },
   },
   methods: {
     acceptAlert() {
@@ -191,6 +173,33 @@ export default {
     },
     changeSwiperIndex() {
       this.count = this.$refs.mySwiper.swiper.activeIndex + 1;
+    },
+    getMappedContent(student) {
+      const content = [];
+
+      for (let item of this.content) {
+        if (item.content == "{student_name}") {
+          content.push({
+            ...item,
+            content: student.first_name + " " + student.last_name,
+          });
+
+          continue;
+        }
+
+        const index = this.mappingData.findIndex(
+          (mapping) => mapping.id == item.id && mapping.content == item.content
+        );
+
+        if (index != -1)
+          content.push({
+            ...item,
+            content: this.mappingData[index].name,
+          });
+        else content.push({ ...item });
+      }
+
+      return content;
     },
   },
 };
